@@ -1,0 +1,7 @@
+const ADD_VERTEX = 'ADD_VERTEX';
+const CREATE_GRAPH = 'CREATE_GRAPH';
+
+export {
+  ADD_VERTEX,
+  CREATE_GRAPH
+}
