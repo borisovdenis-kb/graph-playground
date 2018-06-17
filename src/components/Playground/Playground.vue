@@ -1,17 +1,28 @@
 <template>
-  <div id="playground"></div>
+  <div id="playground" v-on:dblclick="addVertex($event)"></div>
 </template>
 
 <script>
   import './playground.css';
   import SVG from 'svg.js';
-  import {CREATE_GRAPH} from "../../store/mutations";
+  import {CREATE_GRAPH, ADD_VERTEX} from "../../store/mutations";
 
   export default {
     name: "playground",
     data() {
       return {
-        svgContainer: null
+        svgContainer: null,
+        idCounter: 1
+      }
+    },
+    methods: {
+      addVertex(e) {
+        this.$store.commit(ADD_VERTEX, {
+          id: this.idCounter++,
+          value: '',
+          x: e.offsetX,
+          y: e.offsetY
+        });
       }
     },
     mounted() {

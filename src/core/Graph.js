@@ -1,24 +1,27 @@
 import Vertex from './Vertex';
+import Edge from './Edge';
+
 
 export default class Graph {
   constructor(svgContainer) {
     this.head = null;
     this.vertexMap = {};
+    this.edgeList = [];
     this.svgContainer = svgContainer;
   }
 
-  addRelationsToVertex(targetVertexId, vertexesIdsForLink) {
-    const targetVertex = this.getVertexById(targetVertexId);
+  addRelation(id1, id2) {
+    const targetVertex = this.getVertexById(id1);
+    const linkedVertex = this.getVertexById(id2);
 
-    vertexesIdsForLink.forEach(vertexId => {
-      const linkedVertex = this.getVertexById(vertexId);
-      targetVertex.addRelation(linkedVertex);
-      linkedVertex.addRelation(targetVertex);
-    });
+    targetVertex.addRelation(linkedVertex);
+    linkedVertex.addRelation(targetVertex);
+
+    this.edgeList.push(new Edge(targetVertex, linkedVertex, this.svgContainer));
   }
 
-  addVertex(id, value) {
-    const newVertex = new Vertex(id, value, null, this.svgContainer);
+  addVertex(id, value, x, y) {
+    const newVertex = new Vertex(id, value, null, this.svgContainer, x, y);
     this.vertexMap[id] = newVertex;
 
     if (!this.head) {
