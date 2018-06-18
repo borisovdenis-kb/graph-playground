@@ -1,9 +1,7 @@
 <template>
   <div class="tool-bar">
     <div class="tool-bar__add-relation-form">
-      <input type="text" v-model="vertexOneId" placeholder="Vertex One Id"/>
-      <input type="text" v-model="vertexTwoId" placeholder="Vertex Two Id"/>
-      <button v-on:click="addVertex">Add Relation</button>
+      <button v-on:click="turnOnRelationAdditionMode()">Add Relation</button>
     </div>
 
     <ul v-if="$store.graph">
@@ -16,21 +14,15 @@
 
 <script>
   import './tool-bar.css';
-  import {ADD_RELATION} from '../../store/mutations';
+  import {CHANGE_CURRENT_ACTION} from '../../store/mutations';
+  import {RELATION_ADDITION} from "../../core/actions";
 
   export default {
     name: "tool-bar",
-    data() {
-      return {
-        vertexOneId: '',
-        vertexTwoId: ''
-      }
-    },
     methods: {
-      addVertex() {
-        this.$store.commit(ADD_RELATION, {
-          targetId: this.vertexOneId,
-          linkedId: this.vertexTwoId
+      turnOnRelationAdditionMode() {
+        this.$store.commit(CHANGE_CURRENT_ACTION, {
+          action: RELATION_ADDITION
         });
       }
     }
