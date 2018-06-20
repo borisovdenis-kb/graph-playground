@@ -1,5 +1,5 @@
-import Vertex from './Vertex';
-import Edge from './Edge';
+import EdgeObserver from './EdgeObserver';
+import ObservableVertex from "./ObservableVertex";
 
 
 export default class Graph {
@@ -13,15 +13,21 @@ export default class Graph {
   addRelation(id1, id2) {
     const targetVertex = this.getVertexById(id1);
     const linkedVertex = this.getVertexById(id2);
+    let edge;
 
     targetVertex.addRelation(linkedVertex);
     linkedVertex.addRelation(targetVertex);
 
-    this.edgeList.push(new Edge(targetVertex, linkedVertex, this.svgContainer));
+    edge = new EdgeObserver(targetVertex, linkedVertex, this.svgContainer);
+
+    this.edgeList.push(edge);
+
+    targetVertex.addObserver(edge);
+    linkedVertex.addObserver(edge);
   }
 
-  addVertex(id, value, x, y) {
-    const newVertex = new Vertex(id, value, null, this.svgContainer, x, y);
+  addVertex(id, value, coordinate) {
+    const newVertex = new ObservableVertex(id, value, this.svgContainer, coordinate);
     this.vertexMap[id] = newVertex;
 
     if (!this.head) {

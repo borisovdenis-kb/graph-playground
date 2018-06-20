@@ -1,7 +1,12 @@
 <template>
   <div class="tool-bar">
     <div class="tool-bar__add-relation-form">
-      <button v-on:click="turnOnRelationAdditionMode()">Add Relation</button>
+      <el-row>
+        <el-button round
+                   v-on:click="turnOnRelationAdditionMode()">
+          Add Relation
+        </el-button>
+      </el-row>
     </div>
 
     <ul v-if="$store.graph">

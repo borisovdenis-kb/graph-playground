@@ -20,8 +20,7 @@
         this.$store.commit(ADD_VERTEX, {
           id: this.idCounter++,
           value: '',
-          x: e.offsetX,
-          y: e.offsetY
+          coordinate: {cx: e.offsetX, cy: e.offsetY}
         });
       }
     },

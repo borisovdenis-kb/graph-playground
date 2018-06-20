@@ -23,7 +23,7 @@ const store = new Vuex.Store({
       state.graph = new Graph(payload.svgContainer);
     },
     [ADD_VERTEX] (state, payload) {
-      state.graph.addVertex(payload.id, payload.value, payload.x, payload.y);
+      state.graph.addVertex(payload.id, payload.value, payload.coordinate);
     },
     [ADD_RELATION] (state, payload) {
       state.graph.addRelation(payload.vertexOneId, payload.vertexTwoId);
