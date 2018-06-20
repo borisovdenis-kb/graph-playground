@@ -41,8 +41,7 @@ export const createCircle = ({svgContainer, radius, x, y, vertex}) => {
       $store.commit(mutations.ADD_VERTEX_TO_BUFFER_EDGE, {vertex: circle.data('vertex').value});
 
       if ($store.state.bufferEdge.length === 2) {
-        const vertexOne = $store.state.bufferEdge[0];
-        const vertexTwo = $store.state.bufferEdge[1];
+        const [vertexOne, vertexTwo] = $store.state.bufferEdge;
 
         $store.commit(mutations.ADD_RELATION, {
           vertexOneId: vertexOne.id,
