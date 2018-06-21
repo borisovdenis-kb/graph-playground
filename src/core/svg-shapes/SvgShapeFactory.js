@@ -1,7 +1,7 @@
-import $store from '../store/store';
-import {RELATION_ADDITION} from "./actions";
-import * as mutations from "../store/mutations";
-import Circle from "./SVGShapes/Circle";
+import $store from '../../store/store';
+import {RELATION_ADDITION} from "../actions";
+import * as mutations from "../../store/mutations";
+import Circle from "./Circle";
 
 
 export const createCircle = ({svgContainer, vertex, coordinate}) => {
@@ -9,6 +9,7 @@ export const createCircle = ({svgContainer, vertex, coordinate}) => {
 
   const circle = new Circle(svgContainer, vertex);
   circle.setAttrs(coordinate);
+  circle.setStyle({'cursor': 'pointer', 'z-index': '2'});
   circle.addClass('svg-circle');
 
   circle.svgCircle.click(() => {
@@ -31,6 +32,14 @@ export const createCircle = ({svgContainer, vertex, coordinate}) => {
         vertexTwo.svgShape.removeClass('svg-circle--selected');
       }
     }
+  });
+
+  circle.svgCircle.mouseover(() => {
+    circle.sm.hover();
+  });
+
+  circle.svgCircle.mouseout(() => {
+    circle.sm.unhover();
   });
 
   circle.svgCircle.mouseup(() => {
