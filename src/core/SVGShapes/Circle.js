@@ -1,4 +1,4 @@
-const CIRCLE_RADIUS_PX = 50;
+const CIRCLE_RADIUS_PX = 30;
 
 export default class Circle {
   constructor(svgContainer, vertex) {

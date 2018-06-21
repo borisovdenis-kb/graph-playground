@@ -22,9 +22,9 @@ export default class ObservableVertex {
   }
 
   notify() {
-    this.observers.forEach(o => {
-      o.handleVertexChanges();
-    });
+    for (let i = 0, length = this.observers.length; i < length; i++) {
+      this.observers[i].handleVertexChanges();
+    }
   }
 
   addRelation(vertex) {

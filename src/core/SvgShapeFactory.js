@@ -2,7 +2,6 @@ import $store from '../store/store';
 import {RELATION_ADDITION} from "./actions";
 import * as mutations from "../store/mutations";
 import Circle from "./SVGShapes/Circle";
-import _ from 'lodash';
 
 
 export const createCircle = ({svgContainer, vertex, coordinate}) => {

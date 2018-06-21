@@ -1,4 +1,4 @@
-import EdgeObserver from './EdgeObserver';
+import ObserverEdge from './ObserverEdge';
 import ObservableVertex from "./ObservableVertex";
 
 
@@ -18,7 +18,7 @@ export default class Graph {
     targetVertex.addRelation(linkedVertex);
     linkedVertex.addRelation(targetVertex);
 
-    edge = new EdgeObserver(targetVertex, linkedVertex, this.svgContainer);
+    edge = new ObserverEdge(targetVertex, linkedVertex, this.svgContainer);
 
     this.edgeList.push(edge);
 
