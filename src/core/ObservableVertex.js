@@ -1,4 +1,4 @@
-import {createCircle} from "./svg-shapes/SvgShapeFactory";
+import {createCircle} from "./svg/SvgFactory";
 
 export default class ObservableVertex {
   constructor(id, value, svgContainer, coordinate) {

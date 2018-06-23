@@ -4,8 +4,8 @@
 
 <script>
   import './playground.css';
-  import SVG from 'svg.js';
   import {CREATE_GRAPH, ADD_VERTEX} from "../../store/mutations";
+  import {createSvgContainer} from "../../core/svg/SvgFactory";
 
   export default {
     name: "playground",
@@ -25,7 +25,7 @@
       }
     },
     mounted() {
-      this.svgContainer = SVG('playground').size(1376, 830);
+      this.svgContainer = createSvgContainer('playground', 1376, 830);
       this.$store.commit(CREATE_GRAPH, {svgContainer: this.svgContainer});
     }
   }

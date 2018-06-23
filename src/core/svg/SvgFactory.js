@@ -1,12 +1,12 @@
-import $store from '../../store/store';
-import {RELATION_ADDITION} from "../actions";
-import * as mutations from "../../store/mutations";
+import SVG from 'svg.js';
 import Circle from "./Circle";
+import $store from '../../store/store';
+import * as mutations from "../../store/mutations";
+import {RELATION_ADDITION} from "../actions";
+import {SET_CURRENT_DRAGGABLE_SVG_SHAPE} from "../../store/mutations";
 
 
 export const createCircle = ({svgContainer, vertex, coordinate}) => {
-  let isDraggable = false;
-
   const circle = new Circle(svgContainer, vertex);
   circle.setAttrs(coordinate);
   circle.setStyle({'cursor': 'pointer', 'z-index': '2'});
@@ -42,38 +42,46 @@ export const createCircle = ({svgContainer, vertex, coordinate}) => {
     circle.sm.unhover();
   });
 
-  circle.svgCircle.mouseup(() => {
-    if ($store.state.currentAction === RELATION_ADDITION) {
-      return;
-    }
-
-    isDraggable = false;
-
-    circle.removeClass('svg-circle--draggable');
-  });
-
   circle.svgCircle.mousedown(() => {
     if ($store.state.currentAction === RELATION_ADDITION) {
       return;
     }
 
-    isDraggable = true;
+    $store.commit(SET_CURRENT_DRAGGABLE_SVG_SHAPE, {svgShape: circle});
 
     circle.addClass('svg-circle--draggable');
   });
 
-  circle.svgCircle.mousemove((e) => {
-    if (!isDraggable) {
+  circle.svgCircle.mouseup(() => {
+    if ($store.state.currentAction === RELATION_ADDITION) {
       return;
     }
 
-    circle.setAttrs({
+    $store.commit(SET_CURRENT_DRAGGABLE_SVG_SHAPE, {vertex: null});
+
+    circle.removeClass('svg-circle--draggable');
+  });
+
+  return circle;
+};
+
+export const createSvgContainer = (elementId, width, height) => {
+  const svgContainer = SVG(elementId).size(width, height);
+
+  svgContainer.mousemove((e) => {
+    const draggableSvgShape = $store.state.currentDraggableSvgShape;
+
+    if (!draggableSvgShape) {
+      return;
+    }
+
+    draggableSvgShape.setAttrs({
       cx: e.offsetX,
       cy: e.offsetY
     });
 
-    circle.vertex.notify();
+    draggableSvgShape.vertex.notify();
   });
 
-  return circle;
+  return svgContainer;
 };
