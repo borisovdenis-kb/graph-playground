@@ -1,11 +1,14 @@
 import ObserverEdge from './ObserverEdge';
 import ObservableVertex from "./ObservableVertex";
+import {alignVertexes} from "./svg/SvgAlignment";
+import _ from 'lodash';
 
 
 export default class Graph {
   constructor(svgContainer) {
     this.head = null;
     this.vertexMap = {};
+    this.edgeList = [];
     this.svgContainer = svgContainer;
   }
 
@@ -18,6 +21,8 @@ export default class Graph {
     linkedVertex.addRelation(targetVertex);
 
     edge = new ObserverEdge(targetVertex, linkedVertex, this.svgContainer);
+
+    this.edgeList.push(edge);
 
     targetVertex.addObserver(edge);
     linkedVertex.addObserver(edge);
@@ -33,10 +38,22 @@ export default class Graph {
   }
 
   deleteVertex(id) {
+    const edgesForDelition = this.vertexMap[id].observers;
+
+    edgesForDelition.forEach(e => {
+      _.remove(this.edgeList, edge => edge === e);
+    });
+
     this.vertexMap[id].clearObserverList();
     this.vertexMap[id].svgShape.remove();
 
     delete this.vertexMap[id];
+  }
+
+  align() {
+    this.edgeList.forEach(edge => {
+      alignVertexes(edge.vertexOne, edge.vertexTwo);
+    });
   }
 
   find(value) {

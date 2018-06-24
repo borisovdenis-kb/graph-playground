@@ -45,7 +45,15 @@ export default class ObservableVertex {
     return this.svgShape.getCX();
   }
 
+  setX(x) {
+    this.svgShape.setCX(x);
+  }
+
   getY() {
     return this.svgShape.getCY();
+  }
+
+  setY(y) {
+    this.svgShape.setCY(y);
   }
 }

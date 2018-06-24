@@ -32,6 +32,7 @@ export const createCircle = ({svgContainer, vertex, coordinate}) => {
       }
     } else if ($store.state.currentAction === DELETE_VERTEX) {
       $store.state.graph.deleteVertex(circle.vertex.id);
+      $store.commit(mutations.CHANGE_CURRENT_ACTION, {action: null});
     }
   });
 

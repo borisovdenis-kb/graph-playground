@@ -33,7 +33,15 @@ export default class Circle {
     return this.svgCircle.cx();
   }
 
+  setCX(x) {
+    this.svgCircle.cx(x);
+  }
+
   getCY() {
     return this.svgCircle.cy();
+  }
+
+  setCY(y) {
+    this.svgCircle.cy(y);
   }
 }

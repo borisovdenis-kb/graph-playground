@@ -1,17 +1,34 @@
 <template>
   <div class="tool-bar">
     <div class="tool-bar__add-relation-form">
+
       <el-row class="tool-bar__row">
-        <el-button class="tool-bar__action-button" round v-on:click="setCurrentAction(actions.ADD_EDGE)">
+        <el-button class="tool-bar__action-button"
+                   round
+                   icon="el-icon-share"
+                   v-on:click="setCurrentAction(actions.ADD_EDGE)">
           Add Edge
         </el-button>
       </el-row>
 
       <el-row class="tool-bar__row">
-        <el-button round v-on:click="setCurrentAction(actions.DELETE_VERTEX)">
+        <el-button class="tool-bar__action-button"
+                   round
+                   icon="el-icon-delete"
+                   v-on:click="setCurrentAction(actions.DELETE_VERTEX)">
           Delete Vertex
         </el-button>
       </el-row>
+
+      <el-row class="tool-bar__row">
+        <el-button class="tool-bar__action-button"
+                   round
+                   icon="el-icon-menu"
+                   v-on:click="alignGraph()">
+          Align Graph
+        </el-button>
+      </el-row>
+
     </div>
 
     <ul v-if="$store.graph">
@@ -39,6 +56,9 @@
         this.$store.commit(CHANGE_CURRENT_ACTION, {
           action: action
         });
+      },
+      alignGraph() {
+        this.$store.state.graph.align();
       }
     }
   }
