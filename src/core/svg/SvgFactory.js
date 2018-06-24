@@ -10,11 +10,10 @@ export const createCircle = ({svgContainer, vertex, coordinate}) => {
   const circle = new Circle(svgContainer, vertex);
   circle.setAttrs(coordinate);
   circle.setStyle({'cursor': 'pointer', 'z-index': '2'});
-  circle.addClass('svg-circle');
 
   circle.svgCircle.click(() => {
     if ($store.state.currentAction === RELATION_ADDITION) {
-      circle.addClass('svg-circle--selected');
+      circle.sm.select();
 
       $store.commit(mutations.ADD_VERTEX_TO_BUFFER_EDGE, {vertex: circle.vertex});
 
@@ -28,10 +27,11 @@ export const createCircle = ({svgContainer, vertex, coordinate}) => {
         $store.commit(mutations.CLEAR_BUFFER_EDGE);
         $store.commit(mutations.CHANGE_CURRENT_ACTION, {action: null});
 
-        vertexOne.svgShape.removeClass('svg-circle--selected');
-        vertexTwo.svgShape.removeClass('svg-circle--selected');
+        vertexOne.svgShape.sm.reset();
+        vertexTwo.svgShape.sm.unselect();
       }
     }
+    console.log(circle.sm.state);
   });
 
   circle.svgCircle.mouseover(() => {
@@ -49,7 +49,7 @@ export const createCircle = ({svgContainer, vertex, coordinate}) => {
 
     $store.commit(SET_CURRENT_DRAGGABLE_SVG_SHAPE, {svgShape: circle});
 
-    circle.addClass('svg-circle--draggable');
+    console.log(circle.sm.state);
   });
 
   circle.svgCircle.mouseup(() => {
@@ -57,9 +57,9 @@ export const createCircle = ({svgContainer, vertex, coordinate}) => {
       return;
     }
 
-    $store.commit(SET_CURRENT_DRAGGABLE_SVG_SHAPE, {vertex: null});
+    $store.commit(SET_CURRENT_DRAGGABLE_SVG_SHAPE, {svgShape: null});
 
-    circle.removeClass('svg-circle--draggable');
+    console.log(circle.sm.state);
   });
 
   return circle;
