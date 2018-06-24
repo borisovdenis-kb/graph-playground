@@ -2,7 +2,7 @@ import SVG from 'svg.js';
 import Circle from "./Circle";
 import $store from '../../store/store';
 import * as mutations from "../../store/mutations";
-import {RELATION_ADDITION} from "../actions";
+import {ADD_EDGE, DELETE_VERTEX} from "../actions";
 import {SET_CURRENT_DRAGGABLE_SVG_SHAPE} from "../../store/mutations";
 
 
@@ -12,7 +12,7 @@ export const createCircle = ({svgContainer, vertex, coordinate}) => {
   circle.setStyle({'cursor': 'pointer', 'z-index': '2'});
 
   circle.svgCircle.click(() => {
-    if ($store.state.currentAction === RELATION_ADDITION) {
+    if ($store.state.currentAction === ADD_EDGE) {
       circle.sm.select();
 
       $store.commit(mutations.ADD_VERTEX_TO_BUFFER_EDGE, {vertex: circle.vertex});
@@ -30,8 +30,9 @@ export const createCircle = ({svgContainer, vertex, coordinate}) => {
         vertexOne.svgShape.sm.reset();
         vertexTwo.svgShape.sm.unselect();
       }
+    } else if ($store.state.currentAction === DELETE_VERTEX) {
+      $store.state.graph.deleteVertex(circle.vertex.id);
     }
-    console.log(circle.sm.state);
   });
 
   circle.svgCircle.mouseover(() => {
@@ -43,23 +44,19 @@ export const createCircle = ({svgContainer, vertex, coordinate}) => {
   });
 
   circle.svgCircle.mousedown(() => {
-    if ($store.state.currentAction === RELATION_ADDITION) {
+    if ($store.state.currentAction === ADD_EDGE) {
       return;
     }
 
     $store.commit(SET_CURRENT_DRAGGABLE_SVG_SHAPE, {svgShape: circle});
-
-    console.log(circle.sm.state);
   });
 
   circle.svgCircle.mouseup(() => {
-    if ($store.state.currentAction === RELATION_ADDITION) {
+    if ($store.state.currentAction === ADD_EDGE) {
       return;
     }
 
     $store.commit(SET_CURRENT_DRAGGABLE_SVG_SHAPE, {svgShape: null});
-
-    console.log(circle.sm.state);
   });
 
   return circle;

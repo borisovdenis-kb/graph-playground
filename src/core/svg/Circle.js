@@ -9,6 +9,10 @@ export default class Circle {
     this.sm = createStateMachine(this);
   }
 
+  remove() {
+    this.svgCircle.remove();
+  }
+
   setAttrs(attrs) {
     this.svgCircle.attr(attrs);
   }

@@ -17,8 +17,16 @@ export default class ObservableVertex {
     this.observers.push(observer);
   }
 
-  remove(observer) {
+  removeObserver(observer) {
     this.observers = this.observers.filter(item => item !== observer);
+  }
+
+  clearObserverList() {
+    this.observers.forEach((edge) => {
+      edge.svgShape.remove();
+    });
+
+    this.observers = [];
   }
 
   notify() {

@@ -6,7 +6,6 @@ export default class Graph {
   constructor(svgContainer) {
     this.head = null;
     this.vertexMap = {};
-    this.edgeList = [];
     this.svgContainer = svgContainer;
   }
 
@@ -20,8 +19,6 @@ export default class Graph {
 
     edge = new ObserverEdge(targetVertex, linkedVertex, this.svgContainer);
 
-    this.edgeList.push(edge);
-
     targetVertex.addObserver(edge);
     linkedVertex.addObserver(edge);
   }
@@ -33,6 +30,13 @@ export default class Graph {
     if (!this.head) {
       this.head = newVertex;
     }
+  }
+
+  deleteVertex(id) {
+    this.vertexMap[id].clearObserverList();
+    this.vertexMap[id].svgShape.remove();
+
+    delete this.vertexMap[id];
   }
 
   find(value) {
