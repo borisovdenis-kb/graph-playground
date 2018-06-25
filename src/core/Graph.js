@@ -29,7 +29,7 @@ export default class Graph {
   }
 
   addVertex(id, value, coordinate) {
-    const newVertex = new ObservableVertex(id, value, this.svgContainer, coordinate);
+    const newVertex = new ObservableVertex(id, value, coordinate);
     this.vertexMap[id] = newVertex;
 
     if (!this.head) {

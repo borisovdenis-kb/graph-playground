@@ -1,12 +1,11 @@
 import {createCircle} from "./svg/SvgFactory";
 
 export default class ObservableVertex {
-  constructor(id, value, svgContainer, coordinate) {
+  constructor(id, value, coordinate) {
     this.id = id;
     this.value = value;
     this.linkedVertexes = [];
     this.svgShape = createCircle({
-      svgContainer: svgContainer,
       vertex: this,
       coordinate: coordinate
     });
@@ -21,6 +20,12 @@ export default class ObservableVertex {
     this.observers = this.observers.filter(item => item !== observer);
   }
 
+  notify() {
+    for (let i = 0, length = this.observers.length; i < length; i++) {
+      this.observers[i].handleVertexChanges();
+    }
+  }
+
   clearObserverList() {
     this.observers.forEach((edge) => {
       edge.svgShape.remove();
@@ -29,16 +34,19 @@ export default class ObservableVertex {
     this.observers = [];
   }
 
-  notify() {
-    for (let i = 0, length = this.observers.length; i < length; i++) {
-      this.observers[i].handleVertexChanges();
-    }
-  }
-
   addRelation(vertex) {
     if (this.linkedVertexes.indexOf(vertex) === -1) {
       this.linkedVertexes.push(vertex);
     }
+  }
+
+  upliftInSvgContainer() {
+    const coordinate = {cx: this.getX(), cy: this.getY()};
+    this.svgShape.remove();
+    this.svgShape = createCircle({
+      vertex: this,
+      coordinate: coordinate
+    });
   }
 
   getX() {
@@ -55,5 +63,12 @@ export default class ObservableVertex {
 
   setY(y) {
     this.svgShape.setCY(y);
+  }
+
+  getCoordinate() {
+    return {
+      x: this.getX(),
+      y: this.getY()
+    }
   }
 }

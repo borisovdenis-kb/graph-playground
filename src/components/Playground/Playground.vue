@@ -4,7 +4,7 @@
 
 <script>
   import './playground.css';
-  import {CREATE_GRAPH, ADD_VERTEX} from "../../store/mutations";
+  import {CREATE_GRAPH, ADD_VERTEX, SET_SVG_CONTAINER} from "../../store/mutations";
   import {createSvgContainer} from "../../core/svg/SvgFactory";
 
   export default {
@@ -26,6 +26,7 @@
     },
     mounted() {
       this.svgContainer = createSvgContainer('playground', 1376, 830);
+      this.$store.commit(SET_SVG_CONTAINER, {svgContainer: this.svgContainer});
       this.$store.commit(CREATE_GRAPH, {svgContainer: this.svgContainer});
     }
   }

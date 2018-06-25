@@ -1,10 +1,11 @@
+import $store from '../../store/store';
 import {createStateMachine} from "../state-machine/StateMashineFactory";
 
 const CIRCLE_RADIUS_PX = 30;
 
 export default class Circle {
-  constructor(svgContainer, vertex) {
-    this.svgCircle = svgContainer.circle(CIRCLE_RADIUS_PX);
+  constructor(vertex) {
+    this.svgCircle = $store.state.svgContainer.circle(CIRCLE_RADIUS_PX);
     this.vertex = vertex;
     this.sm = createStateMachine(this);
   }

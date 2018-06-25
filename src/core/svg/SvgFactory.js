@@ -6,8 +6,8 @@ import {ADD_EDGE, DELETE_VERTEX} from "../actions";
 import {SET_CURRENT_DRAGGABLE_SVG_SHAPE} from "../../store/mutations";
 
 
-export const createCircle = ({svgContainer, vertex, coordinate}) => {
-  const circle = new Circle(svgContainer, vertex);
+export const createCircle = ({vertex, coordinate}) => {
+  const circle = new Circle(vertex);
   circle.setAttrs(coordinate);
   circle.setStyle({'cursor': 'pointer', 'z-index': '2'});
 
@@ -26,6 +26,9 @@ export const createCircle = ({svgContainer, vertex, coordinate}) => {
         });
         $store.commit(mutations.CLEAR_BUFFER_EDGE);
         $store.commit(mutations.CHANGE_CURRENT_ACTION, {action: null});
+
+        vertexOne.upliftInSvgContainer();
+        vertexTwo.upliftInSvgContainer();
 
         vertexOne.svgShape.sm.reset();
         vertexTwo.svgShape.sm.unselect();

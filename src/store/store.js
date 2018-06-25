@@ -8,9 +8,8 @@ import {
   CHANGE_CURRENT_ACTION,
   ADD_VERTEX_TO_BUFFER_EDGE,
   CLEAR_BUFFER_EDGE,
-  SET_CURRENT_DRAGGABLE_SVG_SHAPE
+  SET_CURRENT_DRAGGABLE_SVG_SHAPE, SET_SVG_CONTAINER
 } from "./mutations";
-// import ObservableVertex from "../core/ObservableVertex";
 
 
 Vue.use(Vuex);
@@ -18,6 +17,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     graph: Graph,
+    svgContainer: null,
     currentAction: '',
     currentDraggableSvgShape: null,
     bufferEdge: []
@@ -43,6 +43,9 @@ const store = new Vuex.Store({
     },
     [SET_CURRENT_DRAGGABLE_SVG_SHAPE] (state, payload) {
       state.currentDraggableSvgShape = payload.svgShape;
+    },
+    [SET_SVG_CONTAINER] (state, payload) {
+      state.svgContainer = payload.svgContainer;
     }
   }
 });
