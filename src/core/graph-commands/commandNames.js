@@ -1,0 +1,5 @@
+const DELETE_VERTEX = 'DELETE_VERTEX';
+
+export {
+  DELETE_VERTEX
+}

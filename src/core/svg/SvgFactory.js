@@ -2,7 +2,6 @@ import SVG from 'svg.js';
 import Circle from "./Circle";
 import $store from '../../store/store';
 import * as mutations from "../../store/mutations";
-import {ADD_EDGE, DELETE_VERTEX} from "../actions";
 import {SET_CURRENT_DRAGGABLE_SVG_SHAPE} from "../../store/mutations";
 
 
@@ -12,31 +11,36 @@ export const createCircle = ({vertex, coordinate}) => {
   circle.setStyle({'cursor': 'pointer', 'z-index': '2'});
 
   circle.svgCircle.click(() => {
-    if ($store.state.currentAction === ADD_EDGE) {
-      circle.sm.select();
+    // if ($store.state.currentAction === ADD_EDGE) {
+    //   circle.sm.select();
+    //
+    //   $store.commit(mutations.ADD_VERTEX_TO_BUFFER_EDGE, {vertex: circle.vertex});
+    //
+    //   if ($store.state.bufferEdge.length === 2) {
+    //     const [vertexOne, vertexTwo] = $store.state.bufferEdge;
+    //
+    //     $store.commit(mutations.ADD_RELATION, {
+    //       vertexOneId: vertexOne.id,
+    //       vertexTwoId: vertexTwo.id
+    //     });
+    //     $store.commit(mutations.CLEAR_BUFFER_EDGE);
+    //     $store.commit(mutations.SET_CURRENT_COMMAND, {action: null});
+    //
+    //     vertexOne.upliftInSvgContainer();
+    //     vertexTwo.upliftInSvgContainer();
+    //
+    //     vertexOne.svgShape.sm.reset();
+    //     vertexTwo.svgShape.sm.unselect();
+    //   }
+    // } else if ($store.state.currentAction === DELETE_VERTEX) {
+    //   $store.state.graph.deleteVertex(circle.vertex.id);
+    //   $store.commit(mutations.SET_CURRENT_COMMAND, {command: null});
+    // }
+    $store.state.currentCommand.setReceiver(circle);
+    $store.state.currentCommand.execute();
 
-      $store.commit(mutations.ADD_VERTEX_TO_BUFFER_EDGE, {vertex: circle.vertex});
-
-      if ($store.state.bufferEdge.length === 2) {
-        const [vertexOne, vertexTwo] = $store.state.bufferEdge;
-
-        $store.commit(mutations.ADD_RELATION, {
-          vertexOneId: vertexOne.id,
-          vertexTwoId: vertexTwo.id
-        });
-        $store.commit(mutations.CLEAR_BUFFER_EDGE);
-        $store.commit(mutations.CHANGE_CURRENT_ACTION, {action: null});
-
-        vertexOne.upliftInSvgContainer();
-        vertexTwo.upliftInSvgContainer();
-
-        vertexOne.svgShape.sm.reset();
-        vertexTwo.svgShape.sm.unselect();
-      }
-    } else if ($store.state.currentAction === DELETE_VERTEX) {
-      $store.state.graph.deleteVertex(circle.vertex.id);
-      $store.commit(mutations.CHANGE_CURRENT_ACTION, {action: null});
-    }
+    $store.commit(mutations.LOG_LAST_COMMAND, {command: $store.state.currentCommand});
+    $store.commit(mutations.SET_CURRENT_COMMAND, {command: null});
   });
 
   circle.svgCircle.mouseover(() => {
@@ -48,17 +52,17 @@ export const createCircle = ({vertex, coordinate}) => {
   });
 
   circle.svgCircle.mousedown(() => {
-    if ($store.state.currentAction === ADD_EDGE) {
-      return;
-    }
+    // if ($store.state.currentAction === ADD_EDGE) {
+    //   return;
+    // }
 
     $store.commit(SET_CURRENT_DRAGGABLE_SVG_SHAPE, {svgShape: circle});
   });
 
   circle.svgCircle.mouseup(() => {
-    if ($store.state.currentAction === ADD_EDGE) {
-      return;
-    }
+    // if ($store.state.currentAction === ADD_EDGE) {
+    //   return;
+    // }
 
     $store.commit(SET_CURRENT_DRAGGABLE_SVG_SHAPE, {svgShape: null});
   });
