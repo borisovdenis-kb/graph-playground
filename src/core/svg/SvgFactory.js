@@ -11,36 +11,36 @@ export const createCircle = ({vertex, coordinate}) => {
   circle.setStyle({'cursor': 'pointer', 'z-index': '2'});
 
   circle.svgCircle.click(() => {
-    // if ($store.state.currentAction === ADD_EDGE) {
-    //   circle.sm.select();
-    //
-    //   $store.commit(mutations.ADD_VERTEX_TO_BUFFER_EDGE, {vertex: circle.vertex});
-    //
-    //   if ($store.state.bufferEdge.length === 2) {
-    //     const [vertexOne, vertexTwo] = $store.state.bufferEdge;
-    //
-    //     $store.commit(mutations.ADD_RELATION, {
-    //       vertexOneId: vertexOne.id,
-    //       vertexTwoId: vertexTwo.id
-    //     });
-    //     $store.commit(mutations.CLEAR_BUFFER_EDGE);
-    //     $store.commit(mutations.SET_CURRENT_COMMAND, {action: null});
-    //
-    //     vertexOne.upliftInSvgContainer();
-    //     vertexTwo.upliftInSvgContainer();
-    //
-    //     vertexOne.svgShape.sm.reset();
-    //     vertexTwo.svgShape.sm.unselect();
-    //   }
-    // } else if ($store.state.currentAction === DELETE_VERTEX) {
-    //   $store.state.graph.deleteVertex(circle.vertex.id);
-    //   $store.commit(mutations.SET_CURRENT_COMMAND, {command: null});
-    // }
-    $store.state.currentCommand.setReceiver(circle);
-    $store.state.currentCommand.execute();
+    let command = $store.state.currentCommand;
 
-    $store.commit(mutations.LOG_LAST_COMMAND, {command: $store.state.currentCommand});
-    $store.commit(mutations.SET_CURRENT_COMMAND, {command: null});
+    if (!command || command.name !== 'Delete Vertex') {
+      circle.sm.select();
+
+      $store.commit(mutations.ADD_VERTEX_TO_BUFFER_EDGE, {vertex: circle.vertex});
+
+      if ($store.state.bufferEdge.length === 2) {
+        const [vertexOne, vertexTwo] = $store.state.bufferEdge;
+
+        $store.commit(mutations.ADD_RELATION, {
+          vertexOneId: vertexOne.id,
+          vertexTwoId: vertexTwo.id
+        });
+        $store.commit(mutations.CLEAR_BUFFER_EDGE);
+        $store.commit(mutations.SET_CURRENT_COMMAND, {action: null});
+
+        vertexOne.upliftInSvgContainer();
+        vertexTwo.upliftInSvgContainer();
+
+        vertexOne.svgShape.sm.reset();
+        vertexTwo.svgShape.sm.unselect();
+      }
+    } else {
+      command.setReceiver(circle);
+      command.execute();
+
+      $store.commit(mutations.LOG_LAST_COMMAND, {command: command});
+      $store.commit(mutations.SET_CURRENT_COMMAND, {command: null});
+    }
   });
 
   circle.svgCircle.mouseover(() => {

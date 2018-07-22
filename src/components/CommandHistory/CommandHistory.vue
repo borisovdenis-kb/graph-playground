@@ -13,11 +13,18 @@
         </el-button>
       </el-row>
     </div>
+
     <div class="command-history__command-list">
-      <div class="command-history__command-row" v-for="command in commandList">
-        {{ command.name }}
-      </div>
+      <template v-if="$store.getters.getCommandHistoryLength">
+        <div class="command-history__command-row" v-for="command in commandList">
+          <div class="command-history__command-label">{{ command.name }}</div>
+        </div>
+      </template>
+      <template v-else>
+        <div class="command-history__empty-message">Empty</div>
+      </template>
     </div>
+
   </div>
 </template>
 
