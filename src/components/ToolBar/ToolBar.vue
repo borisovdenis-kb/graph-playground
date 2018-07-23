@@ -6,7 +6,7 @@
         <el-button class="tool-bar__action-button"
                    round
                    icon="el-icon-share"
-                   v-on:click="setCurrentCommand()">
+                   v-on:click="setCurrentCommand(commandNames.ADD_EDGE)">
           Add Edge
         </el-button>
       </el-row>
@@ -47,6 +47,7 @@
   import DeleteVertexCommand from "../../core/graph-commands/DeleteVertexCommand";
   import ElBadge from "element-ui/packages/badge/src/main";
   import CommandHistory from "../CommandHistory/CommandHistory";
+  import AddEdgeCommand from "../../core/graph-commands/AddEdgeCommand";
 
   export default {
     components: {
@@ -64,7 +65,10 @@
 
         switch (commandName) {
           case this.commandNames.DELETE_VERTEX:
-            command = new DeleteVertexCommand("Delete Vertex");
+            command = new DeleteVertexCommand(this.commandNames.DELETE_VERTEX);
+            break;
+          case this.commandNames.ADD_EDGE:
+            command = new AddEdgeCommand(this.commandNames.ADD_EDGE);
             break;
         }
 

@@ -2,6 +2,7 @@ import SVG from 'svg.js';
 import Circle from "./Circle";
 import $store from '../../store/store';
 import * as mutations from "../../store/mutations";
+import * as commandNames from '../graph-commands/commandNames';
 import {SET_CURRENT_DRAGGABLE_SVG_SHAPE} from "../../store/mutations";
 
 
@@ -13,7 +14,11 @@ export const createCircle = ({vertex, coordinate}) => {
   circle.svgCircle.click(() => {
     let command = $store.state.currentCommand;
 
-    if (!command || command.name !== 'Delete Vertex') {
+    if (!command) {
+      return
+    }
+
+    if (command.name === commandNames.ADD_EDGE) {
       circle.sm.select();
 
       $store.commit(mutations.ADD_VERTEX_TO_BUFFER_EDGE, {vertex: circle.vertex});
@@ -21,11 +26,11 @@ export const createCircle = ({vertex, coordinate}) => {
       if ($store.state.bufferEdge.length === 2) {
         const [vertexOne, vertexTwo] = $store.state.bufferEdge;
 
-        $store.commit(mutations.ADD_RELATION, {
-          vertexOneId: vertexOne.id,
-          vertexTwoId: vertexTwo.id
-        });
+        command.setReceiver({vertexOne, vertexTwo});
+        command.execute();
+
         $store.commit(mutations.CLEAR_BUFFER_EDGE);
+        $store.commit(mutations.LOG_LAST_COMMAND, {command: command});
         $store.commit(mutations.SET_CURRENT_COMMAND, {action: null});
 
         vertexOne.svgShape.sm.reset();

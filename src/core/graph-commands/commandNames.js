@@ -1,5 +1,7 @@
 const DELETE_VERTEX = 'DELETE_VERTEX';
+const ADD_EDGE = 'ADD_EDGE';
 
 export {
-  DELETE_VERTEX
+  DELETE_VERTEX,
+  ADD_EDGE
 }
