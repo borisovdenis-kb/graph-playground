@@ -25,10 +25,12 @@ export default class DeleteVertexCommand extends Command {
     });
 
     this.vertexSnapshot.observers.forEach(edge => {
-      $store.commit(mutations.ADD_RELATION, {
-        vertexOneId: edge.vertexOne.id,
-        vertexTwoId: edge.vertexTwo.id
-      });
+      try {
+        $store.commit(mutations.ADD_RELATION, {
+          vertexOneId: edge.vertexOne.id,
+          vertexTwoId: edge.vertexTwo.id
+        });
+      } catch (vertexDoesNotExistException) {}
     });
   }
 

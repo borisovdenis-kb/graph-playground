@@ -9,6 +9,7 @@
                    circle
                    icon="el-icon-delete"
                    size="mini"
+                   v-bind:disabled="!$store.getters.getCommandHistoryLength"
                    v-on:click="undoLastCommand()">
         </el-button>
       </el-row>
