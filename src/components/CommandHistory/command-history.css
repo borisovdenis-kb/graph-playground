@@ -1,5 +1,5 @@
 .command-history {
-  width: 90%;
+  width: 80%;
   background-color: rgb(245, 245, 245);
   border: 1px solid rgba(50, 58, 91, 0.48);
   border-radius: 4px;
@@ -48,6 +48,7 @@
   height: 15px;
   background-color: #e1e1e1;
   font-size: 11px;
+  color: #919191;
 }
 
 .command-history__command-row:nth-child(2n) {

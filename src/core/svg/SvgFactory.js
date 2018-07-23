@@ -28,9 +28,6 @@ export const createCircle = ({vertex, coordinate}) => {
         $store.commit(mutations.CLEAR_BUFFER_EDGE);
         $store.commit(mutations.SET_CURRENT_COMMAND, {action: null});
 
-        vertexOne.upliftInSvgContainer();
-        vertexTwo.upliftInSvgContainer();
-
         vertexOne.svgShape.sm.reset();
         vertexTwo.svgShape.sm.unselect();
       }

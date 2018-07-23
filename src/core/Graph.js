@@ -13,19 +13,22 @@ export default class Graph {
   }
 
   addRelation(id1, id2) {
-    const targetVertex = this.getVertexById(id1);
-    const linkedVertex = this.getVertexById(id2);
+    const vertexOne = this.getVertexById(id1);
+    const vertexTwo = this.getVertexById(id2);
     let edge;
 
-    targetVertex.addRelation(linkedVertex);
-    linkedVertex.addRelation(targetVertex);
+    vertexOne.addRelation(vertexTwo);
+    vertexTwo.addRelation(vertexOne);
 
-    edge = new ObserverEdge(targetVertex, linkedVertex, this.svgContainer);
+    edge = new ObserverEdge(vertexOne, vertexTwo, this.svgContainer);
 
     this.edgeList.push(edge);
 
-    targetVertex.addObserver(edge);
-    linkedVertex.addObserver(edge);
+    vertexOne.addObserver(edge);
+    vertexTwo.addObserver(edge);
+
+    vertexOne.upliftInSvgContainer();
+    vertexTwo.upliftInSvgContainer();
   }
 
   addVertex(id, value, coordinate) {
