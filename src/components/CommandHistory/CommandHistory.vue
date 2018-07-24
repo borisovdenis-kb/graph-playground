@@ -13,9 +13,7 @@
                    v-bind:disabled="!$store.getters.getCommandHistoryUndoLength"
                    v-on:click="undoLastCommand()">
         </el-button>
-      </el-row>
 
-      <el-row class="command-history__toolbar-buttons">
         <el-button class="command-history__button"
                    type="primary"
                    circle
@@ -30,7 +28,8 @@
     <div class="command-history__command-list">
       <template v-if="$store.getters.getCommandHistoryUndoLength">
         <div class="command-history__command-row" v-for="command in commandList">
-          <div class="command-history__command-label">{{ command.name }}</div>
+          <div class="command-history__command-label command-history__command-label--left">{{ command.name }}</div>
+          <div class="command-history__command-label command-history__command-label--right">{{ command.date }}</div>
         </div>
       </template>
       <template v-else>

@@ -2,6 +2,7 @@
 export default class Command {
   constructor(name, receiver) {
     this.name = name;
+    this.date = Date.now();
     this.receiver = receiver;
   }
 

@@ -31,6 +31,7 @@
 
 .command-history__command-list {
   height: 90px;
+  overflow-y: scroll;
 }
 
 .command-history__empty-message {
@@ -43,6 +44,8 @@
 }
 
 .command-history__command-row {
+  display: flex;
+  justify-content: space-between;
   width: 100%;
   height: 18px;
   background-color: #e1e1e1;
@@ -58,5 +61,12 @@
   display: flex;
   align-items: center;
   height: 100%;
+}
+
+.command-history__command-label--left {
   margin-left: 5px;
+}
+
+.command-history__command-label--right {
+  margin-right: 5px;
 }
