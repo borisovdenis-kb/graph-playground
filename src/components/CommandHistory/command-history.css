@@ -30,8 +30,7 @@
 }
 
 .command-history__command-list {
-  height: 100px;
-  overflow: scroll;
+  height: 90px;
 }
 
 .command-history__empty-message {

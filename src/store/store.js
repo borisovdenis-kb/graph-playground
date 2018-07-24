@@ -5,13 +5,15 @@ import {
   ADD_VERTEX,
   CREATE_GRAPH,
   ADD_RELATION,
+  DELETE_RELATION,
   SET_CURRENT_COMMAND,
   ADD_VERTEX_TO_BUFFER_EDGE,
   CLEAR_BUFFER_EDGE,
   SET_CURRENT_DRAGGABLE_SVG_SHAPE,
   SET_SVG_CONTAINER,
   LOG_LAST_COMMAND,
-  POP_LAST_COMMAND
+  UNDO_LAST_COMMAND,
+  REDO_LAST_COMMAND
 } from "./mutations";
 
 Vue.use(Vuex);
@@ -21,9 +23,12 @@ const store = new Vuex.Store({
     graph: Graph,
     svgContainer: null,
     currentCommand: null,
-    commandHistory: [],
     currentDraggableSvgShape: null,
-    bufferEdge: []
+    bufferEdge: [],
+    commandHistory: {
+      undo: [],
+      redo: []
+    }
   },
   mutations: {
     [CREATE_GRAPH] (state, payload) {
@@ -34,6 +39,9 @@ const store = new Vuex.Store({
     },
     [ADD_RELATION] (state, payload) {
       state.graph.addRelation(payload.vertexOneId, payload.vertexTwoId);
+    },
+    [DELETE_RELATION] (state, payload) {
+      state.graph.deleteRelation(payload.vertexOneId, payload.vertexTwoId);
     },
     [ADD_VERTEX_TO_BUFFER_EDGE] (state, payload) {
       state.bufferEdge = [...state.bufferEdge, payload.vertex];
@@ -51,19 +59,32 @@ const store = new Vuex.Store({
       state.currentCommand = payload.command;
     },
     [LOG_LAST_COMMAND] (state, payload) {
-      state.commandHistory.push(payload.command);
+      state.commandHistory.undo.push(payload.command);
     },
-    [POP_LAST_COMMAND] (state) {
-      state.commandHistory.pop();
+    [UNDO_LAST_COMMAND] (state) {
+      const command = state.commandHistory.undo.pop();
+      command.cancel();
+      state.commandHistory.redo.push(command);
+    },
+    [REDO_LAST_COMMAND] (state) {
+      const command = state.commandHistory.redo.pop();
+      command.execute();
+      state.commandHistory.undo.push(command);
     }
   },
   getters: {
-    getCommandHistoryLength: state => {
-      return state.commandHistory.length;
+    getCommandHistoryUndoLength: state => {
+      return state.commandHistory.undo.length;
     },
-    getLastCommand: state => {
-      return state.commandHistory[state.commandHistory.length - 1];
+    getCommandHistoryRedoLength: state => {
+      return state.commandHistory.redo.length;
+    },
+    getCommandHistoryUndoList: state => {
+      return state.commandHistory.undo;
     }
+    // getLastCommand: state => {
+    //   return state.commandHistory[state.commandHistory.length - 1];
+    // }
   }
 });
 

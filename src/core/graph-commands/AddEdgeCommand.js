@@ -15,7 +15,9 @@ export default class AddEdgeCommand extends Command {
   }
 
   cancel() {
-    return super.cancel();
+    $store.commit(mutations.DELETE_RELATION, {
+      vertexOneId: this.receiver.vertexOne.id,
+      vertexTwoId: this.receiver.vertexTwo.id,
+    });
   }
-
 }

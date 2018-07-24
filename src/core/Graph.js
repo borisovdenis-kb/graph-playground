@@ -31,6 +31,17 @@ export default class Graph {
     vertexTwo.upliftInSvgContainer();
   }
 
+  deleteRelation(id1, id2) {
+    const vertexOne = this.getVertexById(id1);
+    const vertexTwo = this.getVertexById(id2);
+
+    const edge = _.find(vertexOne.observers, (edge) => {
+      return edge.isAdjacentTo(vertexOne.id) && edge.isAdjacentTo(vertexTwo.id);
+    });
+
+    this.deleteEdge(edge);
+  }
+
   addVertex(id, value, coordinate) {
     const newVertex = new ObservableVertex(id, value, coordinate);
     this.vertexMap[id] = newVertex;
@@ -43,14 +54,23 @@ export default class Graph {
   deleteVertex(id) {
     const edgesForDelition = this.vertexMap[id].observers;
 
-    edgesForDelition.forEach(e => {
-      _.remove(this.edgeList, edge => edge === e);
+    edgesForDelition.forEach(edge => {
+      this.deleteEdge(edge)
     });
 
     this.vertexMap[id].clearObserverList();
     this.vertexMap[id].svgShape.remove();
 
     delete this.vertexMap[id];
+  }
+
+  deleteEdge(edge) {
+    _.remove(this.edgeList, e => e === edge);
+
+    edge.vertexOne.removeObserver(edge);
+    edge.vertexTwo.removeObserver(edge);
+
+    edge.svgShape.remove();
   }
 
   align() {

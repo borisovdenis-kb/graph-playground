@@ -35,7 +35,7 @@
 
     </div>
 
-    <command-history v-bind:command-list="$store.state.commandHistory">
+    <command-history v-bind:command-list="$store.getters.getCommandHistoryUndoList">
     </command-history>
   </div>
 </template>

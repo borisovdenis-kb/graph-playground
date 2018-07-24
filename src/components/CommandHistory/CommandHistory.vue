@@ -6,17 +6,29 @@
 
       <el-row class="command-history__toolbar-buttons">
         <el-button class="command-history__button"
+                   type="primary"
                    circle
                    icon="el-icon-delete"
                    size="mini"
-                   v-bind:disabled="!$store.getters.getCommandHistoryLength"
+                   v-bind:disabled="!$store.getters.getCommandHistoryUndoLength"
                    v-on:click="undoLastCommand()">
+        </el-button>
+      </el-row>
+
+      <el-row class="command-history__toolbar-buttons">
+        <el-button class="command-history__button"
+                   type="primary"
+                   circle
+                   icon="el-icon-delete"
+                   size="mini"
+                   v-bind:disabled="!$store.getters.getCommandHistoryRedoLength"
+                   v-on:click="redoLastCommand()">
         </el-button>
       </el-row>
     </div>
 
     <div class="command-history__command-list">
-      <template v-if="$store.getters.getCommandHistoryLength">
+      <template v-if="$store.getters.getCommandHistoryUndoLength">
         <div class="command-history__command-row" v-for="command in commandList">
           <div class="command-history__command-label">{{ command.name }}</div>
         </div>
@@ -40,9 +52,10 @@
     },
     methods: {
       undoLastCommand() {
-        const command = this.$store.getters.getLastCommand;
-        command.cancel();
-        this.$store.commit(mutations.POP_LAST_COMMAND);
+        this.$store.commit(mutations.UNDO_LAST_COMMAND);
+      },
+      redoLastCommand() {
+        this.$store.commit(mutations.REDO_LAST_COMMAND);
       }
     }
   }
