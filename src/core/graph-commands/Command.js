@@ -1,9 +1,10 @@
 
 export default class Command {
-  constructor(name, receiver) {
+  constructor({name = 'COMMAND', receiver = null, payload = null} = {}) {
     this.name = name;
-    this.date = Date.now();
     this.receiver = receiver;
+    this.payload = payload;
+    this.date = Date.now();
   }
 
   execute() {
@@ -16,5 +17,9 @@ export default class Command {
 
   setReceiver(receiver) {
     this.receiver = receiver;
+  }
+
+  setPayload(payload) {
+    this.payload = payload;
   }
 }

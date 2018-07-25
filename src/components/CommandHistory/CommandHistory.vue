@@ -27,7 +27,7 @@
 
     <div class="command-history__command-list">
       <template v-if="$store.getters.getCommandHistoryUndoLength">
-        <div class="command-history__command-row" v-for="command in commandList">
+        <div class="command-history__command-row" v-for="command in reversedCommandList">
           <div class="command-history__command-label command-history__command-label--left">{{ command.name }}</div>
           <div class="command-history__command-label command-history__command-label--right">{{ command.date }}</div>
         </div>
@@ -48,6 +48,12 @@
     name: "command-history",
     props: {
       commandList: Array
+    },
+    computed: {
+      reversedCommandList() {
+        let newArray = this.commandList.slice();
+        return newArray.reverse();
+      }
     },
     methods: {
       undoLastCommand() {

@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import Graph from '../core/Graph';
 import {
   ADD_VERTEX,
+  DELETE_VERTEX,
   CREATE_GRAPH,
   ADD_RELATION,
   DELETE_RELATION,
@@ -30,12 +31,15 @@ const store = new Vuex.Store({
       redo: []
     }
   },
-  mutations: {
+  mutations: { // TODO: разбить стор на модули!!!
     [CREATE_GRAPH] (state, payload) {
       state.graph = new Graph(payload.svgContainer);
     },
     [ADD_VERTEX] (state, payload) {
       state.graph.addVertex(payload.id, payload.value, payload.coordinate);
+    },
+    [DELETE_VERTEX] (state, payload) {
+      state.graph.deleteVertex(payload.id);
     },
     [ADD_RELATION] (state, payload) {
       state.graph.addRelation(payload.vertexOneId, payload.vertexTwoId);

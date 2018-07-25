@@ -26,7 +26,7 @@ export const createCircle = ({vertex, coordinate}) => {
       if ($store.state.bufferEdge.length === 2) {
         const [vertexOne, vertexTwo] = $store.state.bufferEdge;
 
-        command.setReceiver({vertexOne, vertexTwo});
+        command.setPayload({vertexOne, vertexTwo});
         command.execute();
 
         $store.commit(mutations.CLEAR_BUFFER_EDGE);

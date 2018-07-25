@@ -4,14 +4,14 @@ import * as mutations from "../../store/mutations";
 import _ from 'lodash';
 
 export default class DeleteVertexCommand extends Command {
-  constructor(name, receiver) {
-    super(name, receiver);
+  constructor({name, receiver, payload} = {}) {
+    super({name, receiver, payload});
     this.vertexSnapshot = null;
   }
 
   execute() {
     this.vertexSnapshot = _.cloneDeep(this.receiver.vertex);
-    $store.state.graph.deleteVertex(this.receiver.vertex.id);
+    $store.commit(mutations.DELETE_VERTEX, {id: this.receiver.vertex.id});
   }
 
   cancel() {

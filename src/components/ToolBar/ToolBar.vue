@@ -65,10 +65,10 @@
 
         switch (commandName) {
           case this.commandNames.DELETE_VERTEX:
-            command = new DeleteVertexCommand(this.commandNames.DELETE_VERTEX);
+            command = new DeleteVertexCommand({name: this.commandNames.DELETE_VERTEX});
             break;
           case this.commandNames.ADD_EDGE:
-            command = new AddEdgeCommand(this.commandNames.ADD_EDGE);
+            command = new AddEdgeCommand({name: this.commandNames.ADD_EDGE});
             break;
         }
 
