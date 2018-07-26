@@ -1,14 +1,16 @@
 import Command from './Command';
 import $store from './../../store/store';
-import {ADD_VERTEX, DELETE_VERTEX} from './../../store/mutations';
+import * as mutations from './../../store/mutations';
+import {ADD_VERTEX} from "./commandNames";
 
 export default class AddVertexCommand extends Command {
-  constructor({name, receiver, payload} = {}) {
-    super({name, receiver, payload});
+  constructor({receiver, payload} = {}) {
+    super({receiver, payload});
+    this.name = ADD_VERTEX;
   }
 
   execute() {
-    $store.commit(ADD_VERTEX, {
+    $store.commit(mutations.ADD_VERTEX, {
       id: this.payload.id,
       value: this.payload.value,
       coordinate: this.payload.coordinate
@@ -16,7 +18,7 @@ export default class AddVertexCommand extends Command {
   }
 
   cancel() {
-    $store.commit(DELETE_VERTEX, {id: this.payload.id});
+    $store.commit(mutations.DELETE_VERTEX, {id: this.payload.id});
   }
 
 }

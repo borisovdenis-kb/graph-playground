@@ -1,10 +1,12 @@
 import Command from "./Command";
 import $store from "../../store/store";
 import * as mutations from "../../store/mutations";
+import {ADD_EDGE} from "./commandNames";
 
 export default class AddEdgeCommand extends Command {
-  constructor({name, receiver, payload} = {}) {
-    super({name, receiver, payload});
+  constructor({receiver, payload} = {}) {
+    super({receiver, payload});
+    this.name = ADD_EDGE;
   }
 
   execute() {

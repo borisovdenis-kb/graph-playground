@@ -59,7 +59,7 @@ export const createCircle = ({vertex, coordinate}) => {
       return;
     }
 
-    const command = new DragVertexCommand({name: commandNames.DRAG_VERTEX, receiver: circle});
+    const command = new DragVertexCommand({receiver: circle});
     command.saveStartCoordinate({cx: circle.getCX(), cy: circle.getCY()});
 
     $store.commit(mutations.SET_CURRENT_COMMAND, {command: command});

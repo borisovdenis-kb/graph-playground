@@ -1,11 +1,13 @@
 import Command from "./Command";
 import $store from "../../store/store";
 import * as mutations from "../../store/mutations";
+import {DELETE_VERTEX} from "./commandNames";
 import _ from 'lodash';
 
 export default class DeleteVertexCommand extends Command {
-  constructor({name, receiver, payload} = {}) {
-    super({name, receiver, payload});
+  constructor({receiver, payload} = {}) {
+    super({receiver, payload});
+    this.name = DELETE_VERTEX;
     this.vertexSnapshot = null;
   }
 

@@ -6,7 +6,6 @@
   import './playground.css';
   import * as mutations from "../../store/mutations";
   import AddVertexCommand from "../../core/graph-commands/AddVertexCommand";
-  import {ADD_VERTEX} from "../../core/graph-commands/commandNames";
   import {createSvgContainer} from "../../core/svg/SvgFactory";
 
   export default {
@@ -20,7 +19,6 @@
     methods: {
       addVertex(e) {
         const command = new AddVertexCommand({
-          name: ADD_VERTEX,
           payload: {
             id: this.idCounter++,
             value: '',
