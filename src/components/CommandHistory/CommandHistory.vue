@@ -8,7 +8,7 @@
         <el-button class="command-history__button"
                    type="primary"
                    circle
-                   icon="el-icon-delete"
+                   icon="el-icon-d-arrow-left"
                    size="mini"
                    v-bind:disabled="!$store.getters.getCommandHistoryUndoLength"
                    v-on:click="undoLastCommand()">
@@ -17,7 +17,7 @@
         <el-button class="command-history__button"
                    type="primary"
                    circle
-                   icon="el-icon-delete"
+                   icon="el-icon-d-arrow-right"
                    size="mini"
                    v-bind:disabled="!$store.getters.getCommandHistoryRedoLength"
                    v-on:click="redoLastCommand()">

@@ -4,6 +4,7 @@ import $store from '../../store/store';
 import * as mutations from "../../store/mutations";
 import * as commandNames from '../graph-commands/commandNames';
 import {SET_CURRENT_DRAGGABLE_SVG_SHAPE} from "../../store/mutations";
+import DragVertexCommand from "../graph-commands/DragVertexCommand";
 
 
 export const createCircle = ({vertex, coordinate}) => {
@@ -54,18 +55,27 @@ export const createCircle = ({vertex, coordinate}) => {
   });
 
   circle.svgCircle.mousedown(() => {
-    // if ($store.state.currentAction === ADD_EDGE) {
-    //   return;
-    // }
+    if ($store.state.currentCommand && $store.state.currentCommand.name === commandNames.ADD_EDGE) {
+      return;
+    }
 
+    const command = new DragVertexCommand({name: commandNames.DRAG_VERTEX, receiver: circle});
+    command.saveStartCoordinate({cx: circle.getCX(), cy: circle.getCY()});
+
+    $store.commit(mutations.SET_CURRENT_COMMAND, {command: command});
     $store.commit(SET_CURRENT_DRAGGABLE_SVG_SHAPE, {svgShape: circle});
   });
 
   circle.svgCircle.mouseup(() => {
-    // if ($store.state.currentAction === ADD_EDGE) {
-    //   return;
-    // }
+    if ($store.state.currentCommand && $store.state.currentCommand.name === commandNames.ADD_EDGE) {
+      return;
+    }
 
+    const command = $store.state.currentCommand;
+    command.saveEndCoordinate({cx: circle.getCX(), cy: circle.getCY()});
+
+    $store.commit(mutations.LOG_LAST_COMMAND, {command: command});
+    $store.commit(mutations.SET_CURRENT_COMMAND, {command: null});
     $store.commit(SET_CURRENT_DRAGGABLE_SVG_SHAPE, {svgShape: null});
   });
 
