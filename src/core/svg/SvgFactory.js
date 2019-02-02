@@ -30,6 +30,9 @@ export const createSvgContainer = (elementId, width, height) => {
           cy: e.offsetY
         });
         break;
+      case actions.ADD_EDGE:
+        $store.state.svgGraph.buildEdge(e.target.id);
+        break;
       case actions.DELETE_VERTEX:
         $store.state.svgGraph.removeVertex(e.target.id);
         break;

@@ -29,12 +29,6 @@
         </el-button>
       </el-row>
     </div>
-
-    <ul v-if="$store.graph">
-      <li v-for="(v, id) in $store.graph.vertexMap">
-        {{ v.id }}
-      </li>
-    </ul>
   </div>
 </template>
 

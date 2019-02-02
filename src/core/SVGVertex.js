@@ -43,4 +43,12 @@ export default class SVGVertex {
     this.svgElement.attr({...APPEARENCE_SIMPLE, ...attrs});
     this.svgElement.style({'cursor': 'pointer', 'z-index': '2'});
   }
+
+  getX () {
+    return this.svgElement.cx();
+  }
+
+  getY() {
+    return this.svgElement.cy();
+  }
 }

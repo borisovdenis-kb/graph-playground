@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import SVGGraph from '../core/SVGGraph';
@@ -6,8 +7,6 @@ import {
   CREATE_GRAPH,
   ADD_RELATION,
   SET_CURRENT_ACTION,
-  ADD_VERTEX_TO_BUFFER_EDGE,
-  CLEAR_BUFFER_EDGE,
   SET_CURRENT_DRAGGABLE_SVG_SHAPE,
   SET_SVG_CONTAINER
 } from "./mutations";
@@ -34,12 +33,6 @@ const store = new Vuex.Store({
     },
     [SET_CURRENT_ACTION] (state, payload) {
       state.currentAction = payload.action;
-    },
-    [ADD_VERTEX_TO_BUFFER_EDGE] (state, payload) {
-      state.bufferEdge = [...state.bufferEdge, payload.vertex];
-    },
-    [CLEAR_BUFFER_EDGE] (state) {
-      state.bufferEdge = [];
     },
     [SET_CURRENT_DRAGGABLE_SVG_SHAPE] (state, payload) {
       state.currentDraggableSvgShape = payload.svgShape;

@@ -1,4 +1,6 @@
+import _ from 'lodash';
 import SVGVertex from './SVGVertex';
+import SVGEdge from './SVGEdge';
 
 export default class SVGGraph {
   constructor() {
@@ -6,6 +8,7 @@ export default class SVGGraph {
     this.edgeMap = {};
     this.vertexIdCounter = 1;
     this.edgeIdCounter = 1;
+    this.newEdgeBuffer = [];
   }
 
   addVertex (coordinate) {
@@ -28,6 +31,25 @@ export default class SVGGraph {
 
       delete this.vertexMap[vertexId];
       vertex.destroy();
+    }
+  }
+
+  buildEdge (nextVertexId) {
+    const vertex = this.vertexMap[nextVertexId];
+
+    if (vertex && !_.find(this.newEdgeBuffer, vertex)) {
+      this.newEdgeBuffer.push(vertex);
+
+      if (this.newEdgeBuffer.length === 2) {
+        const edge = new SVGEdge({
+          id: this.edgeIdCounter++,
+          vertexOne: this.newEdgeBuffer[0],
+          vertexTwo: this.newEdgeBuffer[1]
+        });
+
+        this.edgeMap[edge.id] = edge;
+        this.newEdgeBuffer = [];
+      }
     }
   }
 }
