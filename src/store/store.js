@@ -1,38 +1,38 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import Graph from '../core/Graph';
+import SVGGraph from '../core/SVGGraph';
 import {
   ADD_VERTEX,
   CREATE_GRAPH,
   ADD_RELATION,
-  CHANGE_CURRENT_ACTION,
+  SET_CURRENT_ACTION,
   ADD_VERTEX_TO_BUFFER_EDGE,
   CLEAR_BUFFER_EDGE,
-  SET_CURRENT_DRAGGABLE_SVG_SHAPE, SET_SVG_CONTAINER
+  SET_CURRENT_DRAGGABLE_SVG_SHAPE,
+  SET_SVG_CONTAINER
 } from "./mutations";
-
 
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: {
-    graph: Graph,
+    svgGraph: null,
     svgContainer: null,
     currentAction: '',
     currentDraggableSvgShape: null,
     bufferEdge: []
   },
   mutations: {
-    [CREATE_GRAPH] (state, payload) {
-      state.graph = new Graph(payload.svgContainer);
+    [CREATE_GRAPH] (state) {
+      state.svgGraph = new SVGGraph();
     },
     [ADD_VERTEX] (state, payload) {
-      state.graph.addVertex(payload.id, payload.value, payload.coordinate);
+      state.svgGraph.addVertex(payload.id, payload.value, payload.coordinate);
     },
     [ADD_RELATION] (state, payload) {
-      state.graph.addRelation(payload.vertexOneId, payload.vertexTwoId);
+      state.svgGraph.addRelation(payload.vertexOneId, payload.vertexTwoId);
     },
-    [CHANGE_CURRENT_ACTION] (state, payload) {
+    [SET_CURRENT_ACTION] (state, payload) {
       state.currentAction = payload.action;
     },
     [ADD_VERTEX_TO_BUFFER_EDGE] (state, payload) {

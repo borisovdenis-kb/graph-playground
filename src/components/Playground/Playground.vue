@@ -1,5 +1,5 @@
 <template>
-  <div id="playground" v-on:dblclick="addVertex($event)"></div>
+  <div id="playground"></div>
 </template>
 
 <script>
@@ -27,7 +27,7 @@
     mounted() {
       this.svgContainer = createSvgContainer('playground', 1376, 830);
       this.$store.commit(SET_SVG_CONTAINER, {svgContainer: this.svgContainer});
-      this.$store.commit(CREATE_GRAPH, {svgContainer: this.svgContainer});
+      this.$store.commit(CREATE_GRAPH);
     }
   }
 </script>
