@@ -7,7 +7,7 @@ export default class SVGEdge {
     this.vertexTwo = vertexTwo;
     this.svgElement = null;
 
-    this.initSvgElement({id: this.id});
+    this.createSvgElement({id: this.id});
     this.register(vertexOne);
     this.register(vertexTwo);
   }
@@ -33,7 +33,7 @@ export default class SVGEdge {
     this.svgElement.remove();
   }
 
-  initSvgElement (attrs) {
+  createSvgElement (attrs) {
     this.svgElement = $store.state.svgContainer.line(
       this.vertexOne.getX(),
       this.vertexOne.getY(),

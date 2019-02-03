@@ -3,7 +3,7 @@ import $store from "../store/store";
 
 const CIRCLE_RADIUS_PX = 30;
 
-const APPEARENCE_SIMPLE = {
+const APPEARANCE_SIMPLE = {
   fill: '#d2d2d2',
   stroke: '#868686',
   'stroke-width': 2
@@ -17,12 +17,13 @@ export default class SVGVertex {
     this.svgElement = null;
     this.edgeObservers = [];
 
-    this.initSvgElement({...coordinate, id: this.id});
+    this.createSvgElement({...coordinate, id: this.id});
   }
 
   addEdgeObserver (observer) {
     if (!_.find(this.edgeObservers, observer)) {
       this.edgeObservers.push(observer);
+      this.upliftSvgElement();
     }
   }
 
@@ -38,10 +39,15 @@ export default class SVGVertex {
     this.svgElement.remove();
   }
 
-  initSvgElement (attrs) {
+  createSvgElement (attrs) {
     this.svgElement = $store.state.svgContainer.circle(CIRCLE_RADIUS_PX);
-    this.svgElement.attr({...APPEARENCE_SIMPLE, ...attrs});
+    this.svgElement.attr({...APPEARANCE_SIMPLE, ...attrs});
     this.svgElement.style({'cursor': 'pointer', 'z-index': '2'});
+  }
+
+  upliftSvgElement() {
+    const coordinate = {cx: this.getX(), cy: this.getY()};
+    this.createSvgElement({id: this.id, ...coordinate});
   }
 
   getX () {
