@@ -6,7 +6,7 @@
   border-left: 2px solid #d2d2d2;
 }
 
-.tool-bar__add-relation-form {
+.tool-bar__main-menu {
   display: flex;
   flex-direction: column;
   justify-content: center;

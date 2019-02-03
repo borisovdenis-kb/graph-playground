@@ -1,33 +1,18 @@
 <template>
   <div class="tool-bar">
-    <div class="tool-bar__add-relation-form">
+    <div class="tool-bar__main-menu">
 
-      <el-row class="tool-bar__row">
-        <el-button class="tool-bar__action-button"
-                   round
-                   icon="el-icon-share"
-                   v-on:click="setCurrentAction(actions.ADD_VERTEX)">
-          Add Vertex
-        </el-button>
-      </el-row>
+      <app-button text="Add Vertex"
+                  v-on:click="setCurrentAction(actions.ADD_VERTEX)">
+      </app-button>
 
-      <el-row class="tool-bar__row">
-        <el-button class="tool-bar__action-button"
-                   round
-                   icon="el-icon-share"
-                   v-on:click="setCurrentAction(actions.ADD_EDGE)">
-          Add Edge
-        </el-button>
-      </el-row>
+      <app-button text="Add Edge"
+                  v-on:click="setCurrentAction(actions.ADD_EDGE)">
+      </app-button>
 
-      <el-row class="tool-bar__row">
-        <el-button class="tool-bar__action-button"
-                   round
-                   icon="el-icon-delete"
-                   v-on:click="setCurrentAction(actions.DELETE_VERTEX)">
-          Delete Vertex
-        </el-button>
-      </el-row>
+      <app-button text="Delete Vertex"
+                  v-on:click="setCurrentAction(actions.DELETE_VERTEX)">
+      </app-button>
     </div>
   </div>
 </template>
@@ -36,9 +21,15 @@
   import './tool-bar.css';
   import {SET_CURRENT_ACTION} from '../../store/mutations';
   import actions from "../../core/actions";
+  import AppHeader from "../Header/AppHeader";
+  import AppButton from "../AppButton/AppButton";
 
   export default {
     name: "tool-bar",
+    components: {
+      AppButton,
+      AppHeader
+    },
     data() {
       return {
         actions
