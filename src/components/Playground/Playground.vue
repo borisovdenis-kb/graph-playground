@@ -25,7 +25,9 @@
       }
     },
     mounted() {
-      this.svgContainer = createSvgContainer('playground', 1376, 830);
+      const rect = document.getElementById('playground').getBoundingClientRect();
+
+      this.svgContainer = createSvgContainer('playground', rect.width, rect.height - 3);
       this.$store.commit(SET_SVG_CONTAINER, {svgContainer: this.svgContainer});
       this.$store.commit(CREATE_GRAPH);
     }
