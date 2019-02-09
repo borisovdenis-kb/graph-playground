@@ -4,7 +4,7 @@
 
 <script>
   import './app-playground.css';
-  import {CREATE_GRAPH, ADD_VERTEX, SET_SVG_CONTAINER} from "../../store/mutations";
+  import mutations from "../../store/mutations";
   import {createSvgContainer} from "../../core/svg/SvgFactory";
 
   export default {
@@ -15,21 +15,12 @@
         idCounter: 1
       }
     },
-    methods: {
-      addVertex(e) {
-        this.$store.commit(ADD_VERTEX, {
-          id: this.idCounter++,
-          value: '',
-          coordinate: {cx: e.offsetX, cy: e.offsetY}
-        });
-      }
-    },
     mounted() {
       const rect = document.getElementById('app-playground').getBoundingClientRect();
 
       this.svgContainer = createSvgContainer('app-playground', rect.width, rect.height - 3);
-      this.$store.commit(SET_SVG_CONTAINER, {svgContainer: this.svgContainer});
-      this.$store.commit(CREATE_GRAPH);
+      this.$store.commit(mutations.SET_SVG_CONTAINER, {svgContainer: this.svgContainer});
+      this.$store.commit(mutations.CREATE_GRAPH);
     }
   }
 </script>

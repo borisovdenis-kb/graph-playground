@@ -11,6 +11,10 @@ export default class SVGGraph {
     this.newEdgeBuffer = [];
   }
 
+  size () {
+    return Object.values(this.vertexMap).length;
+  }
+
   addVertex (coordinate) {
     const vertex = new SVGVertex({
       id: this.vertexIdCounter++,

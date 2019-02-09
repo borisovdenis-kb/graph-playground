@@ -2,7 +2,22 @@ import SVG from 'svg.js';
 import $store from '../../store/store';
 import actions from "../actions";
 
-export const createSvgContainer = (elementId, width, height) => {
+const graphActionStrategies = {
+  [actions.ADD_VERTEX]: (e) => {
+    $store.state.svgGraph.addVertex({
+      cx: e.offsetX,
+      cy: e.offsetY
+    });
+  },
+  [actions.ADD_EDGE]: (e) => {
+    $store.state.svgGraph.buildEdge(e.target.id);
+  },
+  [actions.DELETE_VERTEX]: (e) => {
+    $store.state.svgGraph.removeVertex(e.target.id);
+  }
+};
+
+const createSvgContainer = (elementId, width, height) => {
   const svgContainer = SVG(elementId).size(width, height);
 
   svgContainer.mousemove(e => {
@@ -23,21 +38,12 @@ export const createSvgContainer = (elementId, width, height) => {
   svgContainer.click(e => {
     const currentState = $store.state.currentAction;
 
-    switch (currentState) {
-      case actions.ADD_VERTEX:
-        $store.state.svgGraph.addVertex({
-          cx: e.offsetX,
-          cy: e.offsetY
-        });
-        break;
-      case actions.ADD_EDGE:
-        $store.state.svgGraph.buildEdge(e.target.id);
-        break;
-      case actions.DELETE_VERTEX:
-        $store.state.svgGraph.removeVertex(e.target.id);
-        break;
-    }
+    graphActionStrategies[currentState](e);
   });
 
   return svgContainer;
+};
+
+export {
+  createSvgContainer
 };
