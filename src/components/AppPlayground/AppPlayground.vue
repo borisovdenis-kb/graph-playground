@@ -1,14 +1,14 @@
 <template>
-  <div id="playground"></div>
+  <div id="app-playground"></div>
 </template>
 
 <script>
-  import './playground.css';
+  import './app-playground.css';
   import {CREATE_GRAPH, ADD_VERTEX, SET_SVG_CONTAINER} from "../../store/mutations";
   import {createSvgContainer} from "../../core/svg/SvgFactory";
 
   export default {
-    name: "playground",
+    name: "app-playground",
     data() {
       return {
         svgContainer: null,
@@ -25,9 +25,9 @@
       }
     },
     mounted() {
-      const rect = document.getElementById('playground').getBoundingClientRect();
+      const rect = document.getElementById('app-playground').getBoundingClientRect();
 
-      this.svgContainer = createSvgContainer('playground', rect.width, rect.height - 3);
+      this.svgContainer = createSvgContainer('app-playground', rect.width, rect.height - 3);
       this.$store.commit(SET_SVG_CONTAINER, {svgContainer: this.svgContainer});
       this.$store.commit(CREATE_GRAPH);
     }

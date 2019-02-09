@@ -1,5 +1,7 @@
 <template>
-  <div class="header"></div>
+  <div class="app-header">
+    <div class="app-header__logo">Graph Playground</div>
+  </div>
 </template>
 
 <script>

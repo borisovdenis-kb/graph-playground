@@ -1,6 +1,6 @@
 <template>
-  <div class="tool-bar">
-    <div class="tool-bar__main-menu">
+  <div class="app-side-bar">
+    <div class="app-tool-bar__main-menu">
 
       <app-button text="Add Vertex"
                   v-on:click="setCurrentAction(actions.ADD_VERTEX)">
@@ -18,14 +18,14 @@
 </template>
 
 <script>
-  import './tool-bar.css';
+  import './app-side-bar.css';
   import {SET_CURRENT_ACTION} from '../../store/mutations';
   import actions from "../../core/actions";
-  import AppHeader from "../Header/AppHeader";
+  import AppHeader from "../AppHeader/AppHeader";
   import AppButton from "../AppButton/AppButton";
 
   export default {
-    name: "tool-bar",
+    name: "app-side-bar",
     components: {
       AppButton,
       AppHeader

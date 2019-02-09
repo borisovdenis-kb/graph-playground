@@ -5,26 +5,25 @@
     </div>
     <div class="main-container">
       <div class="playground-container">
-        <playground></playground>
+        <app-playground></app-playground>
       </div>
       <div class="tool-bar-container">
-        <tool-bar></tool-bar>
+        <app-side-bar></app-side-bar>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-
-  import ToolBar from "./components/ToolBar/ToolBar";
-  import Playground from "./components/Playground/Playground";
-  import AppHeader from "./components/Header/AppHeader";
+  import AppHeader from "./components/AppHeader/AppHeader";
+  import AppSideBar from "./components/AppSideBar/AppSideBar";
+  import AppPlayground from "./components/AppPlayground/AppPlayground";
 
   export default {
     components: {
-      AppHeader,
-      Playground,
-      ToolBar
+      AppPlayground,
+      AppSideBar,
+      AppHeader
     },
     name: 'App'
   }
