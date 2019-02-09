@@ -3,7 +3,7 @@
   align-items: center;
   height: 30px;
   border: 1px solid #d7d7d7;
-  border-radius: 30px;
+  border-radius: 4px;
   background-color: #ffffff;
   color: #696969;
   font-family: Helvetica;
@@ -25,16 +25,20 @@
   background-color: #ffffff;
 }
 
+.app-button--disabled:hover {
+  background-color: #ffffff;
+}
+
 .app-button--long {
   width: 150px;
   border: 1px solid #d7d7d7;
 }
 
-.app-button--circle {
+.app-button--short {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 30px;
+  width: 50px;
 }
 
 .app-button__icon {

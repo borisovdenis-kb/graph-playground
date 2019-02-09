@@ -8,8 +8,8 @@
       <div class="app-button__text" v-if="text">{{text}}</div>
     </div>
 
-    <div class="app-button--circle" v-if="!text">
-      <div class="app-button__icon">i</div>
+    <div class="app-button--short" v-if="!text">
+      <div class="app-button__icon">{{iconText}}</div>
     </div>
   </div>
 </template>
@@ -19,7 +19,7 @@
 
   export default {
     name: "AppButton",
-    props: ['text', 'isDisabled', 'isSelected', 'onClick'],
+    props: ['text', 'iconText', 'isDisabled', 'isSelected', 'onClick'],
     data() {
       return {}
     },
