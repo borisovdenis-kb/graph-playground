@@ -1,10 +1,16 @@
 <template>
   <div class="app-button"
-       v-bind:class="{'app-button--clicked': isClicked,
+       v-bind:class="{'app-button--selected': isSelected,
                       'app-button--disabled': isDisabled}"
        v-on:click="onBtnClick()">
-    <div class="app-button__icon">i</div>
-    <div class="app-button__text">{{text}}</div>
+
+    <div class="app-button--long" v-if="text">
+      <div class="app-button__text" v-if="text">{{text}}</div>
+    </div>
+
+    <div class="app-button--circle" v-if="!text">
+      <div class="app-button__icon">i</div>
+    </div>
   </div>
 </template>
 
@@ -13,16 +19,13 @@
 
   export default {
     name: "AppButton",
-    props: ['text', 'isDisabled', 'onClick'],
+    props: ['text', 'isDisabled', 'isSelected', 'onClick'],
     data() {
-      return {
-        isClicked: false
-      }
+      return {}
     },
     methods: {
       onBtnClick () {
         this.$emit('click');
-        this.isClicked = !this.isClicked;
       }
     }
   }

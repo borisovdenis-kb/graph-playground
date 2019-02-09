@@ -1,0 +1,16 @@
+.app-header-toolbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.app-header-toolbar__button {
+  margin-left: 10px;
+}
+
+.app-header-toolbar .app-header-toolbar__button:first-child {
+  margin-left: 0;
+}

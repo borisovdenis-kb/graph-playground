@@ -1,21 +1,20 @@
 .app-button {
   display: flex;
   align-items: center;
-  width: 150px;
-  height: 40px;
+  height: 30px;
   border: 1px solid #d7d7d7;
-  border-radius: 40px;
+  border-radius: 30px;
+  background-color: #ffffff;
   color: #696969;
   font-family: Helvetica;
   cursor: pointer;
-  overflow: hidden;
 }
 
 .app-button:hover {
   background-color: rgba(152, 202, 255, 0.35);
 }
 
-.app-button--clicked {
+.app-button--selected {
   border: 1px solid rgb(110, 145, 255);
   background-color: rgba(152, 202, 255, 0.35);
 }
@@ -26,21 +25,23 @@
   background-color: #ffffff;
 }
 
-.app-button__icon {
+.app-button--long {
+  width: 150px;
+  border: 1px solid #d7d7d7;
+}
+
+.app-button--circle {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-grow: 0;
-  width: 40px;
-  height: 40px;
-  background-color: #ffffff;
-  border-radius: 50%;
-  border-right: 1px solid #d7d7d7;
+  width: 30px;
+}
+
+.app-button__icon {
 }
 
 .app-button__text {
   display: flex;
-  flex-grow: 1;
   justify-content: center;
   align-items: center;
   height: 100%;
