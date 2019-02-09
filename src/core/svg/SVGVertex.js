@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import $store from "../store/store";
+import $store from "../../store/store";
 
 const CIRCLE_RADIUS_PX = 30;
 
@@ -31,15 +31,19 @@ export default class SVGVertex {
     _.pull(this.edgeObservers, observer);
   }
 
-  notifyEndgeObservers () {
+  notifyEdgeObservers () {
     this.edgeObservers.forEach(o => o.update());
   }
 
   destroy () {
-    this.svgElement.remove();
+    if (this.svgElement) {
+      this.svgElement.remove();
+    }
   }
 
   createSvgElement (attrs) {
+    this.destroy();
+
     this.svgElement = $store.state.svgContainer.circle(CIRCLE_RADIUS_PX);
     this.svgElement.attr({...APPEARANCE_SIMPLE, ...attrs});
     this.svgElement.style({'cursor': 'pointer', 'z-index': '2'});
@@ -48,6 +52,11 @@ export default class SVGVertex {
   upliftSvgElement() {
     const coordinate = {cx: this.getX(), cy: this.getY()};
     this.createSvgElement({id: this.id, ...coordinate});
+  }
+
+  move ({cx, cy}) {
+    this.svgElement.attr({cx, cy});
+    this.notifyEdgeObservers();
   }
 
   getX () {

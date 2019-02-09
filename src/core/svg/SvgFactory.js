@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import SVG from 'svg.js';
 import $store from '../../store/store';
 import actions from "../actions";
@@ -14,31 +15,51 @@ const graphActionStrategies = {
   },
   [actions.DELETE_VERTEX]: (e) => {
     $store.state.svgGraph.removeVertex(e.target.id);
+  },
+  [actions.MOVE_VERTEX]: (e) => {
+    $store.state.svgGraph.moveVertex({cx: e.offsetX, cy: e.offsetY});
   }
 };
 
 const createSvgContainer = (elementId, width, height) => {
   const svgContainer = SVG(elementId).size(width, height);
 
-  svgContainer.mousemove(e => {
-    const draggableSvgShape = $store.state.currentDraggableSvgShape;
+  svgContainer.mousedown(e => {
+    const allowedActions = [actions.MOVE_VERTEX];
+    const currentAction = $store.state.currentAction;
 
-    if (!draggableSvgShape) {
-      return;
+    if (currentAction && _.includes(allowedActions, currentAction)) {
+      $store.state.svgGraph.startMoveVertex(e.target.id);
     }
+  });
 
-    draggableSvgShape.setAttrs({
-      cx: e.offsetX,
-      cy: e.offsetY
-    });
+  svgContainer.mouseup(() => {
+    const allowedActions = [actions.MOVE_VERTEX];
+    const currentAction = $store.state.currentAction;
 
-    draggableSvgShape.vertex.notify();
+    if (currentAction && _.includes(allowedActions, currentAction)) {
+      $store.state.svgGraph.stopMoveVertex();
+    }
+  });
+
+  svgContainer.mousemove(e => {
+    const allowedActions = [actions.MOVE_VERTEX];
+    const currentAction = $store.state.currentAction;
+
+    if (currentAction
+        && _.includes(allowedActions, currentAction)
+        && $store.state.svgGraph.currentMovableVertex) {
+      graphActionStrategies[currentAction](e);
+    }
   });
 
   svgContainer.click(e => {
-    const currentState = $store.state.currentAction;
+    const expectedActions = [actions.MOVE_VERTEX];
+    const currentAction = $store.state.currentAction;
 
-    graphActionStrategies[currentState](e);
+    if (currentAction && !_.includes(expectedActions, currentAction)) {
+      graphActionStrategies[currentAction](e);
+    }
   });
 
   return svgContainer;

@@ -9,12 +9,21 @@ export default class SVGGraph {
     this.vertexIdCounter = 1;
     this.edgeIdCounter = 1;
     this.newEdgeBuffer = [];
+    this.currentMovableVertex = null;
   }
 
+  /**
+   * Method returns amount of vertex in graph.
+   * @returns {Number} - amount of vertex
+   */
   size () {
     return Object.values(this.vertexMap).length;
   }
 
+  /**
+   * Method adds vertex to graph.
+   * @param {Object} coordinate - coordinate (x, y) of vertex
+   */
   addVertex (coordinate) {
     const vertex = new SVGVertex({
       id: this.vertexIdCounter++,
@@ -24,6 +33,10 @@ export default class SVGGraph {
     this.vertexMap[vertex.id] = vertex;
   }
 
+  /**
+   * Method deletes vertex from graph and deletes according edges.
+   * @param {Number | String} vertexId - id of vertex.
+   */
   removeVertex (vertexId) {
     const vertex = this.vertexMap[vertexId];
 
@@ -38,6 +51,28 @@ export default class SVGGraph {
     }
   }
 
+  startMoveVertex(vertexId) {
+    const vertex = this.vertexMap[vertexId];
+
+    if (vertex) {
+      this.currentMovableVertex = this.vertexMap[vertexId];
+    }
+  }
+
+  stopMoveVertex() {
+    this.currentMovableVertex = null;
+  }
+
+  moveVertex (newCoordinate) {
+    if (this.currentMovableVertex) {
+      this.currentMovableVertex.move(newCoordinate);
+    }
+  }
+
+  /**
+   * Method builds edge, consistently adding vertexes.
+   * @param {Number | String} nextVertexId - id ov vertex
+   */
   buildEdge (nextVertexId) {
     const vertex = this.vertexMap[nextVertexId];
 

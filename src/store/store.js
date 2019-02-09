@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import SVGGraph from '../core/SVGGraph';
+import SVGGraph from '../core/svg/SVGGraph';
 import mutations from "./mutations";
 
 Vue.use(Vuex);
