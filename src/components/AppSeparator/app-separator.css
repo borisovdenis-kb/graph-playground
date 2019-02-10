@@ -8,5 +8,6 @@
 }
 
 .app-separator--horizontal {
+  width: 100px;
   height: 1px;
 }
