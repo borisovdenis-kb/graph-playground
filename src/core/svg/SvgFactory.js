@@ -1,88 +1,70 @@
+import _ from 'lodash';
 import SVG from 'svg.js';
-import Circle from "./Circle";
 import $store from '../../store/store';
-import * as mutations from "../../store/mutations";
-import {ADD_EDGE, DELETE_VERTEX} from "../actions";
-import {SET_CURRENT_DRAGGABLE_SVG_SHAPE} from "../../store/mutations";
+import actions from "../actions";
 
-
-export const createCircle = ({vertex, coordinate}) => {
-  const circle = new Circle(vertex);
-  circle.setAttrs(coordinate);
-  circle.setStyle({'cursor': 'pointer', 'z-index': '2'});
-
-  circle.svgCircle.click(() => {
-    if ($store.state.currentAction === ADD_EDGE) {
-      circle.sm.select();
-
-      $store.commit(mutations.ADD_VERTEX_TO_BUFFER_EDGE, {vertex: circle.vertex});
-
-      if ($store.state.bufferEdge.length === 2) {
-        const [vertexOne, vertexTwo] = $store.state.bufferEdge;
-
-        $store.commit(mutations.ADD_RELATION, {
-          vertexOneId: vertexOne.id,
-          vertexTwoId: vertexTwo.id
-        });
-        $store.commit(mutations.CLEAR_BUFFER_EDGE);
-        $store.commit(mutations.CHANGE_CURRENT_ACTION, {action: null});
-
-        vertexOne.upliftInSvgContainer();
-        vertexTwo.upliftInSvgContainer();
-
-        vertexOne.svgShape.sm.reset();
-        vertexTwo.svgShape.sm.unselect();
-      }
-    } else if ($store.state.currentAction === DELETE_VERTEX) {
-      $store.state.graph.deleteVertex(circle.vertex.id);
-      $store.commit(mutations.CHANGE_CURRENT_ACTION, {action: null});
-    }
-  });
-
-  circle.svgCircle.mouseover(() => {
-    circle.sm.hover();
-  });
-
-  circle.svgCircle.mouseout(() => {
-    circle.sm.unhover();
-  });
-
-  circle.svgCircle.mousedown(() => {
-    if ($store.state.currentAction === ADD_EDGE) {
-      return;
-    }
-
-    $store.commit(SET_CURRENT_DRAGGABLE_SVG_SHAPE, {svgShape: circle});
-  });
-
-  circle.svgCircle.mouseup(() => {
-    if ($store.state.currentAction === ADD_EDGE) {
-      return;
-    }
-
-    $store.commit(SET_CURRENT_DRAGGABLE_SVG_SHAPE, {svgShape: null});
-  });
-
-  return circle;
-};
-
-export const createSvgContainer = (elementId, width, height) => {
-  const svgContainer = SVG(elementId).size(width, height);
-
-  svgContainer.mousemove((e) => {
-    const draggableSvgShape = $store.state.currentDraggableSvgShape;
-
-    if (!draggableSvgShape) {
-      return;
-    }
-
-    draggableSvgShape.setAttrs({
+const graphActionStrategies = {
+  [actions.ADD_VERTEX]: (e) => {
+    $store.state.svgGraph.addVertex({
       cx: e.offsetX,
       cy: e.offsetY
     });
+  },
+  [actions.ADD_EDGE]: (e) => {
+    $store.state.svgGraph.buildEdge(e.target.id);
+  },
+  [actions.DELETE_VERTEX]: (e) => {
+    $store.state.svgGraph.removeVertex(e.target.id);
+  },
+  [actions.MOVE_VERTEX]: (e) => {
+    $store.state.svgGraph.moveVertex({cx: e.offsetX, cy: e.offsetY});
+  }
+};
 
-    draggableSvgShape.vertex.notify();
+const createSvgContainer = (elementId, width, height) => {
+  const svgContainer = SVG(elementId).size(width, height);
+
+  svgContainer.mousedown(e => {
+    const allowedActions = [actions.MOVE_VERTEX];
+    const currentAction = $store.state.currentAction;
+
+    if (currentAction && _.includes(allowedActions, currentAction)) {
+      $store.state.svgGraph.startMoveVertex(e.target.id);
+    }
+  });
+
+  svgContainer.mouseup(() => {
+    const allowedActions = [actions.MOVE_VERTEX];
+    const currentAction = $store.state.currentAction;
+
+    if (currentAction && _.includes(allowedActions, currentAction)) {
+      $store.state.svgGraph.stopMoveVertex();
+    }
+  });
+
+  svgContainer.mousemove(e => {
+    const allowedActions = [actions.MOVE_VERTEX];
+    const currentAction = $store.state.currentAction;
+
+    if (currentAction
+        && _.includes(allowedActions, currentAction)
+        && $store.state.svgGraph.currentMovableVertex) {
+      graphActionStrategies[currentAction](e);
+    }
+  });
+
+  svgContainer.click(e => {
+    const expectedActions = [actions.MOVE_VERTEX];
+    const currentAction = $store.state.currentAction;
+
+    if (currentAction && !_.includes(expectedActions, currentAction)) {
+      graphActionStrategies[currentAction](e);
+    }
   });
 
   return svgContainer;
+};
+
+export {
+  createSvgContainer
 };

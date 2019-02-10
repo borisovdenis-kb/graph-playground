@@ -1,2 +1,6 @@
-export const ADD_EDGE = 'ADD_EDGE';
-export const DELETE_VERTEX = 'DELETE_VERTEX';
+export default {
+  ADD_VERTEX: 'ADD_VERTEX',
+  ADD_EDGE: 'ADD_EDGE',
+  DELETE_VERTEX: 'DELETE_VERTEX',
+  MOVE_VERTEX: 'MOVE_VERTEX'
+}

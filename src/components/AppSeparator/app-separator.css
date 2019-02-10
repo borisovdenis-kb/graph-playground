@@ -1,0 +1,13 @@
+.app-separator {
+  background-color: #afafaf;
+}
+
+.app-separator--vertical {
+  height: 20px;
+  width: 1px;
+}
+
+.app-separator--horizontal {
+  width: 100px;
+  height: 1px;
+}
