@@ -23,6 +23,7 @@ export default class SVGGraph {
   /**
    * Method adds vertex to graph.
    * @param {Object} coordinate - coordinate (x, y) of vertex
+   * @returns {SVGVertex} - object of created vertex
    */
   addVertex (coordinate) {
     const vertex = new SVGVertex({
@@ -31,6 +32,8 @@ export default class SVGGraph {
     });
 
     this.vertexMap[vertex.id] = vertex;
+
+    return vertex;
   }
 
   /**

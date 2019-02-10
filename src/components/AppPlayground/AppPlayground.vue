@@ -20,7 +20,7 @@
 
       this.svgContainer = createSvgContainer('app-playground', rect.width, rect.height - 3);
       this.$store.commit(mutations.SET_SVG_CONTAINER, {svgContainer: this.svgContainer});
-      this.$store.commit(mutations.CREATE_GRAPH);
+      this.$store.commit(mutations.SVG_GRAPH_CREATE);
     }
   }
 </script>

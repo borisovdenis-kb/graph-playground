@@ -56,7 +56,7 @@
         return this.$store.state.currentAction === action;
       },
       setCurrentAction(action) {
-        this.$store.commit(mutations.SET_CURRENT_ACTION, {
+        this.$store.commit(mutations.CURRENT_ACTION_SET, {
           action: action
         });
       }

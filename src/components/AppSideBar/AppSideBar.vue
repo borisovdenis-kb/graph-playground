@@ -1,7 +1,13 @@
 <template>
   <div class="app-side-bar">
-    <div class="app-tool-bar__main-menu">
+    <div class="app-side-bar__main-menu app-side-bar__group--first">
 
+    </div>
+
+    <app-separator width="250px"></app-separator>
+
+    <div class="app-side-bar__command-history-container app-side-bar__group--last">
+      <app-command-history></app-command-history>
     </div>
   </div>
 </template>
@@ -9,10 +15,14 @@
 <script>
   import './app-side-bar.css';
   import AppHeader from "../AppHeader/AppHeader";
+  import AppCommandHistory from "../AppCommandHistory/AppCommandHistory";
+  import AppSeparator from "../AppSeparator/AppSeparator";
 
   export default {
     name: "app-side-bar",
     components: {
+      AppSeparator,
+      AppCommandHistory,
       AppHeader
     }
   }
