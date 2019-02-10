@@ -1,9 +1,12 @@
 
+import moment from 'moment';
+
 export default class Command {
   constructor({receiver = null, payload = null}) {
     this.receiver = receiver;
     this.payload = payload;
     this.name = 'UNKNOWN_COMMAND';
+    this.date = moment().format('YYYY.MM.DD:HH:mm:ss');
   }
 
   /**

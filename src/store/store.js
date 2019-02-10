@@ -28,6 +28,9 @@ const store = new Vuex.Store({
     },
     [mutations.COMMAND_HISTORY_LOG] (state, payload) {
       state.commandHistory.logCommand(payload.command);
+    },
+    [mutations.COMMAND_HISTORY_UNDO] (state) {
+      state.commandHistory.undoLastCommand();
     }
   },
   getters: {

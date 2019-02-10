@@ -5,15 +5,26 @@
       <div class="app-command-history__toolbar-title">History</div>
 
       <div class="app-command-history__toolbar-buttons">
+        <div class="app-command-history__buttons">
+          <app-button v-on:click="undoCommand()"
+                      icon-text="<-">
+          </app-button>
+        </div>
 
+        <div class="app-command-history__buttons">
+          <app-button icon-text="->"></app-button>
+        </div>
       </div>
     </div>
 
     <div class="app-command-history__command-list">
       <template v-if="!isCommandHistoryEmpty">
-        <div class="app-command-history__command-row" v-for="commandObj in commandList">
-          <div class="app-command-history__command-label app-command-history__command-label--left">{{ commandObj.command.name }}</div>
-          <div class="app-command-history__command-label app-command-history__command-label--right">{{ commandObj.date }}</div>
+        <div class="app-command-history__row" v-for="commandObj in commandList">
+          <div class="app-command-history__label app-command-history__label--left">
+            <div v-if="false">x</div>
+            <div>{{ commandObj.command.name }}</div>
+          </div>
+          <div class="app-command-history__label app-command-history__label--right">{{ commandObj.command.date }}</div>
         </div>
       </template>
       <template v-else>
@@ -29,9 +40,16 @@
   import mutations from '../../store/mutations';
   import CommandHistory from '../../core/commands/CommandHistory';
   import getters from '../../store/getters';
+  import AppButton from "../AppButton/AppButton";
 
   export default {
     name: "app-command-history",
+    components: {AppButton},
+    methods: {
+      undoCommand() {
+        this.$store.commit(mutations.COMMAND_HISTORY_UNDO);
+      }
+    },
     computed: {
       commandList() {
         const commandHistory = this.$store.getters[getters.GET_COMMAND_HISTORY];
