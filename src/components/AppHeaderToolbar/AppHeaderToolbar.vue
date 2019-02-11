@@ -39,7 +39,7 @@
 <script>
   import './app-header-toolbar.css';
   import AppButton from '../AppButton/AppButton';
-  import mutations from '../../store/mutations';
+  import {CURRENT_ACTION_SET} from '../../store/mutations';
   import actions from "../../core/actions";
   import AppSeparator from "../AppSeparator/AppSeparator";
 
@@ -56,7 +56,7 @@
         return this.$store.state.currentAction === action;
       },
       setCurrentAction(action) {
-        this.$store.commit(mutations.CURRENT_ACTION_SET, {
+        this.$store.commit(CURRENT_ACTION_SET, {
           action: action
         });
       }

@@ -37,29 +37,30 @@
 
 <script>
   import './app-command-history.css';
-  import mutations from '../../store/mutations';
-  import CommandHistory from '../../core/commands/CommandHistory';
-  import getters from '../../store/getters';
+
   import AppButton from "../AppButton/AppButton";
+  import {COMMAND_HISTORY_UNDO, COMMAND_HISTORY_CREATE} from '../../store/modules/commandHistory/mutations';
 
   export default {
     name: "app-command-history",
-    components: {AppButton},
+    components: {
+      AppButton
+    },
     methods: {
       undoCommand() {
-        this.$store.commit(mutations.COMMAND_HISTORY_UNDO);
+        this.$store.commit(COMMAND_HISTORY_UNDO);
       }
     },
     computed: {
       commandList() {
-        const commandHistory = this.$store.getters[getters.GET_COMMAND_HISTORY];
+        const commandHistory = this.$store.state.commandHistory.commandHistory;
 
         if (commandHistory) {
           return commandHistory.undo;
         }
       },
       isCommandHistoryEmpty() {
-        const commandHistory = this.$store.getters[getters.GET_COMMAND_HISTORY];
+        const commandHistory = this.$store.state.commandHistory.commandHistory;
 
         if (commandHistory) {
           return commandHistory.undo.length === 0;
@@ -67,9 +68,7 @@
       }
     },
     mounted() {
-      const commandHistory = new CommandHistory();
-
-      this.$store.commit(mutations.COMMAND_HISTORY_SET, {commandHistory});
+      this.$store.commit(COMMAND_HISTORY_CREATE);
     }
   }
 </script>

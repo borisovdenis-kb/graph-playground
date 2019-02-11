@@ -1,6 +1,5 @@
 import Command from "./Command";
 import $store from '../../store/store';
-import getters from '../../store/getters';
 import actions from '../actions';
 
 export default class AddVertexCommand extends Command {
@@ -11,14 +10,14 @@ export default class AddVertexCommand extends Command {
   }
 
   execute() {
-    this.createdVertex = $store.getters[getters.GET_SVG_GRAPH].addVertex({
+    this.createdVertex = $store.state.svgGraph.svgGraph.addVertex({
       cx: this.payload.offsetX,
       cy: this.payload.offsetY
     });
   }
 
   cancel() {
-    $store.getters[getters.GET_SVG_GRAPH].removeVertex(this.createdVertex.id);
+    $store.state.svgGraph.svgGraph.removeVertex(this.createdVertex.id);
     this.createdVertex = null;
   }
 }

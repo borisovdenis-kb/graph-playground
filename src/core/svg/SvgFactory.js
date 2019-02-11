@@ -2,9 +2,8 @@ import _ from 'lodash';
 import SVG from 'svg.js';
 import $store from '../../store/store';
 import actions from "../actions";
-import getters from '../../store/getters';
-import mutations from '../../store/mutations';
 import AddVertexCommand from "../commands/AddVertexCommand";
+import {COMMAND_HISTORY_LOG} from "../../store/modules/commandHistory/mutations";
 
 // TODO: replace with CommandFactory
 const commands = {
@@ -25,7 +24,7 @@ const createSvgContainer = (elementId, width, height) => {
 
   svgContainer.mousedown(e => {
     const allowedActions = [actions.MOVE_VERTEX];
-    const currentAction = $store.getters[getters.GET_CURRENT_ACTION];
+    const currentAction = $store.state.currentAction;
 
     if (currentAction && _.includes(allowedActions, currentAction)) {
       $store.state.svgGraph.startMoveVertex(e.target.id);
@@ -54,14 +53,14 @@ const createSvgContainer = (elementId, width, height) => {
 
   svgContainer.click(e => {
     const notAllowedActions = [actions.MOVE_VERTEX];
-    const currentAction = $store.getters[getters.GET_CURRENT_ACTION];
+    const currentAction = $store.state.currentAction;
 
     if (currentAction && !_.includes(notAllowedActions, currentAction)) {
       const CommandConstructor = commands[currentAction];
       const command = new CommandConstructor({payload: e});
 
       command.execute();
-      $store.commit(mutations.COMMAND_HISTORY_LOG, {command});
+      $store.commit(COMMAND_HISTORY_LOG, {command});
     }
   });
 
