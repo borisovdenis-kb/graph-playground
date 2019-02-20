@@ -1,15 +1,18 @@
 <template>
   <div id="app-playground">
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
-         v-bind:width="pgWidth"
-         v-bind:height="pgHeight"
-         v-on:click="onPgClick">
+         :width="pgWidth"
+         :height="pgHeight"
+         @click="onPgClick"
+         @mousemove="onPgMousemove"
+         @mousedown="onPgMousedown"
+         @mouseup="onPgMouseup">
 
       <line v-for="edge in edgeList"
-            v-bind:x1="edge.vertexOne.cx"
-            v-bind:y1="edge.vertexOne.cy"
-            v-bind:x2="edge.vertexTwo.cx"
-            v-bind:y2="edge.vertexTwo.cy"
+            :x1="edge.vertexOne.cx"
+            :y1="edge.vertexOne.cy"
+            :x2="edge.vertexTwo.cx"
+            :y2="edge.vertexTwo.cy"
             stroke="#c3c3c3" stroke-width="5">
       </line>
 
@@ -35,7 +38,8 @@
       return {
         pgWidth: 0,
         pgHeight: 0,
-        firstEdgeVertex: null
+        firstEdgeVertexId: null,
+        movableVertexId: null
       }
     },
     methods: {
@@ -50,16 +54,41 @@
             });
             break;
           case pgStates.ADD_EDGE:
-            if (this.firstEdgeVertex) {
+            if (this.firstEdgeVertexId) {
               this.$store.commit(`graph/${graphMutations.GRAPH_ADD_EDGE}`, {
-                vertexOne: this.firstEdgeVertex,
-                vertexTwo: this.$store.getters['graph/vertexById'](e.target.id)
+                vertexOneId: this.firstEdgeVertexId,
+                vertexTwoId: e.target.id
               });
 
-              this.firstEdgeVertex = null;
+              this.firstEdgeVertexId = null;
             } else {
-              this.firstEdgeVertex = this.$store.getters['graph/vertexById'](e.target.id);
+              this.firstEdgeVertexId = e.target.id;
             }
+        }
+      },
+      onPgMousemove(e) {
+        const currentPgState = this.$store.state.currentPgState;
+
+        if (currentPgState === pgStates.MOVE_VERTEX && this.movableVertexId) {
+          this.$store.commit(`graph/${graphMutations.GRAPH_MOVE_VERTEX}`, {
+            cx: e.offsetX,
+            cy: e.offsetY,
+            id: this.movableVertexId
+          });
+        }
+      },
+      onPgMousedown(e) {
+        const currentPgState = this.$store.state.currentPgState;
+
+        if (currentPgState === pgStates.MOVE_VERTEX) {
+          this.movableVertexId = e.target.id;
+        }
+      },
+      onPgMouseup() {
+        const currentPgState = this.$store.state.currentPgState;
+
+        if (currentPgState === pgStates.MOVE_VERTEX && this.movableVertexId) {
+          this.movableVertexId = null;
         }
       }
     },
