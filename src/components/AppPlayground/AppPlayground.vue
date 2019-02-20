@@ -20,7 +20,7 @@
               v-bind:id="vertex.id"
               v-bind:cx="vertex.cx"
               v-bind:cy="vertex.cy"
-              r="15" color="red"  stroke="#c3c3c3" fill="#d7d7d7" stroke-width="4">
+              r="15" color="red" stroke="#afafaf" fill="#d7d7d7" stroke-width="4">
       </circle>
     </svg>
   </div>
