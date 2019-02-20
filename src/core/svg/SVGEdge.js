@@ -1,4 +1,4 @@
-import $store from '../../store/store';
+import $store from '../../store';
 
 export default class SVGEdge {
   constructor ({id, vertexOne, vertexTwo}) {

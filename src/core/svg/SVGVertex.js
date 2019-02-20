@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import $store from "../../store/store";
+import $store from "../../store";
 
 const CIRCLE_RADIUS_PX = 30;
 
