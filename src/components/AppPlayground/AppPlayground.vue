@@ -43,33 +43,34 @@
       }
     },
     methods: {
+      [pgStates.ADD_VERTEX] (e) {
+        this.$store.dispatch(`graph/${graphActions.GRAPH_ADD_VERTEX}`, {
+          cx: e.offsetX,
+          cy: e.offsetY
+        });
+      },
+      [pgStates.ADD_EDGE] (e) {
+        if (this.firstEdgeVertexId) {
+          this.$store.dispatch(`graph/${graphActions.GRAPH_ADD_EDGE}`, {
+            vertexOneId: this.firstEdgeVertexId,
+            vertexTwoId: e.target.id
+          });
+
+          this.firstEdgeVertexId = null;
+        } else {
+          this.firstEdgeVertexId = e.target.id;
+        }
+      },
+      [pgStates.DELETE_VERTEX] (e) {
+        this.$store.dispatch(`graph/${graphActions.GRAPH_DELETE_VERTEX}`, {
+          vertexId: e.target.id
+        });
+      },
       onPgClick(e) {
         const currentPgState = this.$store.state.currentPgState;
 
-        switch (currentPgState) {
-          case pgStates.ADD_VERTEX:
-            this.$store.dispatch(`graph/${graphActions.GRAPH_ADD_VERTEX}`, {
-              cx: e.offsetX,
-              cy: e.offsetY
-            });
-            break;
-          case pgStates.ADD_EDGE:
-            if (this.firstEdgeVertexId) {
-              this.$store.dispatch(`graph/${graphActions.GRAPH_ADD_EDGE}`, {
-                vertexOneId: this.firstEdgeVertexId,
-                vertexTwoId: e.target.id
-              });
-
-              this.firstEdgeVertexId = null;
-            } else {
-              this.firstEdgeVertexId = e.target.id;
-            }
-            break;
-          case pgStates.DELETE_VERTEX:
-            this.$store.dispatch(`graph/${graphActions.GRAPH_DELETE_VERTEX}`, {
-              vertexId: e.target.id
-            });
-            break;
+        if (this[currentPgState]) {
+          this[currentPgState](e);
         }
       },
       onPgMousemove(e) {
