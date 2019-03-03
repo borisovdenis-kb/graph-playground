@@ -30,6 +30,7 @@
   import './app-playground.css';
   import * as pgStates from '../../core/pgStates';
   import * as graphMutations from '../../store/graph/graph.mutations';
+  import * as graphActions from '../../store/graph/graph.actions';
   import { mapState } from 'vuex';
 
   export default {
@@ -48,14 +49,14 @@
 
         switch (currentPgState) {
           case pgStates.ADD_VERTEX:
-            this.$store.commit(`graph/${graphMutations.GRAPH_ADD_VERTEX}`, {
+            this.$store.dispatch(`graph/${graphActions.GRAPH_ADD_VERTEX}`, {
               cx: e.offsetX,
               cy: e.offsetY
             });
             break;
           case pgStates.ADD_EDGE:
             if (this.firstEdgeVertexId) {
-              this.$store.commit(`graph/${graphMutations.GRAPH_ADD_EDGE}`, {
+              this.$store.dispatch(`graph/${graphActions.GRAPH_ADD_EDGE}`, {
                 vertexOneId: this.firstEdgeVertexId,
                 vertexTwoId: e.target.id
               });
@@ -70,7 +71,7 @@
         const currentPgState = this.$store.state.currentPgState;
 
         if (currentPgState === pgStates.MOVE_VERTEX && this.movableVertexId) {
-          this.$store.commit(`graph/${graphMutations.GRAPH_MOVE_VERTEX}`, {
+          this.$store.dispatch(`graph/${graphActions.GRAPH_MOVE_VERTEX}`, {
             cx: e.offsetX,
             cy: e.offsetY,
             id: this.movableVertexId
