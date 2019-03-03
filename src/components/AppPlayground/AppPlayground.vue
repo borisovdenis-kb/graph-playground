@@ -29,7 +29,6 @@
 <script>
   import './app-playground.css';
   import * as pgStates from '../../core/pgStates';
-  import * as graphMutations from '../../store/graph/graph.mutations';
   import * as graphActions from '../../store/graph/graph.actions';
   import { mapState } from 'vuex';
 
@@ -65,6 +64,12 @@
             } else {
               this.firstEdgeVertexId = e.target.id;
             }
+            break;
+          case pgStates.DELETE_VERTEX:
+            this.$store.dispatch(`graph/${graphActions.GRAPH_DELETE_VERTEX}`, {
+              vertexId: e.target.id
+            });
+            break;
         }
       },
       onPgMousemove(e) {
@@ -74,7 +79,7 @@
           this.$store.dispatch(`graph/${graphActions.GRAPH_MOVE_VERTEX}`, {
             cx: e.offsetX,
             cy: e.offsetY,
-            id: this.movableVertexId
+            vertexId: this.movableVertexId
           });
         }
       },
