@@ -17,9 +17,10 @@
       </line>
 
       <circle v-for="vertex in vertexList"
-              v-bind:id="vertex.id"
-              v-bind:cx="vertex.cx"
-              v-bind:cy="vertex.cy"
+              :id="vertex.id"
+              :cx="vertex.cx"
+              :cy="vertex.cy"
+              :cursor="vertexCursor"
               r="15" color="red" stroke="#afafaf" fill="#d7d7d7" stroke-width="4">
       </circle>
     </svg>
@@ -109,7 +110,17 @@
       ...mapState('graph', [
         'vertexList',
         'edgeList'
-      ])
+      ]),
+      vertexCursor() {
+        const mapStateToCursor = {
+          [pgStates.MOVE_VERTEX]: 'move',
+          [pgStates.DELETE_VERTEX]: 'pointer',
+          [pgStates.ADD_EDGE]: 'pointer'
+        };
+        const currentPgState = this.$store.state.currentPgState;
+
+        return mapStateToCursor[currentPgState];
+      }
     },
     mounted() {
       const rect = document.getElementById('app-playground').getBoundingClientRect();
