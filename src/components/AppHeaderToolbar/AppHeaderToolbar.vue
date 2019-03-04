@@ -40,7 +40,7 @@
   import './app-header-toolbar.css';
   import AppButton from '../AppButton/AppButton';
   import * as mutations from '../../store/mutations';
-  import * as pgStates from "../../core/pgStates";
+  import * as pgStates from "../../contants/pgStates";
   import AppSeparator from "../AppSeparator/AppSeparator";
 
   export default {

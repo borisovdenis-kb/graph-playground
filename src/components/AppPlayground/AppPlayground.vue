@@ -28,8 +28,10 @@
 
 <script>
   import './app-playground.css';
-  import * as pgStates from '../../core/pgStates';
+  import * as pgStates from '../../contants/pgStates';
   import * as graphActions from '../../store/graph/graph.actions';
+  import * as entityTypes from '../../contants/entityTypes';
+  import { isEventOnEntity } from "../../services/utils";
   import { mapState } from 'vuex';
 
   export default {
@@ -50,6 +52,10 @@
         });
       },
       [pgStates.ADD_EDGE] (e) {
+        if (!isEventOnEntity(e, entityTypes.VERTEX)) {
+          return;
+        }
+
         if (this.firstEdgeVertexId) {
           this.$store.dispatch(`graph/${graphActions.GRAPH_ADD_EDGE}`, {
             vertexOneId: this.firstEdgeVertexId,

@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import * as entityTypes from '../../contants/entityTypes';
 import {
   ADD_VERTEX,
   ADD_EDGE,
@@ -8,7 +9,9 @@ import {
   DELETE_EDGES,
   ADD_VERTEX_TO_CACHE,
   ADD_EDGE_TO_CACHE,
-  CLEAR_CACHE
+  CLEAR_CACHE,
+  INCREASE_ID_COUNTER,
+  RESET_ID_COUNTER
 } from "./graph.mutations";
 import {
   GRAPH_ADD_VERTEX,
@@ -22,7 +25,9 @@ export default {
   state: {
     vertexList: [],
     edgeList: [],
-    edgeCache: {}
+    edgeCache: {},
+    vertexIdCounter: 0,
+    edgeIdCounter: 0
   },
   mutations: {
     [ADD_VERTEX] (state, payload) {
@@ -93,29 +98,41 @@ export default {
     },
     [CLEAR_CACHE] (state, payload) {
       state.edgeCache = _.omit(state.edgeCache, payload.vertexId);
+    },
+    [INCREASE_ID_COUNTER] (state, payload) {
+      state[payload.counterName] = state.vertexIdCounter + 1;
+    },
+    [RESET_ID_COUNTER] (state, payload) {
+      state[payload.counterName] = 0;
     }
   },
   actions: {
     [GRAPH_ADD_VERTEX] ({commit, state}, payload) {
       const vertex = {
-        id: `vertex-${state.vertexList.length}`,
+        id: `${entityTypes.VERTEX}-${state.vertexIdCounter}`,
+        number: state.vertexIdCounter,
         name: '',
         ...payload
       };
 
       commit(ADD_VERTEX, {vertex});
       commit(ADD_VERTEX_TO_CACHE, {vertexId: vertex.id});
+      commit(INCREASE_ID_COUNTER, {counterName: 'vertexIdCounter'});
     },
     [GRAPH_DELETE_VERTEX] ({commit, state}, payload) {
       commit(DELETE_VERTEX, payload);
       commit(DELETE_EDGES, payload);
       commit(CLEAR_CACHE, payload);
+
+      if (!state.vertexList.length) {
+        commit(RESET_ID_COUNTER, {counterName: 'vertexIdCounter'});
+      }
     },
     [GRAPH_ADD_EDGE] ({commit, state, getters}, payload) {
       const vertexOne = getters.vertexById(payload.vertexOneId);
       const vertexTwo = getters.vertexById(payload.vertexTwoId);
       const edge = {
-        id: `edge-${state.edgeList.length}`,
+        id: `${entityTypes.EDGE}-${state.edgeIdCounter}`,
         weight: 0,
         vertexOne,
         vertexTwo
@@ -127,6 +144,7 @@ export default {
         vertexTwoId: vertexTwo.id,
         edgeId: edge.id
       });
+      commit(INCREASE_ID_COUNTER, {counterName: 'edgeIdCounter'});
     },
     [GRAPH_MOVE_VERTEX] ({commit}, payload) {
       commit(UPDATE_VERTEX, payload);
