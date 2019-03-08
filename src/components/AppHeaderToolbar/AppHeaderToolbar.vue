@@ -2,22 +2,22 @@
   <div class="app-header-toolbar">
     <div class="app-button-toolbar__btn-group app-button-toolbar__btn-group-first">
       <div class="app-header-toolbar__button">
-        <app-button v-on:click="setCurrentAction(actions.ADD_VERTEX)"
-                    v-bind:is-selected="checkAction(actions.ADD_VERTEX)"
+        <app-button v-on:click="setCurrentPgState(pgStates.ADD_VERTEX)"
+                    v-bind:is-selected="checkPgState(pgStates.ADD_VERTEX)"
                     icon-text="V+">
         </app-button>
       </div>
 
       <div class="app-header-toolbar__button">
-        <app-button v-on:click="setCurrentAction(actions.DELETE_VERTEX)"
-                    v-bind:is-selected="checkAction(actions.DELETE_VERTEX)"
+        <app-button v-on:click="setCurrentPgState(pgStates.DELETE_VERTEX)"
+                    v-bind:is-selected="checkPgState(pgStates.DELETE_VERTEX)"
                     icon-text="V-">
         </app-button>
       </div>
 
       <div class="app-header-toolbar__button">
-        <app-button v-on:click="setCurrentAction(actions.MOVE_VERTEX)"
-                    v-bind:is-selected="checkAction(actions.MOVE_VERTEX)"
+        <app-button v-on:click="setCurrentPgState(pgStates.MOVE_VERTEX)"
+                    v-bind:is-selected="checkPgState(pgStates.MOVE_VERTEX)"
                     icon-text="D">
         </app-button>
       </div>
@@ -27,8 +27,8 @@
 
     <div class="app-button-toolbar__btn-group app-button-toolbar__btn-group-last">
       <div class="app-header-toolbar__button">
-        <app-button v-on:click="setCurrentAction(actions.ADD_EDGE)"
-                    v-bind:is-selected="checkAction(actions.ADD_EDGE)"
+        <app-button v-on:click="setCurrentPgState(pgStates.ADD_EDGE)"
+                    v-bind:is-selected="checkPgState(pgStates.ADD_EDGE)"
                     icon-text="E+">
         </app-button>
       </div>
@@ -39,8 +39,8 @@
 <script>
   import './app-header-toolbar.css';
   import AppButton from '../AppButton/AppButton';
-  import mutations from '../../store/mutations';
-  import actions from "../../core/actions";
+  import * as mutations from '../../store/mutations';
+  import * as pgStates from "../../contants/pgStates";
   import AppSeparator from "../AppSeparator/AppSeparator";
 
   export default {
@@ -48,16 +48,16 @@
     components: {AppSeparator, AppButton},
     data() {
       return {
-        actions
+        pgStates
       }
     },
     methods: {
-      checkAction(action) {
-        return this.$store.state.currentAction === action;
+      checkPgState(state) {
+        return this.$store.state.currentPgState === state;
       },
-      setCurrentAction(action) {
-        this.$store.commit(mutations.SET_CURRENT_ACTION, {
-          action: action
+      setCurrentPgState(state) {
+        this.$store.commit(mutations.SET_CURRENT_PG_STATE, {
+          state: state
         });
       }
     }
