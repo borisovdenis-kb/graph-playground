@@ -17,11 +17,11 @@
       </line>
 
       <circle v-for="vertex in vertexList"
-              :id="vertex.id"
+              :id="vertex.vertexId"
               :cx="vertex.cx"
               :cy="vertex.cy"
               :cursor="vertexCursor"
-              :fill="vertexFillColor(vertex.id)"
+              :fill="vertexFillColor(vertex.vertexId)"
               r="15" stroke="#afafaf" stroke-width="4">
       </circle>
     </svg>
