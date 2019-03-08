@@ -21,7 +21,8 @@
               :cx="vertex.cx"
               :cy="vertex.cy"
               :cursor="vertexCursor"
-              r="15" color="red" stroke="#afafaf" fill="#d7d7d7" stroke-width="4">
+              :fill="vertexFillColor(vertex.id)"
+              r="15" stroke="#afafaf" stroke-width="4">
       </circle>
     </svg>
   </div>
@@ -104,6 +105,9 @@
         if (currentPgState === pgStates.MOVE_VERTEX && this.movableVertexId) {
           this.movableVertexId = null;
         }
+      },
+      vertexFillColor(vertexId) {
+        return vertexId === this.firstEdgeVertexId ? '#6062bf' : '#d7d7d7';
       }
     },
     computed: {
