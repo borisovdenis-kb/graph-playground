@@ -16,6 +16,7 @@ import {
   GRAPH_ADD_EDGE,
   GRAPH_MOVE_VERTEX
 } from "./graph.actions";
+import {AH_LOG_ACTION} from "../actionHistory/actionHistory.actions";
 
 export default {
   namespaced: true,
@@ -69,7 +70,7 @@ export default {
     }
   },
   actions: {
-    [GRAPH_ADD_VERTEX] ({commit, state}, payload) {
+    [GRAPH_ADD_VERTEX] ({commit, state, dispatch}, payload) {
       const vertex = {
         vertexId: `${entityTypes.VERTEX}-${state.vertexIdCounter}`,
         number: state.vertexIdCounter,
@@ -79,6 +80,11 @@ export default {
 
       commit(ADD_VERTEX, {vertex});
       commit(INCREASE_ID_COUNTER, {counterName: 'vertexIdCounter'});
+
+      dispatch(`actionHistory/${AH_LOG_ACTION}`, {
+        name: GRAPH_ADD_VERTEX,
+        data: _.cloneDeep(vertex)
+      }, {root: true});
     },
     [GRAPH_DELETE_VERTEX] ({commit, state}, payload) {
       commit(DELETE_VERTEX, payload);

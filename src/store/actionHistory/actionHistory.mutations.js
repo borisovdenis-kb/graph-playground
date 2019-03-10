@@ -1,0 +1,7 @@
+const PUSH_ACTION = 'PUSH_ACTION';
+const POP_ACTION = 'POP_ACTION';
+
+export {
+  PUSH_ACTION,
+  POP_ACTION
+}

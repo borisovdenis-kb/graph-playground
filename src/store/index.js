@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import graph from './graph/graph.store';
+import actionHistory from './actionHistory/actionHistory.store';
 
 import {SET_CURRENT_PG_STATE} from "./mutations";
 
@@ -17,7 +18,8 @@ const store = new Vuex.Store({
     }
   },
   modules: {
-    graph
+    graph,
+    actionHistory
   }
 });
 
