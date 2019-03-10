@@ -4,15 +4,34 @@
   align-items: center;
   width: 100%;
   height: 100%;
-  background-color: #eeeeee;
+  background-color: #f7f7f7;
   border-left: 2px solid #d2d2d2;
 }
 
-.app-tool-bar__main-menu {
+.app-side-bar__main-menu {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 30%;
+}
+
+.app-side-bar__command-history-container {
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.app-side-bar__group--first {
+  margin-bottom: 10px;
+}
+
+.app-side-bar__group--middle {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.app-side-bar__group--last {
+  margin-top: 10px;
 }

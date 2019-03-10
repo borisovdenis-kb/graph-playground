@@ -24,5 +24,10 @@ export default {
     [AH_LOG_ACTION] ({commit}, payload) {
       commit(PUSH_ACTION, {source: 'undo', actionObj: payload});
     }
+  },
+  getters: {
+    isActionHistoryEmpty: (state) => {
+      return state.undo.length === 0;
+    }
   }
 }

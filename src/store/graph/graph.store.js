@@ -17,6 +17,7 @@ import {
   GRAPH_MOVE_VERTEX
 } from "./graph.actions";
 import {AH_LOG_ACTION} from "../actionHistory/actionHistory.actions";
+import {createActionObject} from "../../services/utils";
 
 export default {
   namespaced: true,
@@ -81,10 +82,11 @@ export default {
       commit(ADD_VERTEX, {vertex});
       commit(INCREASE_ID_COUNTER, {counterName: 'vertexIdCounter'});
 
-      dispatch(`actionHistory/${AH_LOG_ACTION}`, {
-        name: GRAPH_ADD_VERTEX,
-        data: _.cloneDeep(vertex)
-      }, {root: true});
+      dispatch(
+        `actionHistory/${AH_LOG_ACTION}`,
+        createActionObject(GRAPH_ADD_VERTEX, _.cloneDeep(vertex)),
+        {root: true}
+      );
     },
     [GRAPH_DELETE_VERTEX] ({commit, state}, payload) {
       commit(DELETE_VERTEX, payload);
