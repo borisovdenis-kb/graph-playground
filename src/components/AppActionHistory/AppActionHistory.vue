@@ -12,7 +12,9 @@
         </div>
 
         <div class="app-action-history__buttons">
-          <app-button icon-text="->"></app-button>
+          <app-button v-on:click="redoAction()"
+                      icon-text="->">
+          </app-button>
         </div>
       </div>
     </div>
@@ -38,7 +40,7 @@
   import './app-action-history.css';
 
   import AppButton from "../AppButton/AppButton";
-  import {AH_UNDO_ACTION} from "../../store/actionHistory/actionHistory.actions";
+  import {AH_UNDO_ACTION, AH_REDO_ACTION} from "../../store/actionHistory/actionHistory.actions";
   import {mapState, mapGetters} from 'vuex';
 
   export default {
@@ -49,6 +51,9 @@
     methods: {
       undoAction() {
         this.$store.dispatch(`actionHistory/${AH_UNDO_ACTION}`);
+      },
+      redoAction() {
+        this.$store.dispatch(`actionHistory/${AH_REDO_ACTION}`);
       }
     },
     computed: {

@@ -4,7 +4,12 @@ const GRAPH_ADD_EDGE = 'GRAPH_ADD_EDGE';
 const GRAPH_MOVE_VERTEX = 'GRAPH_MOVE_VERTEX';
 
 const GRAPH_UNDO_REDO_MAP = {
-  [`graph/${GRAPH_ADD_VERTEX}`]: `graph/${GRAPH_DELETE_VERTEX}`  // TODO: to use method
+  [GRAPH_ADD_VERTEX]: {
+    name: 'Add Vertex',
+    execute: GRAPH_ADD_VERTEX,
+    cancel: GRAPH_DELETE_VERTEX,
+    module: 'graph'
+  }
 };
 
 export {

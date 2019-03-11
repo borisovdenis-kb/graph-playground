@@ -14,7 +14,8 @@ import {
   GRAPH_ADD_VERTEX,
   GRAPH_DELETE_VERTEX,
   GRAPH_ADD_EDGE,
-  GRAPH_MOVE_VERTEX
+  GRAPH_MOVE_VERTEX,
+  GRAPH_UNDO_REDO_MAP
 } from "./graph.actions";
 import {AH_LOG_ACTION} from "../actionHistory/actionHistory.actions";
 import {createActionObject} from "../../services/utils";
@@ -84,7 +85,7 @@ export default {
 
       dispatch(
         `actionHistory/${AH_LOG_ACTION}`,
-        createActionObject(`graph/${GRAPH_ADD_VERTEX}`, _.cloneDeep(vertex)),
+        createActionObject(GRAPH_UNDO_REDO_MAP[GRAPH_ADD_VERTEX], _.cloneDeep(vertex)),
         {root: true}
       );
     },

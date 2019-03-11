@@ -1,17 +1,14 @@
 import {
   PUSH_UNDO_ACTION,
   POP_UNDO_ACTION,
-  PUSH_REDO_ACTIONS,
-  POP_REDO_ACTIONS
+  PUSH_REDO_ACTION,
+  POP_REDO_ACTION
 } from "./actionHistory.mutations";
 import {
   AH_LOG_ACTION,
-  AH_UNDO_ACTION
+  AH_UNDO_ACTION,
+  AH_REDO_ACTION
 } from "./actionHistory.actions";
-import {
-  getRedoAction,
-  getUndoAction
-} from "../../services/actionHistoryService";
 
 export default {
   namespaced: true,
@@ -26,10 +23,10 @@ export default {
     [POP_UNDO_ACTION] (state) {
       state.undo = state.undo.slice(0, state.undo.length - 1);
     },
-    [PUSH_REDO_ACTIONS] (state, payload) {
+    [PUSH_REDO_ACTION] (state, payload) {
       state.redo = [...state.redo, payload.actionObj];
     },
-    [POP_REDO_ACTIONS] (state) {
+    [POP_REDO_ACTION] (state) {
       state.redo = state.redo.slice(0, state.redo.length - 1);
     }
   },
@@ -39,10 +36,16 @@ export default {
     },
     [AH_UNDO_ACTION] ({state, commit, dispatch}) {
       const action = state.undo[state.undo.length - 1];
-      const actionUndoName = getUndoAction(action.name);
 
-      dispatch(actionUndoName, action.data, {root: true});
+      dispatch(`${action.module}/${action.cancel}`, action.data, {root: true});
       commit(POP_UNDO_ACTION);
+      commit(PUSH_REDO_ACTION, {actionObj: action});
+    },
+    [AH_REDO_ACTION] ({state, commit, dispatch}) {
+      const action = state.redo[state.redo.length - 1];
+
+      dispatch(`${action.module}/${action.execute}`, action.data, {root: true});
+      commit(POP_REDO_ACTION);
     }
   },
   getters: {
