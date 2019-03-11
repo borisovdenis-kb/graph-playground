@@ -6,7 +6,7 @@
 
       <div class="app-action-history__toolbar-buttons">
         <div class="app-action-history__buttons">
-          <app-button v-on:click="undoCommand()"
+          <app-button v-on:click="undoAction()"
                       icon-text="<-">
           </app-button>
         </div>
@@ -38,6 +38,7 @@
   import './app-action-history.css';
 
   import AppButton from "../AppButton/AppButton";
+  import {AH_UNDO_ACTION} from "../../store/actionHistory/actionHistory.actions";
   import {mapState, mapGetters} from 'vuex';
 
   export default {
@@ -46,8 +47,8 @@
       AppButton
     },
     methods: {
-      undoCommand() {
-        // this.$store.commit(COMMAND_HISTORY_UNDO);
+      undoAction() {
+        this.$store.dispatch(`actionHistory/${AH_UNDO_ACTION}`);
       }
     },
     computed: {

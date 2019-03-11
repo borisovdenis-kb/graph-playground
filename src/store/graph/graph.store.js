@@ -84,7 +84,7 @@ export default {
 
       dispatch(
         `actionHistory/${AH_LOG_ACTION}`,
-        createActionObject(GRAPH_ADD_VERTEX, _.cloneDeep(vertex)),
+        createActionObject(`graph/${GRAPH_ADD_VERTEX}`, _.cloneDeep(vertex)),
         {root: true}
       );
     },
