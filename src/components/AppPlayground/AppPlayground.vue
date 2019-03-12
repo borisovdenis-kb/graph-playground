@@ -9,10 +9,12 @@
          @mouseup="onPgMouseup">
 
       <line v-for="edge in edgeList"
+            :id="edge.edgeId"
             :x1="edge.vertexOne.cx"
             :y1="edge.vertexOne.cy"
             :x2="edge.vertexTwo.cx"
             :y2="edge.vertexTwo.cy"
+            :cursor="edgeCursor"
             stroke="#c3c3c3" stroke-width="5">
       </line>
 
@@ -69,6 +71,13 @@
           this.firstEdgeVertexId = e.target.id;
         }
       },
+      [pgStates.DELETE_EDGE] (e) {
+        if (!isEventOnEntity(e, entityTypes.EDGE)) {
+          return;
+        }
+
+        this.$store.dispatch(`graph/${graphActions.GRAPH_DELETE_EDGE}`, {edgeId: e.target.id});
+      },
       [pgStates.DELETE_VERTEX] (e) {
         this.$store.dispatch(`graph/${graphActions.GRAPH_DELETE_VERTEX}`, {
           vertexId: e.target.id
@@ -119,7 +128,16 @@
         const mapStateToCursor = {
           [pgStates.MOVE_VERTEX]: 'move',
           [pgStates.DELETE_VERTEX]: 'pointer',
-          [pgStates.ADD_EDGE]: 'pointer'
+          [pgStates.ADD_EDGE]: 'pointer',
+          [pgStates.DELETE_EDGE]: 'pointer'
+        };
+        const currentPgState = this.$store.state.currentPgState;
+
+        return mapStateToCursor[currentPgState];
+      },
+      edgeCursor() {
+        const mapStateToCursor = {
+          [pgStates.DELETE_EDGE]: 'pointer'
         };
         const currentPgState = this.$store.state.currentPgState;
 

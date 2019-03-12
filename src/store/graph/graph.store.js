@@ -6,15 +6,17 @@ import {
   DELETE_VERTEX,
   UPDATE_VERTEX,
   REFRESH_EDGES,
-  DELETE_EDGES,
+  DELETE_EDGES_BY_VERTEX,
   INCREASE_ID_COUNTER,
-  RESET_ID_COUNTER
+  RESET_ID_COUNTER,
+  DELETE_EDGE
 } from "./graph.mutations";
 import {
   GRAPH_ADD_VERTEX,
   GRAPH_DELETE_VERTEX,
   GRAPH_ADD_EDGE,
   GRAPH_MOVE_VERTEX,
+  GRAPH_DELETE_EDGE,
   GRAPH_UNDO_REDO_MAP
 } from "./graph.actions";
 import {AH_LOG_ACTION} from "../actionHistory/actionHistory.actions";
@@ -38,6 +40,9 @@ export default {
     [DELETE_VERTEX] (state, payload) {
       state.vertexList = state.vertexList.filter(vertex => vertex.vertexId !== payload.vertexId);
     },
+    [DELETE_EDGE] (state, payload) {
+      state.edgeList = state.edgeList.filter(edge => edge.edgeId !== payload.edgeId);
+    },
     [UPDATE_VERTEX] (state, payload) {
       state.vertexList = state.vertexList.map(vertex => {
         if (vertex.vertexId === payload.vertexId) {
@@ -59,7 +64,7 @@ export default {
         return edge;
       });
     },
-    [DELETE_EDGES] (state, payload) {
+    [DELETE_EDGES_BY_VERTEX] (state, payload) {
       state.edgeList = state.edgeList.filter(edge => {
         return edge.vertexOne.vertexId !== payload.vertexId && edge.vertexTwo.vertexId !== payload.vertexId;
       });
@@ -91,7 +96,7 @@ export default {
     },
     [GRAPH_DELETE_VERTEX] ({commit, state}, payload) {
       commit(DELETE_VERTEX, payload);
-      commit(DELETE_EDGES, payload);
+      commit(DELETE_EDGES_BY_VERTEX, payload);
 
       if (!state.vertexList.length) {
         commit(RESET_ID_COUNTER, {counterName: 'vertexIdCounter'});
@@ -109,6 +114,9 @@ export default {
 
       commit(ADD_EDGE, {edge});
       commit(INCREASE_ID_COUNTER, {counterName: 'edgeIdCounter'});
+    },
+    [GRAPH_DELETE_EDGE] ({commit}, payload) {
+      commit(DELETE_EDGE, payload);
     },
     [GRAPH_MOVE_VERTEX] ({commit}, payload) {
       commit(UPDATE_VERTEX, payload);
