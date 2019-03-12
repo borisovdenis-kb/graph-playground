@@ -10,6 +10,12 @@ const GRAPH_UNDO_REDO_MAP = {
     execute: GRAPH_ADD_VERTEX,
     cancel: GRAPH_DELETE_VERTEX,
     module: 'graph'
+  },
+  [GRAPH_ADD_EDGE]: {
+    name: 'Add Edge',
+    execute: GRAPH_ADD_EDGE,
+    cancel: GRAPH_DELETE_EDGE,
+    module: 'graph'
   }
 };
 

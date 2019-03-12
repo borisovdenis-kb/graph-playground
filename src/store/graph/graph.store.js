@@ -102,7 +102,7 @@ export default {
         commit(RESET_ID_COUNTER, {counterName: 'vertexIdCounter'});
       }
     },
-    [GRAPH_ADD_EDGE] ({commit, state, getters}, payload) {
+    [GRAPH_ADD_EDGE] ({commit, state, getters, dispatch}, payload) {
       const vertexOne = getters.vertexById(payload.vertexOneId);
       const vertexTwo = getters.vertexById(payload.vertexTwoId);
       const edge = {
@@ -114,6 +114,16 @@ export default {
 
       commit(ADD_EDGE, {edge});
       commit(INCREASE_ID_COUNTER, {counterName: 'edgeIdCounter'});
+
+      dispatch(
+        `actionHistory/${AH_LOG_ACTION}`,
+        createActionObject(GRAPH_UNDO_REDO_MAP[GRAPH_ADD_EDGE], {
+          edgeId: edge.edgeId,
+          vertexOneId: payload.vertexOneId,
+          vertexTwoId: payload.vertexTwoId
+        }),
+        {root: true}
+      );
     },
     [GRAPH_DELETE_EDGE] ({commit}, payload) {
       commit(DELETE_EDGE, payload);
