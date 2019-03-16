@@ -33,9 +33,17 @@
 <script>
   import './app-playground.css';
   import * as pgStates from '../../contants/pgStates';
-  import * as graphActions from '../../store/graph/graph.actions';
+  import {
+    GRAPH_ADD_VERTEX,
+    GRAPH_ADD_EDGE,
+    GRAPH_DELETE_VERTEX,
+    GRAPH_DELETE_EDGE,
+    GRAPH_MOVE_VERTEX,
+    GRAPH_COMMANDS_MAP
+  } from '../../store/graph/graph.actions';
   import * as entityTypes from '../../contants/entityTypes';
-  import { isEventOnEntity } from "../../services/utils";
+  import {CH_LOG_COMMAND} from '../../store/commandHistory/commandHistory.actions';
+  import { isEventOnEntity, createCommandObject } from "../../services/utils";
   import { mapState } from 'vuex';
 
   export default {
@@ -50,10 +58,16 @@
     },
     methods: {
       [pgStates.ADD_VERTEX] (e) {
-        this.$store.dispatch(`graph/${graphActions.GRAPH_ADD_VERTEX}`, {
+        this.$store.dispatch(`graph/${GRAPH_ADD_VERTEX}`, {
           cx: e.offsetX,
           cy: e.offsetY
-        });
+        }).then(result => {
+          this.$store.dispatch(
+            `commandHistory/${CH_LOG_COMMAND}`,
+            createCommandObject(GRAPH_COMMANDS_MAP[GRAPH_ADD_VERTEX], result.data),
+            {root: true}
+          );
+        })
       },
       [pgStates.ADD_EDGE] (e) {
         if (!isEventOnEntity(e, entityTypes.VERTEX)) {
@@ -61,12 +75,18 @@
         }
 
         if (this.firstEdgeVertexId) {
-          this.$store.dispatch(`graph/${graphActions.GRAPH_ADD_EDGE}`, {
+          this.$store.dispatch(`graph/${GRAPH_ADD_EDGE}`, {
             vertexOneId: this.firstEdgeVertexId,
             vertexTwoId: e.target.id
-          });
+          }).then(result => {
+            this.$store.dispatch(
+              `commandHistory/${CH_LOG_COMMAND}`,
+              createCommandObject(GRAPH_COMMANDS_MAP[GRAPH_ADD_EDGE], result.data),
+              {root: true}
+            );
 
-          this.firstEdgeVertexId = null;
+            this.firstEdgeVertexId = null;
+          });
         } else {
           this.firstEdgeVertexId = e.target.id;
         }
@@ -76,10 +96,10 @@
           return;
         }
 
-        this.$store.dispatch(`graph/${graphActions.GRAPH_DELETE_EDGE}`, {edgeId: e.target.id});
+        this.$store.dispatch(`graph/${GRAPH_DELETE_EDGE}`, {edgeId: e.target.id});
       },
       [pgStates.DELETE_VERTEX] (e) {
-        this.$store.dispatch(`graph/${graphActions.GRAPH_DELETE_VERTEX}`, {
+        this.$store.dispatch(`graph/${GRAPH_DELETE_VERTEX}`, {
           vertexId: e.target.id
         });
       },
@@ -94,7 +114,7 @@
         const currentPgState = this.$store.state.currentPgState;
 
         if (currentPgState === pgStates.MOVE_VERTEX && this.movableVertexId) {
-          this.$store.dispatch(`graph/${graphActions.GRAPH_MOVE_VERTEX}`, {
+          this.$store.dispatch(`graph/${GRAPH_MOVE_VERTEX}`, {
             cx: e.offsetX,
             cy: e.offsetY,
             vertexId: this.movableVertexId

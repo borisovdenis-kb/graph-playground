@@ -79,20 +79,23 @@ export default {
   actions: {
     [GRAPH_ADD_VERTEX] ({commit, state, dispatch}, payload) {
       const vertex = {
-        vertexId: `${entityTypes.VERTEX}-${state.vertexIdCounter}`,
-        number: state.vertexIdCounter,
-        name: '',
-        ...payload
+        name: payload.name || '',
+        cx: payload.cx,
+        cy: payload.cy
       };
 
-      commit(ADD_VERTEX, {vertex});
-      commit(INCREASE_ID_COUNTER, {counterName: 'vertexIdCounter'});
+      if (payload.vertexId) {
+        vertex.vertexId = payload.vertexId;
+        vertex.number = payload.number;
+      } else {
+        vertex.vertexId = `${entityTypes.VERTEX}-${state.vertexIdCounter}`;
+        vertex.number = state.vertexIdCounter;
+        commit(INCREASE_ID_COUNTER, {counterName: 'vertexIdCounter'});
+      }
 
-      dispatch(
-        `commandHistory/${CH_LOG_COMMAND}`,
-        createCommandObject(GRAPH_COMMANDS_MAP[GRAPH_ADD_VERTEX], _.cloneDeep(vertex)),
-        {root: true}
-      );
+      commit(ADD_VERTEX, {vertex});
+
+      return Promise.resolve({data: _.cloneDeep(vertex)});
     },
     [GRAPH_DELETE_VERTEX] ({commit, state}, payload) {
       commit(DELETE_VERTEX, payload);
@@ -106,24 +109,27 @@ export default {
       const vertexOne = getters.vertexById(payload.vertexOneId);
       const vertexTwo = getters.vertexById(payload.vertexTwoId);
       const edge = {
-        edgeId: `${entityTypes.EDGE}-${state.edgeIdCounter}`,
         weight: 0,
         vertexOne,
         vertexTwo
       };
 
-      commit(ADD_EDGE, {edge});
-      commit(INCREASE_ID_COUNTER, {counterName: 'edgeIdCounter'});
+      if (payload.edgeId) {
+        edge.edgeId = payload.edgeId;
+      } else {
+        edge.edgeId = `${entityTypes.EDGE}-${state.edgeIdCounter}`;
+        commit(INCREASE_ID_COUNTER, {counterName: 'edgeIdCounter'});
+      }
 
-      dispatch(
-        `commandHistory/${CH_LOG_COMMAND}`,
-        createCommandObject(GRAPH_COMMANDS_MAP[GRAPH_ADD_EDGE], {
+      commit(ADD_EDGE, {edge});
+
+      return Promise.resolve({
+        data: {
           edgeId: edge.edgeId,
           vertexOneId: payload.vertexOneId,
           vertexTwoId: payload.vertexTwoId
-        }),
-        {root: true}
-      );
+        }
+      });
     },
     [GRAPH_DELETE_EDGE] ({commit}, payload) {
       commit(DELETE_EDGE, payload);
