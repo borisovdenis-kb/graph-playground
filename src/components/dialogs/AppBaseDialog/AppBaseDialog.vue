@@ -17,6 +17,7 @@
 
 <script>
   import './app-base-dialog.css';
+  import {EventBus} from '../../../bus/eventBus';
 
   export default {
     name: "AppBaseDialog",
@@ -29,14 +30,18 @@
       }
     },
     mounted() {
-      const appRect = document.getElementById('app').getBoundingClientRect();
-      const dialogWindowRect = document.getElementsByClassName('app-base-dialog')[0].getBoundingClientRect();
-      this.blackOutElement = document.getElementsByClassName('global-blackout')[0];
-
-      this.windowTop = (appRect.height - dialogWindowRect.height) / 2;
-      this.windowLeft = (appRect.width - dialogWindowRect.width) / 2;
-
-      this.blackOutElement.style.display = 'block';
+      // const appElement = document.getElementById('app');
+      //
+      // EventBus.$on('componentAppended', () => {
+      //   const appRect = appElement.getBoundingClientRect();
+      //   const dialogWindowRect = document.getElementsByClassName('app-base-dialog')[0].getBoundingClientRect();
+      //   this.blackOutElement = document.getElementsByClassName('global-blackout')[0];
+      //
+      //   this.windowTop = (appRect.height - dialogWindowRect.height) / 2;
+      //   this.windowLeft = (appRect.width - dialogWindowRect.width) / 2;
+      //
+      //   this.blackOutElement.style.display = 'block';
+      // });
     },
     destroyed() {
       this.blackOutElement.style.display = 'none';

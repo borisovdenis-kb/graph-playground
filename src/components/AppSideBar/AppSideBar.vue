@@ -10,9 +10,10 @@
       <app-command-history></app-command-history>
     </div>
 
-    <test-dialog v-if="flag"></test-dialog>
+    <!--<test-dialog v-if="flag"></test-dialog>-->
 
-    <input type="checkbox" v-model="flag"/>
+    <button v-on:click="open">Open</button>
+    <!--<button>Close</button>-->
   </div>
 </template>
 
@@ -22,6 +23,7 @@
   import AppSeparator from "../AppSeparator/AppSeparator";
   import AppCommandHistory from "../AppActionHistory/AppCommandHistory";
   import TestDialog from "../dialogs/TestDialog";
+  import BaseDialogService from '../../services/baseDialogService';
 
   export default {
     name: "app-side-bar",
@@ -34,6 +36,11 @@
     data() {
       return {
         flag: false
+      }
+    },
+    methods: {
+      open() {
+        BaseDialogService.open(TestDialog);
       }
     }
   }

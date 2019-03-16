@@ -1,9 +1,11 @@
 <template>
-  <app-base-dialog caption="Hello Dialog World">
-    <template slot="content">
-      <h1>Hey Hey Hey</h1>
-    </template>
-  </app-base-dialog>
+  <div class="test-dialog">
+    <app-base-dialog caption="Hello Dialog World">
+      <template slot="content">
+        <h1>Hey Hey Hey</h1>
+      </template>
+    </app-base-dialog>
+  </div>
 </template>
 
 <script>
