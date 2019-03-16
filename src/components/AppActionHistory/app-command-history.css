@@ -1,4 +1,4 @@
-.app-action-history {
+.app-command-history {
   width: 100%;
   background-color: #ffffff;
   border: 1px solid rgb(209, 209, 209);
@@ -8,7 +8,7 @@
   font-family: Helvetica;
 }
 
-.app-action-history__toolbar {
+.app-command-history__toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -17,28 +17,28 @@
   background-color: rgb(255, 136, 74);
 }
 
-.app-action-history__toolbar-title {
+.app-command-history__toolbar-title {
   margin-left: 5px;
   color: #ffffff;
 }
 
-.app-action-history__toolbar-buttons {
+.app-command-history__toolbar-buttons {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-right: 5px;
 }
 
-.app-action-history__buttons {
+.app-command-history__buttons {
   margin-left: 5px;
 }
 
-.app-action-history__command-list {
+.app-command-history__command-list {
   height: 180px;
   overflow-y: scroll;
 }
 
-.app-action-history__empty-message {
+.app-command-history__empty-message {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -47,7 +47,7 @@
   color: #c8c8c8;
 }
 
-.app-action-history__row {
+.app-command-history__row {
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -57,20 +57,20 @@
   color: #919191;
 }
 
-.app-action-history__row:nth-child(2n) {
+.app-command-history__row:nth-child(2n) {
   background-color: rgba(200,200,200,0);
 }
 
-.app-action-history__label {
+.app-command-history__label {
   display: flex;
   align-items: center;
   height: 100%;
 }
 
-.app-action-history__label--left {
+.app-command-history__label--left {
   margin-left: 5px;
 }
 
-.app-action-history__label--right {
+.app-command-history__label--right {
   margin-right: 5px;
 }

@@ -7,7 +7,7 @@
     <app-separator width="250px"></app-separator>
 
     <div class="app-side-bar__command-history-container app-side-bar__group--last">
-      <app-action-history></app-action-history>
+      <app-command-history></app-command-history>
     </div>
   </div>
 </template>
@@ -16,12 +16,12 @@
   import './app-side-bar.css';
   import AppHeader from "../AppHeader/AppHeader";
   import AppSeparator from "../AppSeparator/AppSeparator";
-  import AppActionHistory from "../AppActionHistory/AppActionHistory";
+  import AppCommandHistory from "../AppActionHistory/AppCommandHistory";
 
   export default {
     name: "app-side-bar",
     components: {
-      AppActionHistory,
+      AppCommandHistory,
       AppSeparator,
       AppHeader
     }

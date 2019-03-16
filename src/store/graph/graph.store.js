@@ -17,10 +17,10 @@ import {
   GRAPH_ADD_EDGE,
   GRAPH_MOVE_VERTEX,
   GRAPH_DELETE_EDGE,
-  GRAPH_UNDO_REDO_MAP
+  GRAPH_COMMANDS_MAP
 } from "./graph.actions";
-import {AH_LOG_ACTION} from "../actionHistory/actionHistory.actions";
-import {createActionObject} from "../../services/utils";
+import {CH_LOG_COMMAND} from "../commandHistory/commandHistory.actions";
+import {createCommandObject} from "../../services/utils";
 
 export default {
   namespaced: true,
@@ -89,8 +89,8 @@ export default {
       commit(INCREASE_ID_COUNTER, {counterName: 'vertexIdCounter'});
 
       dispatch(
-        `actionHistory/${AH_LOG_ACTION}`,
-        createActionObject(GRAPH_UNDO_REDO_MAP[GRAPH_ADD_VERTEX], _.cloneDeep(vertex)),
+        `commandHistory/${CH_LOG_COMMAND}`,
+        createCommandObject(GRAPH_COMMANDS_MAP[GRAPH_ADD_VERTEX], _.cloneDeep(vertex)),
         {root: true}
       );
     },
@@ -116,8 +116,8 @@ export default {
       commit(INCREASE_ID_COUNTER, {counterName: 'edgeIdCounter'});
 
       dispatch(
-        `actionHistory/${AH_LOG_ACTION}`,
-        createActionObject(GRAPH_UNDO_REDO_MAP[GRAPH_ADD_EDGE], {
+        `commandHistory/${CH_LOG_COMMAND}`,
+        createCommandObject(GRAPH_COMMANDS_MAP[GRAPH_ADD_EDGE], {
           edgeId: edge.edgeId,
           vertexOneId: payload.vertexOneId,
           vertexTwoId: payload.vertexTwoId
