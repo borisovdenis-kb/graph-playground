@@ -11,6 +11,8 @@
         <app-side-bar></app-side-bar>
       </div>
     </div>
+
+    <div class="global-blackout"></div>
   </div>
 </template>
 
