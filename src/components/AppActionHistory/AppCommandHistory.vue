@@ -1,0 +1,68 @@
+<template>
+  <div class="app-command-history">
+    <div class="app-command-history__toolbar">
+
+      <div class="app-command-history__toolbar-title">History</div>
+
+      <div class="app-command-history__toolbar-buttons">
+        <div class="app-command-history__buttons">
+          <app-button v-on:click="undoAction()"
+                      icon-text="<-">
+          </app-button>
+        </div>
+
+        <div class="app-command-history__buttons">
+          <app-button v-on:click="redoAction()"
+                      icon-text="->">
+          </app-button>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-command-history__command-list">
+      <template v-if="!isActionHistoryEmpty">
+        <div class="app-command-history__row" v-for="action in undoActionsList">
+          <div class="app-command-history__label app-command-history__label--left">
+            <div>{{ action.name }}</div>
+          </div>
+          <div class="app-command-history__label app-command-history__label--right">{{ action.date }}</div>
+        </div>
+      </template>
+      <template v-else>
+        <div class="app-command-history__empty-message">Empty</div>
+      </template>
+    </div>
+
+  </div>
+</template>
+
+<script>
+  import './app-command-history.css';
+
+  import AppButton from "../AppButton/AppButton";
+  import {CH_UNDO_COMMAND, CH_REDO_COMMAND} from "../../store/commandHistory/commandHistory.actions";
+  import {mapState, mapGetters} from 'vuex';
+
+  export default {
+    name: "app-command-history",
+    components: {
+      AppButton
+    },
+    methods: {
+      undoAction() {
+        this.$store.dispatch(`commandHistory/${CH_UNDO_COMMAND}`);
+      },
+      redoAction() {
+        this.$store.dispatch(`commandHistory/${CH_REDO_COMMAND}`);
+      }
+    },
+    computed: {
+      ...mapState('commandHistory', {
+        undoActionsList: 'undo'
+      }),
+      ...mapGetters('commandHistory', [
+        'isActionHistoryEmpty'
+      ])
+    }
+  }
+</script>

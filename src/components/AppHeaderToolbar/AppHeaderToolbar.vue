@@ -32,6 +32,13 @@
                     icon-text="E+">
         </app-button>
       </div>
+
+      <div class="app-header-toolbar__button">
+        <app-button v-on:click="setCurrentPgState(pgStates.DELETE_EDGE)"
+                    v-bind:is-selected="checkPgState(pgStates.DELETE_EDGE)"
+                    icon-text="E-">
+        </app-button>
+      </div>
     </div>
   </div>
 </template>
