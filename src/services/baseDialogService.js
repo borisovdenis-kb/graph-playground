@@ -2,18 +2,37 @@ import Vue from 'vue';
 import {EventBus} from '../bus/eventBus';
 
 class BaseDialogService {
-  constructor() {
-    this.appElement = document.getElementById('app');
-  }
+  constructor() {}
 
   open(dialogComponent, data, options) {
-    const ComponentClass = Vue.extend(dialogComponent);
-    const dialogInstance = new ComponentClass();
+    const appElement = document.getElementById('app');
+    let dialogInstance;
 
-    dialogInstance.$mount();
-    this.appElement.appendChild(dialogInstance.$el);
+    return new Promise((resolve, reject) => {
+      const ComponentClass = Vue.extend(dialogComponent);
 
-    EventBus.$emit('componentAppended');
+      const onResolveClose = data => resolve(data);
+      const onRejectClose = data => reject(data);
+
+      dialogInstance = new ComponentClass({
+        propsData: {
+          inData: data,
+          options,
+          onResolveClose,
+          onRejectClose
+        }
+      });
+
+      dialogInstance.$mount();
+      appElement.appendChild(dialogInstance.$el);
+
+      EventBus.$emit('componentAppended');
+    }).then(data => {
+      dialogInstance.$destroy();
+      appElement.removeChild(dialogInstance.$el);
+
+      return data;
+    });
   }
 }
 

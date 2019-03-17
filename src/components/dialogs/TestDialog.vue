@@ -1,8 +1,13 @@
 <template>
   <div class="test-dialog">
-    <app-base-dialog caption="Hello Dialog World">
+    <app-base-dialog v-bind:options="options">
       <template slot="content">
-        <h1>Hey Hey Hey</h1>
+        <h1>{{ inData.text }}</h1>
+      </template>
+
+      <template slot="footer">
+        <button v-on:click="onOkCLick">OK</button>
+        <button v-on:click="onCloseCLick">Close</button>
       </template>
     </app-base-dialog>
   </div>
@@ -13,7 +18,19 @@
 
   export default {
     name: "TestDialog",
-    components: {AppBaseDialog}
+    components: {AppBaseDialog},
+    props: ['inData', 'options', 'onResolveClose', 'onRejectClose'],
+    methods: {
+      onOkCLick() {
+        this.onResolveClose({text: 'Hello!'});
+      },
+      onCloseCLick() {
+        this.onRejectClose({text: 'Hello!'});
+      }
+    },
+    mounted() {
+      console.log(this.options);
+    }
   }
 </script>
 

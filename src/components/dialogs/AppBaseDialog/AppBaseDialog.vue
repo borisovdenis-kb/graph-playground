@@ -1,7 +1,9 @@
 <template>
-  <div class="app-base-dialog" v-bind:style="{left: windowLeft + 'px', top: windowTop + 'px'}">
+  <div class="app-base-dialog"
+       v-bind:class="{'app-base-dialog--appear': isReady}"
+       v-bind:style="{left: windowLeft + 'px', top: windowTop + 'px'}">
     <div class="app-base-dialog__header">
-      <div class="app-base-dialog__caption">{{ caption }}</div>
+      <div class="app-base-dialog__caption">{{ options.caption }}</div>
       <div class="app-base-dialog__btn-close-header">✕</div>
     </div>
 
@@ -21,27 +23,34 @@
 
   export default {
     name: "AppBaseDialog",
-    props: ['caption'],
+    props: ['options'],
     data() {
       return {
-        windowTop: 500,
-        windowLeft: 500,
+        windowTop: 0,
+        windowLeft: 0,
+        isReady: false,
         blackOutElement: null
       }
     },
     mounted() {
-      // const appElement = document.getElementById('app');
-      //
-      // EventBus.$on('componentAppended', () => {
-      //   const appRect = appElement.getBoundingClientRect();
-      //   const dialogWindowRect = document.getElementsByClassName('app-base-dialog')[0].getBoundingClientRect();
-      //   this.blackOutElement = document.getElementsByClassName('global-blackout')[0];
-      //
-      //   this.windowTop = (appRect.height - dialogWindowRect.height) / 2;
-      //   this.windowLeft = (appRect.width - dialogWindowRect.width) / 2;
-      //
-      //   this.blackOutElement.style.display = 'block';
-      // });
+      const vm = this;
+
+      console.log(this.options);
+
+      EventBus.$on('componentAppended', () => {
+        const appRect = document.getElementById('app').getBoundingClientRect();
+
+        vm.windowLeft = (appRect.width - vm.options.width) / 2;
+        vm.windowTop = (appRect.height - vm.options.height) / 2;
+
+        vm.isReady = true;
+
+        vm.blackOutElement = document.getElementsByClassName('global-blackout')[0];
+        vm.blackOutElement.style.display = 'block';
+      });
+    },
+    beforeDestroy() {
+      this.isReady = false;
     },
     destroyed() {
       this.blackOutElement.style.display = 'none';

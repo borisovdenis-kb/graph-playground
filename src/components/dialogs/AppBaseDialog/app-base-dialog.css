@@ -12,7 +12,14 @@
   -moz-box-shadow: 0px 0px 27px 5px rgba(0,0,0,0.15);
   box-shadow: 0px 0px 27px 5px rgba(0,0,0,0.15);
   z-index: 100;
-  transition: 0.3s ease;
+  opacity: 0.5;
+  transform: scale(0.8, 0.8);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.app-base-dialog--appear {
+  opacity: 1;
+  transform: scale(1, 1);
 }
 
 .app-base-dialog__header {

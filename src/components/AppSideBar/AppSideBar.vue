@@ -10,8 +10,6 @@
       <app-command-history></app-command-history>
     </div>
 
-    <!--<test-dialog v-if="flag"></test-dialog>-->
-
     <button v-on:click="open">Open</button>
     <!--<button>Close</button>-->
   </div>
@@ -40,7 +38,15 @@
     },
     methods: {
       open() {
-        BaseDialogService.open(TestDialog);
+        BaseDialogService.open(
+          TestDialog,
+          {text: 'Hey Hey Hey'},
+          {caption: 'Hello Dialog World', width: 300, height: 250}
+        ).then(data => {
+          console.log(data);
+        }).catch(data => {
+          console.log(data);
+        });
       }
     }
   }
