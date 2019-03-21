@@ -12,7 +12,14 @@
     </div>
 
     <div class="app-base-dialog__footer">
-      <slot name="footer"></slot>
+      <div class="app-base-dialog__btn app-base-dialog__btn-ok"
+           v-on:click="okCLick">
+        OK
+      </div>
+      <div class="app-base-dialog__btn app-base-dialog__btn-close"
+           v-on:click="closeCLick">
+        CLOSE
+      </div>
     </div>
   </div>
 </template>
@@ -23,7 +30,7 @@
 
   export default {
     name: "AppBaseDialog",
-    props: ['options'],
+    props: ['options', 'onOkCLick', 'onCloseClick'],
     data() {
       return {
         windowTop: 0,
@@ -32,10 +39,16 @@
         blackOutElement: null
       }
     },
+    methods: {
+      okCLick() {
+        this.options.onResolveClose({text: 'Hello!'});
+      },
+      closeCLick() {
+        this.options.onRejectClose({text: 'Hello!'});
+      }
+    },
     mounted() {
       const vm = this;
-
-      console.log(this.options);
 
       EventBus.$on('componentAppended', () => {
         const appRect = document.getElementById('app').getBoundingClientRect();

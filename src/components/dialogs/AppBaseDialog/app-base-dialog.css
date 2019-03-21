@@ -13,6 +13,7 @@
   box-shadow: 0px 0px 27px 5px rgba(0,0,0,0.15);
   z-index: 100;
   opacity: 0.5;
+  font-family: Helvetica;
   transform: scale(0.8, 0.8);
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
@@ -26,14 +27,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 35px;
+  height: 40px;
   padding-right: 10px;
   padding-left: 10px;
   border-bottom: 1px solid #ebebeb;
   color: #a1a1a1;
   font-size: 18px;
   font-weight: 500;
-  font-family: Helvetica;
 }
 
 .app-base-dialog__caption {
@@ -42,7 +42,37 @@
 
 .app-base-dialog__footer {
   display: flex;
+  justify-content: flex-end;
   align-items: center;
-  height: 35px;
+  height: 40px;
   border-top: 1px solid #ebebeb;
+}
+
+.app-base-dialog__btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 50%;
+  color: #a1a1a1;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.app-base-dialog__btn-ok {
+  border-right: 1px solid #e1e1e1;
+  border-bottom-left-radius: 6px;
+}
+
+.app-base-dialog__btn-ok:hover {
+  background-color: rgb(135, 255, 214);
+}
+
+.app-base-dialog__btn-close {
+  border-bottom-right-radius: 6px;
+}
+
+.app-base-dialog__btn-close:hover {
+  background-color: rgba(255, 135, 124, 0.66);
+  color: #ffffff;
 }

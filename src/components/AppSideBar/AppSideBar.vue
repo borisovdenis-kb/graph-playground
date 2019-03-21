@@ -38,11 +38,11 @@
     },
     methods: {
       open() {
-        BaseDialogService.open(
-          TestDialog,
-          {text: 'Hey Hey Hey'},
-          {caption: 'Hello Dialog World', width: 300, height: 250}
-        ).then(data => {
+        BaseDialogService.open({
+          dialogComponent: TestDialog,
+          data: {text: 'Hey Hey Hey'},
+          options: {caption: 'Hello Dialog World', width: 300, height: 300}
+        }).then(data => {
           console.log(data);
         }).catch(data => {
           console.log(data);

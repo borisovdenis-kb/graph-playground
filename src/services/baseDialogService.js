@@ -1,10 +1,11 @@
 import Vue from 'vue';
 import {EventBus} from '../bus/eventBus';
+import AppBaseDialog from '../components/dialogs/AppBaseDialog/AppBaseDialog';
 
 class BaseDialogService {
   constructor() {}
 
-  open(dialogComponent, data, options) {
+  open({dialogComponent = AppBaseDialog, data, options}) {
     const appElement = document.getElementById('app');
     let dialogInstance;
 
@@ -17,9 +18,11 @@ class BaseDialogService {
       dialogInstance = new ComponentClass({
         propsData: {
           inData: data,
-          options,
-          onResolveClose,
-          onRejectClose
+          options: {
+            ...options,
+            onResolveClose,
+            onRejectClose
+          }
         }
       });
 
