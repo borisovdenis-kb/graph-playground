@@ -1,11 +1,12 @@
 <template>
   <div class="app-base-dialog"
        v-bind:class="{'app-base-dialog--appear': isReady}"
-       v-bind:style="{left: windowLeft + 'px', top: windowTop + 'px'}">
+       v-bind:style="inlineStyles">
     <div class="app-base-dialog__header">
       <div class="app-base-dialog__caption">{{ options.caption }}</div>
       <div class="app-base-dialog__btn-cancel--header"
-           v-on:click="cancelClick">✕</div>
+           v-on:click="cancelClick">✕
+      </div>
     </div>
 
     <div class="app-base-dialog__content">
@@ -55,6 +56,16 @@
 
       this.blackOutElement = document.getElementsByClassName('global-blackout')[0];
       this.blackOutElement.style.display = 'block';
+    },
+    computed: {
+      inlineStyles() {
+        return {
+          left: `${this.windowLeft}px`,
+          top: `${this.windowTop}px`,
+          width: `${this.options.width}px`,
+          height: `${this.options.height}px`
+        }
+      }
     },
     mounted() {
       this.isReady = true;

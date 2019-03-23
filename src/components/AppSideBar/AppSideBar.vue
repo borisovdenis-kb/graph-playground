@@ -40,7 +40,7 @@
         BaseDialogService.open({
           dialogComponent: TestDialog,
           data: {text: 'Hey Hey Hey'},
-          options: {caption: 'Hello Dialog World', width: 300, height: 300}
+          options: {caption: 'Hello Dialog World', width: 300, height: 700}
         }).then(data => {
           console.log(data);
         }).catch(data => {
