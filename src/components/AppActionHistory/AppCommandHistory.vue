@@ -20,7 +20,7 @@
     </div>
 
     <div class="app-command-history__command-list">
-      <template v-if="!isActionHistoryEmpty">
+      <template v-if="!isUndoEmpty">
         <div class="app-command-history__row" v-for="action in undoActionsList">
           <div class="app-command-history__label app-command-history__label--left">
             <div>{{ action.name }}</div>
@@ -61,7 +61,7 @@
         undoActionsList: 'undo'
       }),
       ...mapGetters('commandHistory', [
-        'isActionHistoryEmpty'
+        'isUndoEmpty'
       ])
     }
   }

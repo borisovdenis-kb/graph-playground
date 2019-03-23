@@ -9,8 +9,6 @@
     <div class="app-side-bar__command-history-container app-side-bar__group--last">
       <app-command-history></app-command-history>
     </div>
-
-    <button v-on:click="open">Open</button>
   </div>
 </template>
 
@@ -19,13 +17,10 @@
   import AppHeader from "../AppHeader/AppHeader";
   import AppSeparator from "../AppSeparator/AppSeparator";
   import AppCommandHistory from "../AppActionHistory/AppCommandHistory";
-  import TestDialog from "../dialogs/TestDialog";
-  import BaseDialogService from '../../services/baseDialogService';
 
   export default {
     name: "app-side-bar",
     components: {
-      TestDialog,
       AppCommandHistory,
       AppSeparator,
       AppHeader
@@ -33,19 +28,6 @@
     data() {
       return {
         flag: false
-      }
-    },
-    methods: {
-      open() {
-        BaseDialogService.open({
-          dialogComponent: TestDialog,
-          data: {text: 'Hey Hey Hey'},
-          options: {caption: 'Hello Dialog World', width: 300, height: 700}
-        }).then(data => {
-          console.log(data);
-        }).catch(data => {
-          console.log(data);
-        });
       }
     }
   }

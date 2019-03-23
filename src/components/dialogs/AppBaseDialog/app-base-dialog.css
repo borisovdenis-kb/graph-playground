@@ -51,6 +51,12 @@
   cursor: pointer;
 }
 
+.app-base-dialog__content {
+  flex-grow: 1;
+  display: table-cell;
+  width: 100%;
+}
+
 .app-base-dialog__footer {
   display: flex;
   justify-content: flex-end;

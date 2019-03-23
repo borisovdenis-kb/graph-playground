@@ -1,18 +1,19 @@
 <template>
-  <div class="test-dialog">
+  <div class="app-info-dialog">
     <app-base-dialog v-bind:options="options">
       <template slot="content">
-        <h1>{{ inData.text }}</h1>
+        <div class="app-info-dialog__content">{{ inData.text }}</div>
       </template>
     </app-base-dialog>
   </div>
 </template>
 
 <script>
-  import AppBaseDialog from "./AppBaseDialog/AppBaseDialog";
+  import './app-info-dialog.css';
+  import AppBaseDialog from "../AppBaseDialog/AppBaseDialog";
 
   export default {
-    name: "TestDialog",
+    name: "AppInfoDialog",
     components: {AppBaseDialog},
     props: ['inData', 'options']
   }

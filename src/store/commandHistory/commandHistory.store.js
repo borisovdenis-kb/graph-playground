@@ -50,8 +50,11 @@ export default {
     }
   },
   getters: {
-    isActionHistoryEmpty: (state) => {
+    isUndoEmpty: state => {
       return state.undo.length === 0;
+    },
+    isRedoEmpty: state => {
+      return state.redo.length === 0;
     }
   }
 }
