@@ -13,12 +13,12 @@
 
     <div class="app-base-dialog__footer">
       <div class="app-base-dialog__btn app-base-dialog__btn-ok"
-           v-on:click="okCLick">
+           v-on:click="okClick">
         OK
       </div>
       <div class="app-base-dialog__btn app-base-dialog__btn-close"
-           v-on:click="closeCLick">
-        CLOSE
+           v-on:click="cancelClick">
+        CANCEL
       </div>
     </div>
   </div>
@@ -26,11 +26,10 @@
 
 <script>
   import './app-base-dialog.css';
-  import {EventBus} from '../../../bus/eventBus';
 
   export default {
     name: "AppBaseDialog",
-    props: ['options', 'onOkCLick', 'onCloseClick'],
+    props: ['options', 'onOkClick', 'onCancelClick'],
     data() {
       return {
         windowTop: 0,
@@ -40,27 +39,24 @@
       }
     },
     methods: {
-      okCLick() {
+      okClick() {
         this.options.onResolveClose({text: 'Hello!'});
       },
-      closeCLick() {
+      cancelClick() {
         this.options.onRejectClose({text: 'Hello!'});
       }
     },
+    beforeMount() {
+      const appRect = document.getElementById('app').getBoundingClientRect();
+
+      this.windowLeft = (appRect.width - this.options.width) / 2;
+      this.windowTop = (appRect.height - this.options.height) / 2;
+
+      this.blackOutElement = document.getElementsByClassName('global-blackout')[0];
+      this.blackOutElement.style.display = 'block';
+    },
     mounted() {
-      const vm = this;
-
-      EventBus.$on('componentAppended', () => {
-        const appRect = document.getElementById('app').getBoundingClientRect();
-
-        vm.windowLeft = (appRect.width - vm.options.width) / 2;
-        vm.windowTop = (appRect.height - vm.options.height) / 2;
-
-        vm.isReady = true;
-
-        vm.blackOutElement = document.getElementsByClassName('global-blackout')[0];
-        vm.blackOutElement.style.display = 'block';
-      });
+      this.isReady = true;
     },
     beforeDestroy() {
       this.isReady = false;

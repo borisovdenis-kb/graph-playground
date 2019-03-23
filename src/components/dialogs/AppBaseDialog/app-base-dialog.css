@@ -57,6 +57,8 @@
   color: #a1a1a1;
   cursor: pointer;
   transition: 0.2s ease;
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .app-base-dialog__btn-ok {
@@ -65,7 +67,7 @@
 }
 
 .app-base-dialog__btn-ok:hover {
-  background-color: rgb(135, 255, 214);
+  color: rgb(66, 185, 93);
 }
 
 .app-base-dialog__btn-close {
@@ -73,6 +75,5 @@
 }
 
 .app-base-dialog__btn-close:hover {
-  background-color: rgba(255, 135, 124, 0.66);
-  color: #ffffff;
+  color: rgba(255, 97, 97, 0.66);
 }

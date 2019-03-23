@@ -11,7 +11,6 @@
     </div>
 
     <button v-on:click="open">Open</button>
-    <!--<button>Close</button>-->
   </div>
 </template>
 

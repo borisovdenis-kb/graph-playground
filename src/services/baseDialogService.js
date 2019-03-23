@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import {EventBus} from '../bus/eventBus';
 import AppBaseDialog from '../components/dialogs/AppBaseDialog/AppBaseDialog';
 
 class BaseDialogService {
@@ -8,6 +7,11 @@ class BaseDialogService {
   open({dialogComponent = AppBaseDialog, data, options}) {
     const appElement = document.getElementById('app');
     let dialogInstance;
+
+    const close = () => {
+      dialogInstance.$destroy();
+      appElement.removeChild(dialogInstance.$el);
+    };
 
     return new Promise((resolve, reject) => {
       const ComponentClass = Vue.extend(dialogComponent);
@@ -28,13 +32,14 @@ class BaseDialogService {
 
       dialogInstance.$mount();
       appElement.appendChild(dialogInstance.$el);
-
-      EventBus.$emit('componentAppended');
     }).then(data => {
-      dialogInstance.$destroy();
-      appElement.removeChild(dialogInstance.$el);
+      close();
 
       return data;
+    }).catch(data => {
+      close();
+
+      return Promise.reject(data);
     });
   }
 }
