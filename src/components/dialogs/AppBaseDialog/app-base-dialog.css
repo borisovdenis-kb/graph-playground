@@ -28,7 +28,6 @@
   justify-content: space-between;
   align-items: center;
   height: 40px;
-  padding-right: 10px;
   padding-left: 10px;
   border-bottom: 1px solid #ebebeb;
   color: #a1a1a1;
@@ -37,7 +36,19 @@
 }
 
 .app-base-dialog__caption {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
 
+.app-base-dialog__btn-cancel--header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 35px;
+  border-top-right-radius: 6px;
+  cursor: pointer;
 }
 
 .app-base-dialog__footer {
@@ -70,10 +81,10 @@
   color: rgb(66, 185, 93);
 }
 
-.app-base-dialog__btn-close {
+.app-base-dialog__btn-cancel {
   border-bottom-right-radius: 6px;
 }
 
-.app-base-dialog__btn-close:hover {
+.app-base-dialog__btn-cancel:hover {
   color: rgba(255, 97, 97, 0.66);
 }

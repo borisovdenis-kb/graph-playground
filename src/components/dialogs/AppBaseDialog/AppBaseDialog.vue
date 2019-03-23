@@ -4,7 +4,8 @@
        v-bind:style="{left: windowLeft + 'px', top: windowTop + 'px'}">
     <div class="app-base-dialog__header">
       <div class="app-base-dialog__caption">{{ options.caption }}</div>
-      <div class="app-base-dialog__btn-close-header">✕</div>
+      <div class="app-base-dialog__btn-cancel--header"
+           v-on:click="cancelClick">✕</div>
     </div>
 
     <div class="app-base-dialog__content">
@@ -16,7 +17,7 @@
            v-on:click="okClick">
         OK
       </div>
-      <div class="app-base-dialog__btn app-base-dialog__btn-close"
+      <div class="app-base-dialog__btn app-base-dialog__btn-cancel"
            v-on:click="cancelClick">
         CANCEL
       </div>
