@@ -2,7 +2,8 @@ import {
   PUSH_UNDO_COMMAND,
   POP_UNDO_COMMAND,
   PUSH_REDO_COMMAND,
-  POP_REDO_COMMAND
+  POP_REDO_COMMAND,
+  CLEAR_REDO
 } from "./commandHistory.mutations";
 import {
   CH_LOG_COMMAND,
@@ -28,6 +29,9 @@ export default {
     },
     [POP_REDO_COMMAND] (state) {
       state.redo = state.redo.slice(0, state.redo.length - 1);
+    },
+    [CLEAR_REDO] (state) {
+      state.redo = [];
     }
   },
   actions: {
