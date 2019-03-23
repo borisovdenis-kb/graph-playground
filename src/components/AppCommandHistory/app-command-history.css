@@ -53,6 +53,7 @@
   width: 100%;
   height: 18px;
   font-size: 12px;
+  transition: height 0.2s ease;
 }
 
 .app-command-history__row--executed {
@@ -91,6 +92,6 @@
   margin-left: 5px;
 }
 
-.app-command-history__row:hover .app-command-history__label-name {
-  transform: translateX(10px);
+.app-command-history__row:hover {
+  height: 30px;
 }
