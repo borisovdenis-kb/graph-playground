@@ -16,7 +16,7 @@
   import './app-side-bar.css';
   import AppHeader from "../AppHeader/AppHeader";
   import AppSeparator from "../AppSeparator/AppSeparator";
-  import AppCommandHistory from "../AppActionHistory/AppCommandHistory";
+  import AppCommandHistory from "../AppCommandHistory/AppCommandHistory";
 
   export default {
     name: "app-side-bar",
