@@ -42,6 +42,7 @@
     GRAPH_COMMANDS_MAP
   } from '../../store/graph/graph.actions';
   import * as entityTypes from '../../contants/entityTypes';
+  import * as appDialogService from '../../services/appDiIalogService';
   import {CH_LOG_COMMAND} from '../../store/commandHistory/commandHistory.actions';
   import { isEventOnEntity, createCommandObject } from "../../services/utils";
   import { mapState } from 'vuex';
@@ -107,7 +108,16 @@
         const currentPgState = this.$store.state.currentPgState;
 
         if (this[currentPgState]) {
-          this[currentPgState](e);
+          if (this.$store.getters['commandHistory/isRedoEmpty']) {
+            this[currentPgState](e);
+          } else {
+            appDialogService.openInfoDialog({
+              data: {text: 'Отмененные действия будут утеряны!'},
+              options: {caption: 'Внимание', width: 400, height: 200}
+            }).then(() => {
+              this[currentPgState](e);
+            });
+          }
         }
       },
       onPgMousemove(e) {

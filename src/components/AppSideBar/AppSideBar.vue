@@ -24,6 +24,11 @@
       AppCommandHistory,
       AppSeparator,
       AppHeader
+    },
+    data() {
+      return {
+        flag: false
+      }
     }
   }
 </script>
