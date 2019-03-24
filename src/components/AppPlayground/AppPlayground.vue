@@ -60,7 +60,7 @@
     },
     methods: {
       [pgStates.ADD_VERTEX] (e) {
-        this.checkUndoIsEmpty()
+        this.checkRedoIsEmpty()
           .then(() => {
             return this.$store.dispatch(`graph/${GRAPH_ADD_VERTEX}`, {
               cx: e.offsetX,
@@ -68,11 +68,7 @@
             });
           })
           .then(result => {
-            this.$store.dispatch(
-              `commandHistory/${CH_LOG_COMMAND}`,
-              createCommandObject(GRAPH_COMMANDS_MAP[GRAPH_ADD_VERTEX], result.data),
-              {root: true}
-            );
+            this.logCommand(GRAPH_ADD_VERTEX, result.data);
           });
       },
       [pgStates.ADD_EDGE] (e) {
@@ -81,7 +77,7 @@
         }
 
         if (this.firstEdgeVertexId) {
-          this.checkUndoIsEmpty()
+          this.checkRedoIsEmpty()
             .then(() => {
               return this.$store.dispatch(`graph/${GRAPH_ADD_EDGE}`, {
                 vertexOneId: this.firstEdgeVertexId,
@@ -89,12 +85,7 @@
               });
             })
             .then(result => {
-              this.$store.dispatch(
-                `commandHistory/${CH_LOG_COMMAND}`,
-                createCommandObject(GRAPH_COMMANDS_MAP[GRAPH_ADD_EDGE], result.data),
-                {root: true}
-              );
-
+              this.logCommand(GRAPH_ADD_EDGE, result.data);
               this.firstEdgeVertexId = null;
             });
         } else {
@@ -106,7 +97,13 @@
           return;
         }
 
-        this.$store.dispatch(`graph/${GRAPH_DELETE_EDGE}`, {edgeId: e.target.id});
+        this.checkRedoIsEmpty()
+          .then(() => {
+            return this.$store.dispatch(`graph/${GRAPH_DELETE_EDGE}`, {edgeId: e.target.id});
+          })
+          .then(result => {
+            this.logCommand(GRAPH_DELETE_EDGE, result.data);
+          });
       },
       [pgStates.DELETE_VERTEX] (e) {
         this.$store.dispatch(`graph/${GRAPH_DELETE_VERTEX}`, {
@@ -148,7 +145,7 @@
       vertexFillColor(vertexId) {
         return vertexId === this.firstEdgeVertexId ? '#6062bf' : '#d7d7d7';
       },
-      checkUndoIsEmpty() {
+      checkRedoIsEmpty() {
         const vm = this;
 
         if (!this.$store.getters['commandHistory/isRedoEmpty']) {
@@ -161,6 +158,13 @@
         }
 
         return Promise.resolve();
+      },
+      logCommand(commandName, data) {
+        this.$store.dispatch(
+          `commandHistory/${CH_LOG_COMMAND}`,
+          createCommandObject(GRAPH_COMMANDS_MAP[commandName], data),
+          {root: true}
+        );
       }
     },
     computed: {

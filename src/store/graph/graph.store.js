@@ -16,11 +16,8 @@ import {
   GRAPH_DELETE_VERTEX,
   GRAPH_ADD_EDGE,
   GRAPH_MOVE_VERTEX,
-  GRAPH_DELETE_EDGE,
-  GRAPH_COMMANDS_MAP
+  GRAPH_DELETE_EDGE
 } from "./graph.actions";
-import {CH_LOG_COMMAND} from "../commandHistory/commandHistory.actions";
-import {createCommandObject} from "../../services/utils";
 
 export default {
   namespaced: true,
@@ -131,8 +128,18 @@ export default {
         }
       });
     },
-    [GRAPH_DELETE_EDGE] ({commit}, payload) {
+    [GRAPH_DELETE_EDGE] ({commit, getters}, payload) {
+      const edge = getters.edgeById(payload.edgeId);
+
       commit(DELETE_EDGE, payload);
+
+      return Promise.resolve({
+        data: {
+          edgeId: edge.edgeId,
+          vertexOneId: edge.vertexOne.vertexId,
+          vertexTwoId: edge.vertexTwo.vertexId
+        }
+      });
     },
     [GRAPH_MOVE_VERTEX] ({commit}, payload) {
       commit(UPDATE_VERTEX, payload);
@@ -140,8 +147,11 @@ export default {
     }
   },
   getters: {
-    vertexById: (state) => (vertexId) => {
+    vertexById: state => vertexId => {
       return _.find(state.vertexList, ['vertexId', vertexId]);
+    },
+    edgeById: state => edgeId => {
+      return _.find(state.edgeList, ['edgeId', edgeId]);
     }
   }
 }

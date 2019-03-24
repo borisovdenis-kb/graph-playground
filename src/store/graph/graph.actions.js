@@ -16,6 +16,12 @@ const GRAPH_COMMANDS_MAP = {
     execute: GRAPH_ADD_EDGE,
     cancel: GRAPH_DELETE_EDGE,
     module: 'graph'
+  },
+  [GRAPH_DELETE_EDGE]: {
+    name: 'Delete Edge',
+    execute: GRAPH_DELETE_EDGE,
+    cancel: GRAPH_ADD_EDGE,
+    module: 'graph'
   }
 };
 
