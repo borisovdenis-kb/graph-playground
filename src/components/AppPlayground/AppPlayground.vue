@@ -10,10 +10,10 @@
 
       <line v-for="edge in edgeList"
             :id="edge.edgeId"
-            :x1="edge.vertexOne.cx"
-            :y1="edge.vertexOne.cy"
-            :x2="edge.vertexTwo.cx"
-            :y2="edge.vertexTwo.cy"
+            :x1="edge.x1"
+            :y1="edge.y1"
+            :x2="edge.x2"
+            :y2="edge.y2"
             :cursor="edgeCursor"
             stroke="#c3c3c3" stroke-width="5">
       </line>
