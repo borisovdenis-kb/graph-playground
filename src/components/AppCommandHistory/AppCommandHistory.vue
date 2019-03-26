@@ -47,7 +47,7 @@
 </template>
 
 <script>
-  import './app-command-history.css';
+  import  './app-command-history.css';
 
   import AppButton from "../AppButton/AppButton";
   import {CH_UNDO_COMMAND, CH_REDO_COMMAND} from "../../store/commandHistory/commandHistory.actions";
@@ -69,7 +69,7 @@
     computed: {
       ...mapState('commandHistory', {
         undoCommandList: 'undo',
-        redoCommandsList: 'redo'
+        redoCommandsList: state => state.redo.reverse()
       }),
       ...mapGetters('commandHistory', [
         'isUndoEmpty',
