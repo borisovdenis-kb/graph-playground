@@ -45,7 +45,7 @@
   import * as appDialogService from '../../services/appDiIalogService';
   import {CH_LOG_COMMAND} from '../../store/commandHistory/commandHistory.actions';
   import {CLEAR_REDO} from '../../store/commandHistory/commandHistory.mutations';
-  import { isEventOnEntity, createCommandObject } from "../../services/utils";
+  import { isEventOnEntity, createCommandObject, createMultiCommandObject } from "../../services/utils";
   import { mapState } from 'vuex';
 
   export default {
@@ -106,9 +106,30 @@
           });
       },
       [pgStates.DELETE_VERTEX] (e) {
-        this.$store.dispatch(`graph/${GRAPH_DELETE_VERTEX}`, {
-          vertexId: e.target.id
-        });
+        if (!isEventOnEntity(e, entityTypes.VERTEX)) {
+          return;
+        }
+
+        this.checkRedoIsEmpty()
+          .then(() => {
+            const vertexId = e.target.id;
+            const subCommands = [];
+
+            this.$store.getters['graph/adjEdgesByVertex'](vertexId).forEach(edge => {
+              this.$store.dispatch(`graph/${GRAPH_DELETE_EDGE}`, {edgeId: edge.edgeId})
+                .then(result => {
+                  subCommands.push(createCommandObject(GRAPH_COMMANDS_MAP[GRAPH_DELETE_EDGE], result.data));
+                });
+            });
+
+            this.$store.dispatch(`graph/${GRAPH_DELETE_VERTEX}`, {
+              vertexId: vertexId
+            }).then(result => {
+              subCommands.push(createCommandObject(GRAPH_COMMANDS_MAP.GRAPH_DELETE_VERTEX_PRIVATE, result.data));
+            }).then(() => {
+              this.logMultiCommand(GRAPH_DELETE_VERTEX, subCommands);
+            });
+          });
       },
       onPgClick(e) {
         const currentPgState = this.$store.state.currentPgState;
@@ -163,6 +184,13 @@
         this.$store.dispatch(
           `commandHistory/${CH_LOG_COMMAND}`,
           createCommandObject(GRAPH_COMMANDS_MAP[commandName], data),
+          {root: true}
+        );
+      },
+      logMultiCommand(commandName, subCommands) {
+        this.$store.dispatch(
+          `commandHistory/${CH_LOG_COMMAND}`,
+          createMultiCommandObject(GRAPH_COMMANDS_MAP[commandName], subCommands),
           {root: true}
         );
       }

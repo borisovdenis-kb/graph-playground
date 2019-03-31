@@ -9,19 +9,42 @@ const GRAPH_COMMANDS_MAP = {
     name: 'Add Vertex',
     execute: GRAPH_ADD_VERTEX,
     cancel: GRAPH_DELETE_VERTEX,
-    module: 'graph'
+    module: 'graph',
+    data: null,
+    date: null
   },
   [GRAPH_ADD_EDGE]: {
     name: 'Add Edge',
     execute: GRAPH_ADD_EDGE,
     cancel: GRAPH_DELETE_EDGE,
-    module: 'graph'
+    module: 'graph',
+    data: null,
+    date: null
   },
   [GRAPH_DELETE_EDGE]: {
     name: 'Delete Edge',
     execute: GRAPH_DELETE_EDGE,
     cancel: GRAPH_ADD_EDGE,
-    module: 'graph'
+    module: 'graph',
+    data: null,
+    date: null
+  },
+  GRAPH_DELETE_VERTEX_PRIVATE: {
+    name: 'Delete Vertex',
+    execute: GRAPH_DELETE_VERTEX,
+    cancel: GRAPH_ADD_VERTEX,
+    module: 'graph',
+    data: null,
+    date: null
+  },
+  GRAPH_DELETE_VERTEX: {
+    name: 'Delete Vertex',
+    isMulti: true,
+    execute: [],
+    cancel: [],
+    module:'graph',
+    data: null,
+    date: null
   }
 };
 

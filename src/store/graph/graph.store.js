@@ -6,7 +6,6 @@ import {
   DELETE_VERTEX,
   UPDATE_VERTEX,
   REFRESH_EDGES,
-  DELETE_EDGES_BY_VERTEX,
   INCREASE_ID_COUNTER,
   RESET_ID_COUNTER,
   DELETE_EDGE
@@ -36,10 +35,7 @@ const mutations = {
   [UPDATE_VERTEX](state, payload) {
     state.vertexList = state.vertexList.map(vertex => {
       if (vertex.vertexId === payload.vertexData.vertexId) {
-        const updatedVertex = {...vertex, ...payload.vertexData};
-        updatedVertex.edges = [...updatedVertex.edges, payload.edgeId];
-
-        return updatedVertex;
+        return {...vertex, ...payload.vertexData};
       }
 
       return vertex;
@@ -63,11 +59,6 @@ const mutations = {
       return edge;
     });
   },
-  [DELETE_EDGES_BY_VERTEX](state, payload) { // TODO: переписать
-    state.edgeList = state.edgeList.filter(edge => {
-      return edge.vertexOneId !== payload.vertexId && edge.vertexTwoId !== payload.vertexId;
-    });
-  },
   [INCREASE_ID_COUNTER](state, payload) {
     state[payload.counterName] = state[payload.counterName] + 1;
   },
@@ -81,8 +72,7 @@ const actions = {
     const vertex = {
       name: payload.name || '',
       cx: payload.cx,
-      cy: payload.cy,
-      edges: []
+      cy: payload.cy
     };
 
     if (payload.vertexId) {
@@ -98,13 +88,18 @@ const actions = {
 
     return Promise.resolve({data: _.cloneDeep(vertex)});
   },
-  [GRAPH_DELETE_VERTEX]({commit, state}, payload) {
+  [GRAPH_DELETE_VERTEX]({commit, state, getters}, payload) {
+    const vertex = _.cloneDeep(getters.vertexById(payload.vertexId));
+
     commit(DELETE_VERTEX, payload);
-    commit(DELETE_EDGES_BY_VERTEX, payload);
 
     if (!state.vertexList.length) {
       commit(RESET_ID_COUNTER, {counterName: 'vertexIdCounter'});
     }
+
+    return Promise.resolve({
+      data: vertex
+    });
   },
   [GRAPH_ADD_EDGE]({commit, state, getters, dispatch}, payload) {
     const vertexOne = getters.vertexById(payload.vertexOneId);
@@ -127,8 +122,6 @@ const actions = {
     }
 
     commit(ADD_EDGE, {edge});
-    commit(UPDATE_VERTEX, {vertexData: {vertexId: payload.vertexOneId}, edgeId: edge.edgeId});
-    commit(UPDATE_VERTEX, {vertexData: {vertexId: payload.vertexTwoId}, edgeId: edge.edgeId});
 
     return Promise.resolve({
       data: {
@@ -146,8 +139,8 @@ const actions = {
     return Promise.resolve({
       data: {
         edgeId: edge.edgeId,
-        vertexOneId: edge.vertexId,
-        vertexTwoId: edge.vertexId
+        vertexOneId: edge.vertexOneId,
+        vertexTwoId: edge.vertexTwoId
       }
     });
   },
@@ -173,6 +166,9 @@ export default {
     },
     edgeById: state => edgeId => {
       return _.find(state.edgeList, ['edgeId', edgeId]);
+    },
+    adjEdgesByVertex: state => vertexId => {
+      return state.edgeList.filter(edge => edge.vertexOneId === vertexId || edge.vertexTwoId === vertexId);
     }
   }
 }
