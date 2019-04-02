@@ -34,7 +34,7 @@
 }
 
 .app-command-history__command-list {
-  height: 180px;
+  height: 555px;
   overflow-y: scroll;
 }
 
@@ -92,6 +92,6 @@
   margin-left: 5px;
 }
 
-.app-command-history__row:hover {
-  height: 30px;
-}
+/*.app-command-history__row:hover {*/
+  /*height: 30px;*/
+/*}*/
