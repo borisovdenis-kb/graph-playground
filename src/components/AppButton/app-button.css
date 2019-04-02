@@ -11,7 +11,7 @@
 }
 
 .app-button:hover {
-  background-color: rgba(152, 202, 255, 0.35);
+  background-color: rgb(206, 224, 242);
 }
 
 .app-button--selected {
@@ -23,6 +23,7 @@
   border: 1px solid #ebebeb;
   color: #cbcdcc;
   background-color: #ffffff;
+  cursor: not-allowed;
 }
 
 .app-button--disabled:hover {
