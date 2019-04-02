@@ -25,7 +25,9 @@
     },
     methods: {
       onBtnClick () {
-        this.$emit('click');
+        if (!this.isDisabled) {
+          this.$emit('click');
+        }
       }
     }
   }

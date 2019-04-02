@@ -7,12 +7,14 @@
       <div class="app-command-history__toolbar-buttons">
         <div class="app-command-history__buttons">
           <app-button v-on:click="undoAction()"
+                      v-bind:is-disabled="isUndoEmpty"
                       icon-text="<-">
           </app-button>
         </div>
 
         <div class="app-command-history__buttons">
           <app-button v-on:click="redoAction()"
+                      v-bind:is-disabled="isRedoEmpty"
                       icon-text="->">
           </app-button>
         </div>
