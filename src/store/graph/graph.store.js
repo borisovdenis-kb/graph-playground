@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import * as entityTypes from '../../contants/entityTypes';
 import * as entityFactory from '../../services/entityFactory';
+import { createCommandObject } from "../../services/utils";
 import {
   ADD_VERTEX,
   ADD_EDGE,
@@ -16,7 +17,8 @@ import {
   GRAPH_DELETE_VERTEX,
   GRAPH_ADD_EDGE,
   GRAPH_MOVE_VERTEX,
-  GRAPH_DELETE_EDGE
+  GRAPH_DELETE_EDGE,
+  GRAPH_COMMANDS_MAP
 } from "./graph.actions";
 
 
@@ -87,7 +89,11 @@ const actions = {
 
     commit(ADD_VERTEX, {vertex});
 
-    return Promise.resolve({data: _.cloneDeep(vertex)});
+    return Promise.resolve(createCommandObject({
+      commandDefinition: GRAPH_COMMANDS_MAP[GRAPH_ADD_VERTEX],
+      data: _.cloneDeep(vertex),
+      text: `Add Vertex V(${vertex.number})`
+    }));
   },
   [GRAPH_DELETE_VERTEX]({commit, state, getters}, payload) {
     const vertex = _.cloneDeep(getters.vertexById(payload.vertexId));
@@ -98,9 +104,11 @@ const actions = {
       commit(RESET_ID_COUNTER, {counterName: 'vertexIdCounter'});
     }
 
-    return Promise.resolve({
-      data: vertex
-    });
+    return Promise.resolve(createCommandObject({
+      commandDefinition: GRAPH_COMMANDS_MAP.GRAPH_DELETE_VERTEX_PRIVATE,
+      data: vertex,
+      text: `Delete Vertex V(${vertex.number})`
+    }));
   },
   [GRAPH_ADD_EDGE]({commit, state, getters, dispatch}, payload) {
     const vertexOne = getters.vertexById(payload.vertexOneId);
@@ -124,26 +132,32 @@ const actions = {
 
     commit(ADD_EDGE, {edge});
 
-    return Promise.resolve({
+    return Promise.resolve(createCommandObject({
+      commandDefinition: GRAPH_COMMANDS_MAP[GRAPH_ADD_EDGE],
       data: {
         edgeId: edge.edgeId,
         vertexOneId: payload.vertexOneId,
         vertexTwoId: payload.vertexTwoId
-      }
-    });
+      },
+      text: `Add Edge V(${vertexOne.number}) -- V(${vertexTwo.number})`
+    }));
   },
   [GRAPH_DELETE_EDGE]({commit, getters}, payload) {
     const edge = getters.edgeById(payload.edgeId);
+    const vertexOne = getters.vertexById(edge.vertexOneId);
+    const vertexTwo = getters.vertexById(edge.vertexTwoId);
 
     commit(DELETE_EDGE, payload);
 
-    return Promise.resolve({
+    return Promise.resolve(createCommandObject({
+      commandDefinition: GRAPH_COMMANDS_MAP[GRAPH_DELETE_EDGE],
       data: {
         edgeId: edge.edgeId,
         vertexOneId: edge.vertexOneId,
         vertexTwoId: edge.vertexTwoId
-      }
-    });
+      },
+      text: `Delete Edge V(${vertexOne.number}) -- V(${vertexTwo.number})`
+    }));
   },
   [GRAPH_MOVE_VERTEX]({commit}, payload) {
     commit(UPDATE_VERTEX, {vertexData: payload});

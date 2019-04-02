@@ -25,7 +25,7 @@
       <template v-if="!isUndoEmpty || !isRedoEmpty">
         <div class="app-command-history__row app-command-history__row--executed" v-for="command in undoCommandList">
           <div class="app-command-history__label app-command-history__label--left">
-            <div class="app-command-history__label-name">{{ command.name }}</div>
+            <div class="app-command-history__label-name">{{ command.text }}</div>
           </div>
           <div class="app-command-history__label app-command-history__label--right">{{ command.date }}</div>
         </div>
@@ -34,7 +34,7 @@
           <div class="app-command-history__label app-command-history__label--left">
             <div class="app-command-history__label-icon">✕</div>
             <div class="app-command-history__label-name app-command-history__label-name--canceled">
-              {{ command.name }}
+              {{ command.text }}
             </div>
           </div>
           <div class="app-command-history__label app-command-history__label--right">{{ command.date }}</div>
