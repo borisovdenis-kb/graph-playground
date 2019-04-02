@@ -23,21 +23,21 @@
 
     <div class="app-command-history__command-list">
       <template v-if="!isUndoEmpty || !isRedoEmpty">
-        <div class="app-command-history__row app-command-history__row--executed" v-for="action in undoCommandList">
+        <div class="app-command-history__row app-command-history__row--executed" v-for="command in undoCommandList">
           <div class="app-command-history__label app-command-history__label--left">
-            <div class="app-command-history__label-name">{{ action.name }}</div>
+            <div class="app-command-history__label-name">{{ command.name }}</div>
           </div>
-          <div class="app-command-history__label app-command-history__label--right">{{ action.date }}</div>
+          <div class="app-command-history__label app-command-history__label--right">{{ command.date }}</div>
         </div>
 
-        <div class="app-command-history__row app-command-history__row--canceled" v-for="action in redoCommandsList">
+        <div class="app-command-history__row app-command-history__row--canceled" v-for="command in redoCommandsList">
           <div class="app-command-history__label app-command-history__label--left">
             <div class="app-command-history__label-icon">✕</div>
             <div class="app-command-history__label-name app-command-history__label-name--canceled">
-              {{ action.name }}
+              {{ command.name }}
             </div>
           </div>
-          <div class="app-command-history__label app-command-history__label--right">{{ action.date }}</div>
+          <div class="app-command-history__label app-command-history__label--right">{{ command.date }}</div>
         </div>
       </template>
       <template v-else>
@@ -71,7 +71,7 @@
     computed: {
       ...mapState('commandHistory', {
         undoCommandList: 'undo',
-        redoCommandsList: state => state.redo.reverse()
+        redoCommandsList: state => state.redo.slice().reverse()
       }),
       ...mapGetters('commandHistory', [
         'isUndoEmpty',
