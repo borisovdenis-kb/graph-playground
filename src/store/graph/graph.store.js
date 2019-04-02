@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import * as entityTypes from '../../contants/entityTypes';
+import * as entityFactory from '../../services/entityFactory';
 import {
   ADD_VERTEX,
   ADD_EDGE,
@@ -69,11 +70,11 @@ const mutations = {
 
 const actions = {
   [GRAPH_ADD_VERTEX]({commit, state, dispatch}, payload) {
-    const vertex = {
-      name: payload.name || '',
+    const vertex = entityFactory.createVertex({
+      name: payload.name,
       cx: payload.cx,
       cy: payload.cy
-    };
+    });
 
     if (payload.vertexId) {
       vertex.vertexId = payload.vertexId;

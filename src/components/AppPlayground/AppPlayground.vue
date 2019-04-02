@@ -18,14 +18,24 @@
             stroke="#c3c3c3" stroke-width="5">
       </line>
 
-      <circle v-for="vertex in vertexList"
-              :id="vertex.vertexId"
-              :cx="vertex.cx"
-              :cy="vertex.cy"
-              :cursor="vertexCursor"
-              :fill="vertexFillColor(vertex.vertexId)"
-              r="15" stroke="#afafaf" stroke-width="4">
-      </circle>
+      <g v-for="vertex in vertexList" :cursor="vertexCursor">
+        <circle :id="vertex.vertexId"
+                :cx="vertex.cx"
+                :cy="vertex.cy"
+                :fill="vertexFillColor(vertex.vertexId)"
+                r="15"
+                stroke="#afafaf"
+                stroke-width="4">
+        </circle>
+        <text :id="vertex.vertexId"
+              :x="vertex.cx"
+              :y="vertex.cy"
+              :stroke="textStrokeColor(vertex.vertexId)"
+              text-anchor="middle"
+              stroke-width="2px"
+              dy=".3em">{{vertex.number}}
+        </text>
+      </g>
     </svg>
   </div>
 </template>
@@ -165,6 +175,9 @@
       },
       vertexFillColor(vertexId) {
         return vertexId === this.firstEdgeVertexId ? '#6062bf' : '#d7d7d7';
+      },
+      textStrokeColor(vertexId) {
+        return vertexId === this.firstEdgeVertexId ? '#d7d7d7' : '#6062bf';
       },
       checkRedoIsEmpty() {
         const vm = this;
