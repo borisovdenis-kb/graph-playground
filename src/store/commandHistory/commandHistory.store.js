@@ -2,7 +2,8 @@ import {
   PUSH_UNDO_COMMAND,
   POP_UNDO_COMMAND,
   PUSH_REDO_COMMAND,
-  POP_REDO_COMMAND
+  POP_REDO_COMMAND,
+  CLEAR_REDO
 } from "./commandHistory.mutations";
 import {
   CH_LOG_COMMAND,
@@ -28,6 +29,9 @@ export default {
     },
     [POP_REDO_COMMAND] (state) {
       state.redo = state.redo.slice(0, state.redo.length - 1);
+    },
+    [CLEAR_REDO] (state) {
+      state.redo = [];
     }
   },
   actions: {
@@ -37,16 +41,34 @@ export default {
     [CH_UNDO_COMMAND] ({state, commit, dispatch}) {
       const command = state.undo[state.undo.length - 1];
 
-      dispatch(`${command.module}/${command.cancel}`, command.data, {root: true});
-      commit(POP_UNDO_COMMAND);
-      commit(PUSH_REDO_COMMAND, {command});
+      if (command.isMulti) {
+        command.cancel.forEach(subCommand => {
+          dispatch(`${subCommand.module}/${subCommand.cancel}`, subCommand.data, {root: true});
+        });
+
+        commit(POP_UNDO_COMMAND);
+        commit(PUSH_REDO_COMMAND, {command});
+      } else {
+        dispatch(`${command.module}/${command.cancel}`, command.data, {root: true});
+        commit(POP_UNDO_COMMAND);
+        commit(PUSH_REDO_COMMAND, {command});
+      }
     },
     [CH_REDO_COMMAND] ({state, commit, dispatch}) {
       const command = state.redo[state.redo.length - 1];
 
-      dispatch(`${command.module}/${command.execute}`, command.data, {root: true});
-      commit(POP_REDO_COMMAND);
-      commit(PUSH_UNDO_COMMAND, {command});
+      if (command.isMulti) {
+        command.execute.forEach(subCommand => {
+          dispatch(`${subCommand.module}/${subCommand.execute}`, subCommand.data, {root: true});
+        });
+
+        commit(POP_REDO_COMMAND);
+        commit(PUSH_UNDO_COMMAND, {command});
+      } else {
+        dispatch(`${command.module}/${command.execute}`, command.data, {root: true});
+        commit(POP_REDO_COMMAND);
+        commit(PUSH_UNDO_COMMAND, {command});
+      }
     }
   },
   getters: {

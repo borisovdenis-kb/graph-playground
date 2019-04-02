@@ -7,12 +7,14 @@
       <div class="app-command-history__toolbar-buttons">
         <div class="app-command-history__buttons">
           <app-button v-on:click="undoAction()"
+                      v-bind:is-disabled="isUndoEmpty"
                       icon-text="<-">
           </app-button>
         </div>
 
         <div class="app-command-history__buttons">
           <app-button v-on:click="redoAction()"
+                      v-bind:is-disabled="isRedoEmpty"
                       icon-text="->">
           </app-button>
         </div>
@@ -20,12 +22,22 @@
     </div>
 
     <div class="app-command-history__command-list">
-      <template v-if="!isUndoEmpty">
-        <div class="app-command-history__row" v-for="action in undoActionsList">
+      <template v-if="!isUndoEmpty || !isRedoEmpty">
+        <div class="app-command-history__row app-command-history__row--executed" v-for="command in undoCommandList">
           <div class="app-command-history__label app-command-history__label--left">
-            <div>{{ action.name }}</div>
+            <div class="app-command-history__label-name">{{ command.name }}</div>
           </div>
-          <div class="app-command-history__label app-command-history__label--right">{{ action.date }}</div>
+          <div class="app-command-history__label app-command-history__label--right">{{ command.date }}</div>
+        </div>
+
+        <div class="app-command-history__row app-command-history__row--canceled" v-for="command in redoCommandsList">
+          <div class="app-command-history__label app-command-history__label--left">
+            <div class="app-command-history__label-icon">✕</div>
+            <div class="app-command-history__label-name app-command-history__label-name--canceled">
+              {{ command.name }}
+            </div>
+          </div>
+          <div class="app-command-history__label app-command-history__label--right">{{ command.date }}</div>
         </div>
       </template>
       <template v-else>
@@ -37,7 +49,7 @@
 </template>
 
 <script>
-  import './app-command-history.css';
+  import  './app-command-history.css';
 
   import AppButton from "../AppButton/AppButton";
   import {CH_UNDO_COMMAND, CH_REDO_COMMAND} from "../../store/commandHistory/commandHistory.actions";
@@ -58,10 +70,12 @@
     },
     computed: {
       ...mapState('commandHistory', {
-        undoActionsList: 'undo'
+        undoCommandList: 'undo',
+        redoCommandsList: state => state.redo.slice().reverse()
       }),
       ...mapGetters('commandHistory', [
-        'isUndoEmpty'
+        'isUndoEmpty',
+        'isRedoEmpty'
       ])
     }
   }

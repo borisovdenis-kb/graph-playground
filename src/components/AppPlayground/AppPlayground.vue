@@ -10,10 +10,10 @@
 
       <line v-for="edge in edgeList"
             :id="edge.edgeId"
-            :x1="edge.vertexOne.cx"
-            :y1="edge.vertexOne.cy"
-            :x2="edge.vertexTwo.cx"
-            :y2="edge.vertexTwo.cy"
+            :x1="edge.x1"
+            :y1="edge.y1"
+            :x2="edge.x2"
+            :y2="edge.y2"
             :cursor="edgeCursor"
             stroke="#c3c3c3" stroke-width="5">
       </line>
@@ -44,7 +44,8 @@
   import * as entityTypes from '../../contants/entityTypes';
   import * as appDialogService from '../../services/appDiIalogService';
   import {CH_LOG_COMMAND} from '../../store/commandHistory/commandHistory.actions';
-  import { isEventOnEntity, createCommandObject } from "../../services/utils";
+  import {CLEAR_REDO} from '../../store/commandHistory/commandHistory.mutations';
+  import { isEventOnEntity, createCommandObject, createMultiCommandObject } from "../../services/utils";
   import { mapState } from 'vuex';
 
   export default {
@@ -59,16 +60,16 @@
     },
     methods: {
       [pgStates.ADD_VERTEX] (e) {
-        this.$store.dispatch(`graph/${GRAPH_ADD_VERTEX}`, {
-          cx: e.offsetX,
-          cy: e.offsetY
-        }).then(result => {
-          this.$store.dispatch(
-            `commandHistory/${CH_LOG_COMMAND}`,
-            createCommandObject(GRAPH_COMMANDS_MAP[GRAPH_ADD_VERTEX], result.data),
-            {root: true}
-          );
-        })
+        this.checkRedoIsEmpty()
+          .then(() => {
+            return this.$store.dispatch(`graph/${GRAPH_ADD_VERTEX}`, {
+              cx: e.offsetX,
+              cy: e.offsetY
+            });
+          })
+          .then(result => {
+            this.logCommand(GRAPH_ADD_VERTEX, result.data);
+          });
       },
       [pgStates.ADD_EDGE] (e) {
         if (!isEventOnEntity(e, entityTypes.VERTEX)) {
@@ -76,18 +77,17 @@
         }
 
         if (this.firstEdgeVertexId) {
-          this.$store.dispatch(`graph/${GRAPH_ADD_EDGE}`, {
-            vertexOneId: this.firstEdgeVertexId,
-            vertexTwoId: e.target.id
-          }).then(result => {
-            this.$store.dispatch(
-              `commandHistory/${CH_LOG_COMMAND}`,
-              createCommandObject(GRAPH_COMMANDS_MAP[GRAPH_ADD_EDGE], result.data),
-              {root: true}
-            );
-
-            this.firstEdgeVertexId = null;
-          });
+          this.checkRedoIsEmpty()
+            .then(() => {
+              return this.$store.dispatch(`graph/${GRAPH_ADD_EDGE}`, {
+                vertexOneId: this.firstEdgeVertexId,
+                vertexTwoId: e.target.id
+              });
+            })
+            .then(result => {
+              this.logCommand(GRAPH_ADD_EDGE, result.data);
+              this.firstEdgeVertexId = null;
+            });
         } else {
           this.firstEdgeVertexId = e.target.id;
         }
@@ -97,27 +97,45 @@
           return;
         }
 
-        this.$store.dispatch(`graph/${GRAPH_DELETE_EDGE}`, {edgeId: e.target.id});
+        this.checkRedoIsEmpty()
+          .then(() => {
+            return this.$store.dispatch(`graph/${GRAPH_DELETE_EDGE}`, {edgeId: e.target.id});
+          })
+          .then(result => {
+            this.logCommand(GRAPH_DELETE_EDGE, result.data);
+          });
       },
       [pgStates.DELETE_VERTEX] (e) {
-        this.$store.dispatch(`graph/${GRAPH_DELETE_VERTEX}`, {
-          vertexId: e.target.id
-        });
+        if (!isEventOnEntity(e, entityTypes.VERTEX)) {
+          return;
+        }
+
+        this.checkRedoIsEmpty()
+          .then(() => {
+            const vertexId = e.target.id;
+            const subCommands = [];
+
+            this.$store.getters['graph/adjEdgesByVertex'](vertexId).forEach(edge => {
+              this.$store.dispatch(`graph/${GRAPH_DELETE_EDGE}`, {edgeId: edge.edgeId})
+                .then(result => {
+                  subCommands.push(createCommandObject(GRAPH_COMMANDS_MAP[GRAPH_DELETE_EDGE], result.data));
+                });
+            });
+
+            this.$store.dispatch(`graph/${GRAPH_DELETE_VERTEX}`, {
+              vertexId: vertexId
+            }).then(result => {
+              subCommands.push(createCommandObject(GRAPH_COMMANDS_MAP.GRAPH_DELETE_VERTEX_PRIVATE, result.data));
+            }).then(() => {
+              this.logMultiCommand(GRAPH_DELETE_VERTEX, subCommands);
+            });
+          });
       },
       onPgClick(e) {
         const currentPgState = this.$store.state.currentPgState;
 
         if (this[currentPgState]) {
-          if (this.$store.getters['commandHistory/isRedoEmpty']) {
-            this[currentPgState](e);
-          } else {
-            appDialogService.openInfoDialog({
-              data: {text: 'Отмененные действия будут утеряны!'},
-              options: {caption: 'Внимание', width: 400, height: 200}
-            }).then(() => {
-              this[currentPgState](e);
-            });
-          }
+          this[currentPgState](e);
         }
       },
       onPgMousemove(e) {
@@ -147,6 +165,34 @@
       },
       vertexFillColor(vertexId) {
         return vertexId === this.firstEdgeVertexId ? '#6062bf' : '#d7d7d7';
+      },
+      checkRedoIsEmpty() {
+        const vm = this;
+
+        if (!this.$store.getters['commandHistory/isRedoEmpty']) {
+          return appDialogService.openInfoDialog({
+            data: {text: 'Отмененные действия будут утеряны!'},
+            options: {caption: 'Внимание', width: 400, height: 200}
+          }).then(() => {
+            vm.$store.commit(`commandHistory/${CLEAR_REDO}`);
+          });
+        }
+
+        return Promise.resolve();
+      },
+      logCommand(commandName, data) {
+        this.$store.dispatch(
+          `commandHistory/${CH_LOG_COMMAND}`,
+          createCommandObject(GRAPH_COMMANDS_MAP[commandName], data),
+          {root: true}
+        );
+      },
+      logMultiCommand(commandName, subCommands) {
+        this.$store.dispatch(
+          `commandHistory/${CH_LOG_COMMAND}`,
+          createMultiCommandObject(GRAPH_COMMANDS_MAP[commandName], subCommands),
+          {root: true}
+        );
       }
     },
     computed: {

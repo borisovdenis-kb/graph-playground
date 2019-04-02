@@ -34,7 +34,7 @@
 }
 
 .app-command-history__command-list {
-  height: 180px;
+  height: 555px;
   overflow-y: scroll;
 }
 
@@ -52,13 +52,22 @@
   justify-content: space-between;
   width: 100%;
   height: 18px;
-  background-color: #ebebeb;
   font-size: 12px;
+  transition: height 0.2s ease;
+}
+
+.app-command-history__row--executed {
+  background-color: #ebebeb;
   color: #919191;
 }
 
-.app-command-history__row:nth-child(2n) {
+.app-command-history__row--executed:nth-child(2n) {
   background-color: rgba(200,200,200,0);
+}
+
+.app-command-history__row--canceled {
+  background-color: #313131;
+  color: #919191;
 }
 
 .app-command-history__label {
@@ -74,3 +83,15 @@
 .app-command-history__label--right {
   margin-right: 5px;
 }
+
+.app-command-history__label-name {
+  transition: 0.2s ease-in-out;
+}
+
+.app-command-history__label-name--canceled {
+  margin-left: 5px;
+}
+
+/*.app-command-history__row:hover {*/
+  /*height: 30px;*/
+/*}*/
