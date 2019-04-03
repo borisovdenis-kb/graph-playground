@@ -17,3 +17,7 @@
   font-size: 25px;
   color: #9b9b9b;
 }
+
+.app-header__entity-counter {
+  margin-left: auto;
+}

@@ -172,6 +172,8 @@ export default {
     },
     adjEdgesByVertex: state => vertexId => {
       return state.edgeList.filter(edge => edge.vertexOneId === vertexId || edge.vertexTwoId === vertexId);
-    }
+    },
+    vertexCount: state => state.vertexList.length,
+    edgeCount: state => state.edgeList.length
   }
 }
