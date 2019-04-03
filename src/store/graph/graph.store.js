@@ -1,13 +1,13 @@
 import _ from 'lodash';
 import * as entityTypes from '../../contants/entityTypes';
+import * as entityFactory from '../../services/entityFactory';
+import { createCommandObject, getNextId } from "../../services/utils";
 import {
   ADD_VERTEX,
   ADD_EDGE,
   DELETE_VERTEX,
   UPDATE_VERTEX,
   REFRESH_EDGES,
-  INCREASE_ID_COUNTER,
-  RESET_ID_COUNTER,
   DELETE_EDGE
 } from "./graph.mutations";
 import {
@@ -15,7 +15,8 @@ import {
   GRAPH_DELETE_VERTEX,
   GRAPH_ADD_EDGE,
   GRAPH_MOVE_VERTEX,
-  GRAPH_DELETE_EDGE
+  GRAPH_DELETE_EDGE,
+  GRAPH_COMMANDS_MAP
 } from "./graph.actions";
 
 
@@ -58,48 +59,44 @@ const mutations = {
 
       return edge;
     });
-  },
-  [INCREASE_ID_COUNTER](state, payload) {
-    state[payload.counterName] = state[payload.counterName] + 1;
-  },
-  [RESET_ID_COUNTER](state, payload) {
-    state[payload.counterName] = 0;
   }
 };
 
 const actions = {
   [GRAPH_ADD_VERTEX]({commit, state, dispatch}, payload) {
-    const vertex = {
-      name: payload.name || '',
+    const vertex = entityFactory.createVertex({
+      name: payload.name,
       cx: payload.cx,
       cy: payload.cy
-    };
+    });
 
     if (payload.vertexId) {
       vertex.vertexId = payload.vertexId;
       vertex.number = payload.number;
     } else {
-      vertex.vertexId = `${entityTypes.VERTEX}-${state.vertexIdCounter}`;
-      vertex.number = state.vertexIdCounter;
-      commit(INCREASE_ID_COUNTER, {counterName: 'vertexIdCounter'});
+      const id = getNextId(state.vertexList);
+      vertex.vertexId = `${entityTypes.VERTEX}-${id}`;
+      vertex.number = id;
     }
 
     commit(ADD_VERTEX, {vertex});
 
-    return Promise.resolve({data: _.cloneDeep(vertex)});
+    return Promise.resolve(createCommandObject({
+      commandDefinition: GRAPH_COMMANDS_MAP[GRAPH_ADD_VERTEX],
+      data: _.cloneDeep(vertex),
+      text: `Add Vertex V(${vertex.number})`
+    }));
   },
   [GRAPH_DELETE_VERTEX]({commit, state, getters}, payload) {
     const vertex = _.cloneDeep(getters.vertexById(payload.vertexId));
 
     commit(DELETE_VERTEX, payload);
 
-    if (!state.vertexList.length) {
-      commit(RESET_ID_COUNTER, {counterName: 'vertexIdCounter'});
-    }
-
-    return Promise.resolve({
-      data: vertex
-    });
+    return Promise.resolve(createCommandObject({
+      commandDefinition: GRAPH_COMMANDS_MAP.GRAPH_DELETE_VERTEX_PRIVATE,
+      data: vertex,
+      text: `Delete Vertex V(${vertex.number})`
+    }));
   },
   [GRAPH_ADD_EDGE]({commit, state, getters, dispatch}, payload) {
     const vertexOne = getters.vertexById(payload.vertexOneId);
@@ -116,33 +113,41 @@ const actions = {
 
     if (payload.edgeId) {
       edge.edgeId = payload.edgeId;
+      edge.number = payload.number;
     } else {
-      edge.edgeId = `${entityTypes.EDGE}-${state.edgeIdCounter}`;
-      commit(INCREASE_ID_COUNTER, {counterName: 'edgeIdCounter'});
+      const id = getNextId(state.edgeList);
+      edge.edgeId = `${entityTypes.EDGE}-${id}`;
+      edge.number = id;
     }
 
     commit(ADD_EDGE, {edge});
 
-    return Promise.resolve({
+    return Promise.resolve(createCommandObject({
+      commandDefinition: GRAPH_COMMANDS_MAP[GRAPH_ADD_EDGE],
       data: {
         edgeId: edge.edgeId,
         vertexOneId: payload.vertexOneId,
         vertexTwoId: payload.vertexTwoId
-      }
-    });
+      },
+      text: `Add Edge V(${vertexOne.number}) -- V(${vertexTwo.number})`
+    }));
   },
   [GRAPH_DELETE_EDGE]({commit, getters}, payload) {
     const edge = getters.edgeById(payload.edgeId);
+    const vertexOne = getters.vertexById(edge.vertexOneId);
+    const vertexTwo = getters.vertexById(edge.vertexTwoId);
 
     commit(DELETE_EDGE, payload);
 
-    return Promise.resolve({
+    return Promise.resolve(createCommandObject({
+      commandDefinition: GRAPH_COMMANDS_MAP[GRAPH_DELETE_EDGE],
       data: {
         edgeId: edge.edgeId,
         vertexOneId: edge.vertexOneId,
         vertexTwoId: edge.vertexTwoId
-      }
-    });
+      },
+      text: `Delete Edge V(${vertexOne.number}) -- V(${vertexTwo.number})`
+    }));
   },
   [GRAPH_MOVE_VERTEX]({commit}, payload) {
     commit(UPDATE_VERTEX, {vertexData: payload});
@@ -154,9 +159,7 @@ export default {
   namespaced: true,
   state: {
     vertexList: [],
-    edgeList: [],
-    vertexIdCounter: 0,
-    edgeIdCounter: 0
+    edgeList: []
   },
   mutations,
   actions,
@@ -169,6 +172,8 @@ export default {
     },
     adjEdgesByVertex: state => vertexId => {
       return state.edgeList.filter(edge => edge.vertexOneId === vertexId || edge.vertexTwoId === vertexId);
-    }
+    },
+    vertexCount: state => state.vertexList.length,
+    edgeCount: state => state.edgeList.length
   }
 }

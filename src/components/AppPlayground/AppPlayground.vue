@@ -18,14 +18,24 @@
             stroke="#c3c3c3" stroke-width="5">
       </line>
 
-      <circle v-for="vertex in vertexList"
-              :id="vertex.vertexId"
-              :cx="vertex.cx"
-              :cy="vertex.cy"
-              :cursor="vertexCursor"
-              :fill="vertexFillColor(vertex.vertexId)"
-              r="15" stroke="#afafaf" stroke-width="4">
-      </circle>
+      <g v-for="vertex in vertexList" :cursor="vertexCursor">
+        <circle :id="vertex.vertexId"
+                :cx="vertex.cx"
+                :cy="vertex.cy"
+                :fill="vertexFillColor(vertex.vertexId)"
+                r="15"
+                stroke="#afafaf"
+                stroke-width="4">
+        </circle>
+        <text :id="vertex.vertexId"
+              :x="vertex.cx"
+              :y="vertex.cy"
+              :stroke="textStrokeColor(vertex.vertexId)"
+              text-anchor="middle"
+              stroke-width="2px"
+              dy=".3em">{{vertex.number}}
+        </text>
+      </g>
     </svg>
   </div>
 </template>
@@ -67,9 +77,7 @@
               cy: e.offsetY
             });
           })
-          .then(result => {
-            this.logCommand(GRAPH_ADD_VERTEX, result.data);
-          });
+          .then(this.logCommand);
       },
       [pgStates.ADD_EDGE] (e) {
         if (!isEventOnEntity(e, entityTypes.VERTEX)) {
@@ -84,8 +92,8 @@
                 vertexTwoId: e.target.id
               });
             })
-            .then(result => {
-              this.logCommand(GRAPH_ADD_EDGE, result.data);
+            .then(command => {
+              this.logCommand(command);
               this.firstEdgeVertexId = null;
             });
         } else {
@@ -101,33 +109,39 @@
           .then(() => {
             return this.$store.dispatch(`graph/${GRAPH_DELETE_EDGE}`, {edgeId: e.target.id});
           })
-          .then(result => {
-            this.logCommand(GRAPH_DELETE_EDGE, result.data);
-          });
+          .then(this.logCommand);
       },
       [pgStates.DELETE_VERTEX] (e) {
         if (!isEventOnEntity(e, entityTypes.VERTEX)) {
           return;
         }
 
+        // TODO: move logic to $store !!!
+
         this.checkRedoIsEmpty()
           .then(() => {
-            const vertexId = e.target.id;
+            const vertex = this.$store.getters['graph/vertexById'](e.target.id);
             const subCommands = [];
 
-            this.$store.getters['graph/adjEdgesByVertex'](vertexId).forEach(edge => {
+            this.$store.getters['graph/adjEdgesByVertex'](vertex.vertexId).forEach(edge => {
               this.$store.dispatch(`graph/${GRAPH_DELETE_EDGE}`, {edgeId: edge.edgeId})
-                .then(result => {
-                  subCommands.push(createCommandObject(GRAPH_COMMANDS_MAP[GRAPH_DELETE_EDGE], result.data));
+                .then(command => {
+                  subCommands.push(command);
                 });
             });
 
             this.$store.dispatch(`graph/${GRAPH_DELETE_VERTEX}`, {
-              vertexId: vertexId
-            }).then(result => {
-              subCommands.push(createCommandObject(GRAPH_COMMANDS_MAP.GRAPH_DELETE_VERTEX_PRIVATE, result.data));
+              vertexId: vertex.vertexId
+            }).then(command => {
+              subCommands.push(command);
             }).then(() => {
-              this.logMultiCommand(GRAPH_DELETE_VERTEX, subCommands);
+              const command = createMultiCommandObject({
+                commandDefinition: GRAPH_COMMANDS_MAP[GRAPH_DELETE_VERTEX],
+                text: `Delete Vertex V(${vertex.number})`,
+                subCommands,
+              });
+
+              this.logCommand(command);
             });
           });
       },
@@ -166,6 +180,9 @@
       vertexFillColor(vertexId) {
         return vertexId === this.firstEdgeVertexId ? '#6062bf' : '#d7d7d7';
       },
+      textStrokeColor(vertexId) {
+        return vertexId === this.firstEdgeVertexId ? '#d7d7d7' : '#6062bf';
+      },
       checkRedoIsEmpty() {
         const vm = this;
 
@@ -180,17 +197,10 @@
 
         return Promise.resolve();
       },
-      logCommand(commandName, data) {
+      logCommand(command) {
         this.$store.dispatch(
           `commandHistory/${CH_LOG_COMMAND}`,
-          createCommandObject(GRAPH_COMMANDS_MAP[commandName], data),
-          {root: true}
-        );
-      },
-      logMultiCommand(commandName, subCommands) {
-        this.$store.dispatch(
-          `commandHistory/${CH_LOG_COMMAND}`,
-          createMultiCommandObject(GRAPH_COMMANDS_MAP[commandName], subCommands),
+          command,
           {root: true}
         );
       }

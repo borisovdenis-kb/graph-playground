@@ -5,14 +5,28 @@ const isEventOnEntity = (event, entityType) => {
   return event.target.id.split('-')[0] === entityType;
 };
 
-const createCommandObject = (commandDefinition, data) => ({
+const getNextId = entityList => {
+  let maxNumber = 0;
+
+  entityList.forEach(entity => {
+    if (entity.number > maxNumber) {
+      maxNumber = entity.number;
+    }
+  });
+
+  return maxNumber + 1;
+};
+
+const createCommandObject = ({commandDefinition, data, text}) => ({
   ...commandDefinition,
   data,
+  text,
   date: moment().format('YYYY.MM.DD:HH:mm:ss')
 });
 
-const createMultiCommandObject = (commandDefinition, subCommands) => ({
+const createMultiCommandObject = ({commandDefinition, subCommands, text}) => ({
   ...commandDefinition,
+  text,
   execute: _.cloneDeep(subCommands),
   cancel: _.cloneDeep(subCommands.reverse()),
   date: moment().format('YYYY.MM.DD:HH:mm:ss')
@@ -20,6 +34,7 @@ const createMultiCommandObject = (commandDefinition, subCommands) => ({
 
 export {
   isEventOnEntity,
+  getNextId,
   createCommandObject,
   createMultiCommandObject
 }

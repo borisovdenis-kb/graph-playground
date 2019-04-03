@@ -1,0 +1,41 @@
+.app-entity-counter {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  font-family: Consolas;
+  font-size: 14px;
+}
+
+.app-entity-counter__counter {
+  display: flex;
+  height: 20px;
+  width: 120px;
+  border: 1px solid #cdcdcd;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.app-entity-counter__label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70%;
+  color: #ffffff;
+}
+
+.app-entity-counter__label--vertexes {
+  background-color: #41c86f;
+  border-right: 5px solid #56d76b;
+}
+
+.app-entity-counter__label--edges {
+  background-color: #22bdd8;
+  border-right: 5px solid #54d3e9;
+}
+
+.app-entity-counter__count {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30%;
+}
