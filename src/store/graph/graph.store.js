@@ -1,15 +1,13 @@
 import _ from 'lodash';
 import * as entityTypes from '../../contants/entityTypes';
 import * as entityFactory from '../../services/entityFactory';
-import { createCommandObject } from "../../services/utils";
+import { createCommandObject, getNextId } from "../../services/utils";
 import {
   ADD_VERTEX,
   ADD_EDGE,
   DELETE_VERTEX,
   UPDATE_VERTEX,
   REFRESH_EDGES,
-  INCREASE_ID_COUNTER,
-  RESET_ID_COUNTER,
   DELETE_EDGE
 } from "./graph.mutations";
 import {
@@ -61,12 +59,6 @@ const mutations = {
 
       return edge;
     });
-  },
-  [INCREASE_ID_COUNTER](state, payload) {
-    state[payload.counterName] = state[payload.counterName] + 1;
-  },
-  [RESET_ID_COUNTER](state, payload) {
-    state[payload.counterName] = 0;
   }
 };
 
@@ -82,9 +74,9 @@ const actions = {
       vertex.vertexId = payload.vertexId;
       vertex.number = payload.number;
     } else {
-      vertex.vertexId = `${entityTypes.VERTEX}-${state.vertexIdCounter}`;
-      vertex.number = state.vertexIdCounter;
-      commit(INCREASE_ID_COUNTER, {counterName: 'vertexIdCounter'});
+      const id = getNextId(state.vertexList);
+      vertex.vertexId = `${entityTypes.VERTEX}-${id}`;
+      vertex.number = id;
     }
 
     commit(ADD_VERTEX, {vertex});
@@ -99,10 +91,6 @@ const actions = {
     const vertex = _.cloneDeep(getters.vertexById(payload.vertexId));
 
     commit(DELETE_VERTEX, payload);
-
-    if (!state.vertexList.length) {
-      commit(RESET_ID_COUNTER, {counterName: 'vertexIdCounter'});
-    }
 
     return Promise.resolve(createCommandObject({
       commandDefinition: GRAPH_COMMANDS_MAP.GRAPH_DELETE_VERTEX_PRIVATE,
@@ -125,9 +113,11 @@ const actions = {
 
     if (payload.edgeId) {
       edge.edgeId = payload.edgeId;
+      edge.number = payload.number;
     } else {
-      edge.edgeId = `${entityTypes.EDGE}-${state.edgeIdCounter}`;
-      commit(INCREASE_ID_COUNTER, {counterName: 'edgeIdCounter'});
+      const id = getNextId(state.edgeList);
+      edge.edgeId = `${entityTypes.EDGE}-${id}`;
+      edge.number = id;
     }
 
     commit(ADD_EDGE, {edge});
@@ -169,9 +159,7 @@ export default {
   namespaced: true,
   state: {
     vertexList: [],
-    edgeList: [],
-    vertexIdCounter: 0,
-    edgeIdCounter: 0
+    edgeList: []
   },
   mutations,
   actions,

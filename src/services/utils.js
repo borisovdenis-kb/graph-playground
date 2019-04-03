@@ -5,6 +5,18 @@ const isEventOnEntity = (event, entityType) => {
   return event.target.id.split('-')[0] === entityType;
 };
 
+const getNextId = entityList => {
+  let maxNumber = 0;
+
+  entityList.forEach(entity => {
+    if (entity.number > maxNumber) {
+      maxNumber = entity.number;
+    }
+  });
+
+  return maxNumber + 1;
+};
+
 const createCommandObject = ({commandDefinition, data, text}) => ({
   ...commandDefinition,
   data,
@@ -22,6 +34,7 @@ const createMultiCommandObject = ({commandDefinition, subCommands, text}) => ({
 
 export {
   isEventOnEntity,
+  getNextId,
   createCommandObject,
   createMultiCommandObject
 }
