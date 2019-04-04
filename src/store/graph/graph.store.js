@@ -8,7 +8,8 @@ import {
   DELETE_VERTEX,
   UPDATE_VERTEX,
   REFRESH_EDGES,
-  DELETE_EDGE
+  DELETE_EDGE,
+  SET_EDGE_WEIGHT_VISIBILITY
 } from "./graph.mutations";
 import {
   GRAPH_ADD_VERTEX,
@@ -59,6 +60,9 @@ const mutations = {
 
       return edge;
     });
+  },
+  [SET_EDGE_WEIGHT_VISIBILITY](state, payload) {
+    state.isEdgeWeightVisible = payload.flag;
   }
 };
 
@@ -159,7 +163,8 @@ export default {
   namespaced: true,
   state: {
     vertexList: [],
-    edgeList: []
+    edgeList: [],
+    isEdgeWeightVisible: false
   },
   mutations,
   actions,

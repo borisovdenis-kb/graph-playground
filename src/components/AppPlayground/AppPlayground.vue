@@ -18,7 +18,8 @@
               stroke="#c3c3c3"
               stroke-width="5"> <!-- TODO: проверить, что все нормально с курсором-->
         </line>
-        <rect :id="edge.edgeId"
+        <rect v-if="isEdgeWeightVisible"
+              :id="edge.edgeId"
               :x="calcMiddleCoordinate(edge.x1, edge.x2) - 10"
               :y="calcMiddleCoordinate(edge.y1, edge.y2) - 10"
               width="35px"
@@ -28,7 +29,8 @@
               rx="4"
               ry="4"></rect>
 
-        <text :id="edge.edgeId"
+        <text v-if="isEdgeWeightVisible"
+              :id="edge.edgeId"
               :x="calcMiddleCoordinate(edge.x1, edge.x2) + 7"
               :y="calcMiddleCoordinate(edge.y1, edge.y2) + 5"
               text-anchor="middle"
@@ -231,7 +233,8 @@
     computed: {
       ...mapState('graph', [
         'vertexList',
-        'edgeList'
+        'edgeList',
+        'isEdgeWeightVisible'
       ]),
       vertexCursor() {
         const mapStateToCursor = {
