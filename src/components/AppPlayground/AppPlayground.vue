@@ -8,15 +8,34 @@
          @mousedown="onPgMousedown"
          @mouseup="onPgMouseup">
 
-      <line v-for="edge in edgeList"
-            :id="edge.edgeId"
-            :x1="edge.x1"
-            :y1="edge.y1"
-            :x2="edge.x2"
-            :y2="edge.y2"
-            :cursor="edgeCursor"
-            stroke="#c3c3c3" stroke-width="5">
-      </line>
+      <g v-for="edge in edgeList">
+        <line :id="edge.edgeId"
+              :x1="edge.x1"
+              :y1="edge.y1"
+              :x2="edge.x2"
+              :y2="edge.y2"
+              :cursor="edgeCursor"
+              stroke="#c3c3c3"
+              stroke-width="5"> <!-- TODO: проверить, что все нормально с курсором-->
+        </line>
+        <rect :id="edge.edgeId"
+              :x="calcMiddleCoordinate(edge.x1, edge.x2) - 10"
+              :y="calcMiddleCoordinate(edge.y1, edge.y2) - 10"
+              width="35px"
+              height="20px"
+              fill="#f0f0f0"
+              style="opacity: 0.8"
+              rx="4"
+              ry="4"></rect>
+
+        <text :id="edge.edgeId"
+              :x="calcMiddleCoordinate(edge.x1, edge.x2) + 7"
+              :y="calcMiddleCoordinate(edge.y1, edge.y2) + 5"
+              text-anchor="middle"
+              fill="#c3c3c3">
+          {{edge.weight}}
+        </text>
+      </g>
 
       <g v-for="vertex in vertexList" :cursor="vertexCursor">
         <circle :id="vertex.vertexId"
@@ -33,7 +52,8 @@
               :stroke="textStrokeColor(vertex.vertexId)"
               text-anchor="middle"
               stroke-width="2px"
-              dy=".3em">{{vertex.number}}
+              dy=".3em">
+          {{vertex.number}}
         </text>
       </g>
     </svg>
@@ -203,6 +223,9 @@
           command,
           {root: true}
         );
+      },
+      calcMiddleCoordinate(c1, c2) {
+        return (c1 + c2) / 2;
       }
     },
     computed: {
