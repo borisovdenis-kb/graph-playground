@@ -2,6 +2,17 @@
   <div class="app-header-toolbar">
     <div class="app-button-toolbar__btn-group app-button-toolbar__btn-group-first">
       <div class="app-header-toolbar__button">
+        <app-button v-on:click="setCurrentPgState(pgStates.SELECT_ENTITY)"
+                    v-bind:is-selected="checkPgState(pgStates.SELECT_ENTITY)"
+                    icon-text="C">
+        </app-button>
+      </div>
+    </div>
+
+    <app-separator is-vertical="true"></app-separator>
+
+    <div class="app-button-toolbar__btn-group app-button-toolbar__btn-group-middle">
+      <div class="app-header-toolbar__button">
         <app-button v-on:click="setCurrentPgState(pgStates.ADD_VERTEX)"
                     v-bind:is-selected="checkPgState(pgStates.ADD_VERTEX)"
                     icon-text="V+">
@@ -61,7 +72,7 @@
   import {mapState} from 'vuex';
   import * as mutations from '../../store/mutations';
   import * as graphMutations from '../../store/graph/graph.mutations';
-  import * as pgStates from "../../contants/pgStates";
+  import * as pgStates from "../../constants/pgStates";
 
   export default {
     name: "AppHeaderToolbar",

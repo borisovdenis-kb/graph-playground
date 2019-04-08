@@ -4,7 +4,7 @@ import AppBaseDialog from '../components/dialogs/AppBaseDialog/AppBaseDialog';
 class BaseDialogService {
   constructor() {}
 
-  open({dialogComponent = AppBaseDialog, data, options}) {
+  open({dialogComponent = AppBaseDialog, data = {}, options = {}}) {
     const appElement = document.getElementById('app');
     let dialogInstance;
 

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import * as entityTypes from '../../contants/entityTypes';
+import * as entityTypes from '../../constants/entityTypes';
 import * as entityFactory from '../../services/entityFactory';
 import { createCommandObject, getNextId } from "../../services/utils";
 import {
@@ -106,7 +106,7 @@ const actions = {
     const vertexOne = getters.vertexById(payload.vertexOneId);
     const vertexTwo = getters.vertexById(payload.vertexTwoId);
     const edge = {
-      weight: 0,
+      weight: null,
       x1: vertexOne.cx,
       y1: vertexOne.cy,
       x2: vertexTwo.cx,

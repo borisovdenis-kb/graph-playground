@@ -8,7 +8,7 @@
          @mousedown="onPgMousedown"
          @mouseup="onPgMouseup">
 
-      <g v-for="edge in edgeList">
+      <g v-for="edge in edgeList"> <!-- TODO: вынести в компоненты -->
         <line :id="edge.edgeId"
               :x1="edge.x1"
               :y1="edge.y1"
@@ -35,7 +35,7 @@
               :y="calcMiddleCoordinate(edge.y1, edge.y2) + 5"
               text-anchor="middle"
               fill="#c3c3c3">
-          {{edge.weight}}
+          {{edge.weight || 0}}
         </text>
       </g>
 
@@ -64,7 +64,7 @@
 
 <script>
   import './app-playground.css';
-  import * as pgStates from '../../contants/pgStates';
+  import * as pgStates from '../../constants/pgStates';
   import {
     GRAPH_ADD_VERTEX,
     GRAPH_ADD_EDGE,
@@ -73,11 +73,11 @@
     GRAPH_MOVE_VERTEX,
     GRAPH_COMMANDS_MAP
   } from '../../store/graph/graph.actions';
-  import * as entityTypes from '../../contants/entityTypes';
+  import * as entityTypes from '../../constants/entityTypes';
   import * as appDialogService from '../../services/appDiIalogService';
   import {CH_LOG_COMMAND} from '../../store/commandHistory/commandHistory.actions';
   import {CLEAR_REDO} from '../../store/commandHistory/commandHistory.mutations';
-  import { isEventOnEntity, createCommandObject, createMultiCommandObject } from "../../services/utils";
+  import { isEventOnEntity, createMultiCommandObject } from "../../services/utils";
   import { mapState } from 'vuex';
 
   export default {
@@ -166,6 +166,15 @@
               this.logCommand(command);
             });
           });
+      },
+      [pgStates.SELECT_ENTITY](e) {
+        if (!isEventOnEntity(e, entityTypes.VERTEX)) {
+          appDialogService.openEditEdgeDialog({
+            data: {
+              edgeId: e.target.id
+            }
+          });
+        }
       },
       onPgClick(e) {
         const currentPgState = this.$store.state.currentPgState;

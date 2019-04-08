@@ -1,0 +1,17 @@
+.app-edit-edge-dialog {
+  flex-direction: column;
+  width: 150px;
+  height: 200px;
+  background-color: #ffffff;
+  border: 1px solid #e1e1e1;
+  border-radius: 6px;
+  padding: 10px;
+  -webkit-box-shadow: 0px 0px 27px 5px rgba(0,0,0,0.15);
+  -moz-box-shadow: 0px 0px 27px 5px rgba(0,0,0,0.15);
+  box-shadow: 0px 0px 27px 5px rgba(0,0,0,0.15);
+}
+
+.app-edit-edge-dialog__header {
+  height: 35px;
+  font-weight: 600;
+}

@@ -1,5 +1,5 @@
 <template>
-  <div class="app-base-dialog"
+  <div class="app-base-dialog common-dialog"
        v-bind:class="{'app-base-dialog--appear': isReady}"
        v-bind:style="inlineStyles">
     <div class="app-base-dialog__header">

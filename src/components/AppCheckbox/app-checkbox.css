@@ -1,0 +1,16 @@
+.app-checkbox {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.app-checkbox__input {
+  margin-left: 0;
+}
+
+.app-checkbox__label {
+  margin-top: 5px;
+  font-size: 13px;
+  color: #a1a1a1;
+}
