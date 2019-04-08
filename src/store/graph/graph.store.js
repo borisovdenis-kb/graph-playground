@@ -107,6 +107,7 @@ const actions = {
     const vertexTwo = getters.vertexById(payload.vertexTwoId);
     const edge = {
       weight: null,
+      isOriented: false,
       x1: vertexOne.cx,
       y1: vertexOne.cy,
       x2: vertexTwo.cx,

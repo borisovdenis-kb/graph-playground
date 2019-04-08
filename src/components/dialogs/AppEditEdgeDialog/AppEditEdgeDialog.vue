@@ -9,7 +9,7 @@
     <div class="app-edit-edge-dialog__row">
       <app-input v-bind:text="edge.weight"
                  label="Weight"
-                 placeholder="Enter edge weight">
+                 placeholder="Enter weight">
       </app-input>
     </div>
 

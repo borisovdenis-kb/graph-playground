@@ -1,9 +1,15 @@
 <template>
   <div class="app-input">
-    <input class="app-input__input"
-           v-model="innerText"
-           v-bind:placeholder="placeholderValue"
-           type="text">
+    <!--<input class="app-input__input"-->
+           <!--v-model="innerText"-->
+           <!--v-bind:placeholder="placeholderValue"-->
+           <!--type="text">-->
+
+    <el-input v-model="innerText"
+              v-bind:placeholder="placeholderValue"
+              size="mini">
+
+    </el-input>
     <label class="app-input__label">{{label}}</label>
   </div>
 </template>

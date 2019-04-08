@@ -15,3 +15,7 @@
   height: 35px;
   font-weight: 600;
 }
+
+.app-edit-edge-dialog__row {
+  margin-top: 10px;
+}
