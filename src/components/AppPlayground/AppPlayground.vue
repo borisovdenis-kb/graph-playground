@@ -25,7 +25,7 @@
               width="35px"
               height="20px"
               fill="#f0f0f0"
-              style="opacity: 0.8"
+              style="opacity: 0.9"
               rx="4"
               ry="4"></rect>
 
@@ -34,7 +34,7 @@
               :x="calcMiddleCoordinate(edge.x1, edge.x2) + 7"
               :y="calcMiddleCoordinate(edge.y1, edge.y2) + 5"
               text-anchor="middle"
-              fill="#c3c3c3">
+              fill="#a5a5a5">
           {{edge.weight || 0}}
         </text>
       </g>
@@ -71,6 +71,7 @@
     GRAPH_DELETE_VERTEX,
     GRAPH_DELETE_EDGE,
     GRAPH_MOVE_VERTEX,
+    GRAPH_UPDATE_EDGE,
     GRAPH_COMMANDS_MAP
   } from '../../store/graph/graph.actions';
   import * as entityTypes from '../../constants/entityTypes';
@@ -173,6 +174,8 @@
             data: {
               edgeId: e.target.id
             }
+          }).then(data => {
+            this.$store.dispatch(`graph/${GRAPH_UPDATE_EDGE}`, data.edge);
           });
         }
       },

@@ -19,7 +19,7 @@
 
           <div class="app-edit-edge-dialog__row">
             <div>
-              <el-radio v-model="edgeDirection"
+              <el-radio v-model="edge.direction"
                         :disabled="!edge.isOriented"
                         label="true"
                         border
@@ -27,7 +27,7 @@
                         style="margin-right: 10px">
                 A - B
               </el-radio>
-              <el-radio v-model="edgeDirection"
+              <el-radio v-model="edge.direction"
                         :disabled="!edge.isOriented"
                         label="false"
                         border
@@ -46,6 +46,7 @@
 
 <script>
   import './app-edit-edge-dialog.css';
+  import _ from 'lodash';
   import $store from '../../../store/index';
   import AppInput from "../../AppInput/AppInput";
   import AppCheckbox from "../../AppCheckbox/AppCheckbox";
@@ -61,15 +62,13 @@
     props: ['inData', 'options'],
     data() {
       return {
-        edge: {},
-        edgeDirection: true
+        edge: {}
       }
     },
     methods: {
       onOkClick() {
         this.options.onResolveClose({
-          edge: this.edge,
-          edgeDirection: this.edgeDirection
+          edge: this.edge
         });
       },
       onCancelClick() {
@@ -77,7 +76,7 @@
       }
     },
     created() {
-      this.edge = $store.getters['graph/edgeById'](this.inData.edgeId);
+      this.edge = _.cloneDeep($store.getters['graph/edgeById'](this.inData.edgeId));
 
       this.options['windowLeft'] = (this.edge.x1 + this.edge.x2) / 2 + 20;
       this.options['windowTop'] = (this.edge.y1 + this.edge.y2) / 2 + 20;

@@ -9,6 +9,7 @@ import {
   UPDATE_VERTEX,
   REFRESH_EDGES,
   DELETE_EDGE,
+  UPDATE_EDGE,
   SET_EDGE_WEIGHT_VISIBILITY
 } from "./graph.mutations";
 import {
@@ -17,6 +18,7 @@ import {
   GRAPH_ADD_EDGE,
   GRAPH_MOVE_VERTEX,
   GRAPH_DELETE_EDGE,
+  GRAPH_UPDATE_EDGE,
   GRAPH_COMMANDS_MAP
 } from "./graph.actions";
 
@@ -41,6 +43,15 @@ const mutations = {
       }
 
       return vertex;
+    });
+  },
+  [UPDATE_EDGE](state, payload) {
+    state.edgeList = state.edgeList.map(edge => {
+      if (edge.edgeId === payload.edgeData.edgeId) {
+        return {...edge, ...payload.edgeData};
+      }
+
+      return edge;
     });
   },
   [REFRESH_EDGES](state, payload) {
@@ -108,6 +119,7 @@ const actions = {
     const edge = {
       weight: null,
       isOriented: false,
+      direction: true,
       x1: vertexOne.cx,
       y1: vertexOne.cy,
       x2: vertexTwo.cx,
@@ -153,6 +165,9 @@ const actions = {
       },
       text: `Delete Edge V(${vertexOne.number}) -- V(${vertexTwo.number})`
     }));
+  },
+  [GRAPH_UPDATE_EDGE]({commit}, payload) {
+    commit(UPDATE_EDGE, {edgeData: payload});
   },
   [GRAPH_MOVE_VERTEX]({commit}, payload) {
     commit(UPDATE_VERTEX, {vertexData: payload});
