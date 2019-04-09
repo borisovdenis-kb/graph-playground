@@ -1,27 +1,30 @@
 <template>
-  <div class="app-edit-edge-dialog common-dialog"
-       v-bind:style="inlineStyles">
+  <div class="app-edit-edge-dialog">
+    <app-base-dialog v-bind:options="options">
+      <template slot="content">
+        <div class="app-edit-edge-dialog__content">
+          <div class="app-edit-edge-dialog__row">
+            <app-input v-bind:text="edge.weight"
+                       label="Weight"
+                       placeholder="Enter weight">
+            </app-input>
+          </div>
 
-    <div class="app-edit-edge-dialog__header">
-      Edit Edge
-    </div>
+          <div class="app-edit-edge-dialog__row">
+            <app-checkbox label="Orientation">
+            </app-checkbox>
+          </div>
 
-    <div class="app-edit-edge-dialog__row">
-      <app-input v-bind:text="edge.weight"
-                 label="Weight"
-                 placeholder="Enter weight">
-      </app-input>
-    </div>
-
-    <div class="app-edit-edge-dialog__row">
-      <app-checkbox label="Orientation">
-      </app-checkbox>
-    </div>
-
-    <div class="app-edit-edge-dialog__row">
-      <div>A - B</div>
-      <div>B - A</div>
-    </div>
+          <div class="app-edit-edge-dialog__row">
+            <div>
+              <el-radio v-model="edgeDirection" label="true" border size="mini" style="margin-right: 10px">A - B</el-radio>
+              <el-radio v-model="edgeDirection" label="false" border size="mini" style="margin: 0">B - A</el-radio>
+            </div>
+            <label class="app-edit-edge-dialog__direction-label">Direction</label>
+          </div>
+        </div>
+      </template>
+    </app-base-dialog>
   </div>
 </template>
 
@@ -30,34 +33,27 @@
   import $store from '../../../store/index';
   import AppInput from "../../AppInput/AppInput";
   import AppCheckbox from "../../AppCheckbox/AppCheckbox";
+  import AppBaseDialog from "../AppBaseDialog/AppBaseDialog";
 
   export default {
     name: "AppEditEdgeDialog",
     components: {
+      AppBaseDialog,
       AppCheckbox,
       AppInput
     },
-    props: ['inData'],
+    props: ['inData', 'options'],
     data() {
       return {
         edge: {},
-        windowTop: 0,
-        windowLeft: 0
+        edgeDirection: true
       }
     },
-    computed: {
-      inlineStyles() {
-        return {
-          left: `${this.windowLeft}px`,
-          top: `${this.windowTop}px`
-        }
-      }
-    },
-    beforeMount() {
+    created() {
       this.edge = $store.getters['graph/edgeById'](this.inData.edgeId);
 
-      this.windowLeft = (this.edge.x1 + this.edge.x2) / 2 + 20;
-      this.windowTop = (this.edge.y1 + this.edge.y2) / 2 + 20;
+      this.options['windowLeft'] = (this.edge.x1 + this.edge.x2) / 2 + 20;
+      this.options['windowTop'] = (this.edge.y1 + this.edge.y2) / 2 + 20;
     }
   }
 </script>

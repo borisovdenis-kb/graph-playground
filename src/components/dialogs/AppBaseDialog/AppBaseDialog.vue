@@ -46,16 +46,25 @@
       },
       cancelClick() {
         this.options.onRejectClose({text: 'Hello!'});
+      },
+      getWindowLeft() {
+        if (this.options.windowLeft) {
+          return this.options.windowLeft;
+        }
+
+        const appRect = document.getElementById('app').getBoundingClientRect();
+
+        return (appRect.width - this.options.width) / 2;
+      },
+      getWindowTop() {
+        if (this.options.windowTop) {
+          return this.options.windowTop;
+        }
+
+        const appRect = document.getElementById('app').getBoundingClientRect();
+
+        return (appRect.height - this.options.height) / 2;
       }
-    },
-    beforeMount() {
-      const appRect = document.getElementById('app').getBoundingClientRect();
-
-      this.windowLeft = (appRect.width - this.options.width) / 2;
-      this.windowTop = (appRect.height - this.options.height) / 2;
-
-      this.blackOutElement = document.getElementsByClassName('global-blackout')[0];
-      this.blackOutElement.style.display = 'block';
     },
     computed: {
       inlineStyles() {
@@ -67,6 +76,15 @@
         }
       }
     },
+    beforeMount() {
+      this.windowLeft = this.getWindowLeft();
+      this.windowTop = this.getWindowTop();
+
+      if (!this.options.isBlackoutDisabled) {
+        this.blackOutElement = document.getElementsByClassName('global-blackout')[0];
+        this.blackOutElement.style.display = 'block';
+      }
+    },
     mounted() {
       this.isReady = true;
     },
@@ -74,9 +92,10 @@
       this.isReady = false;
     },
     destroyed() {
-      this.blackOutElement.style.display = 'none';
+      if (!this.options.isBlackoutDisabled) {
+        this.blackOutElement.style.display = 'none';
+      }
     }
-
   }
 </script>
 

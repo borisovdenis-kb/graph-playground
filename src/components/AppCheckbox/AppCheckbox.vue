@@ -1,6 +1,6 @@
 <template>
   <div class="app-checkbox">
-    <el-checkbox v-model="innerValue"></el-checkbox>
+    <el-checkbox v-model="innerValue" style="margin: 0"></el-checkbox>
     <label class="app-checkbox__label">{{label}}</label>
   </div>
 </template>

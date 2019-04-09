@@ -2,7 +2,7 @@ import baseDialogService from './baseDialogService';
 import AppInfoDialog from '../components/dialogs/AppInfoDialog/AppInfoDialog';
 import AppEditEdgeDialog from '../components/dialogs/AppEditEdgeDialog/AppEditEdgeDialog';
 
-const openInfoDialog = ({data, options}) => {
+const openInfoDialog = ({data, options = {}}) => {
   return baseDialogService.open({
     dialogComponent: AppInfoDialog,
     data,
@@ -10,9 +10,20 @@ const openInfoDialog = ({data, options}) => {
   });
 };
 
-const openEditEdgeDialog = ({data}) => {
+const openEditEdgeDialog = ({data, options = {}}) => {
+  const defaultOptions = {
+    caption: 'EditEdge',
+    width: 190,
+    height: 300,
+    isBlackoutDisabled: true
+  };
+
   return baseDialogService.open({
     dialogComponent: AppEditEdgeDialog,
+    options: {
+      ...defaultOptions,
+      ...options
+    },
     data
   });
 };
