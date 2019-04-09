@@ -3,10 +3,19 @@ import AppInfoDialog from '../components/dialogs/AppInfoDialog/AppInfoDialog';
 import AppEditEdgeDialog from '../components/dialogs/AppEditEdgeDialog/AppEditEdgeDialog';
 
 const openInfoDialog = ({data, options = {}}) => {
+  const defaultOptions = {
+    caption: 'Внимание',
+    width: 400,
+    height: 200
+  };
+
   return baseDialogService.open({
     dialogComponent: AppInfoDialog,
-    data,
-    options
+    options: {
+      ...defaultOptions,
+      ...options
+    },
+    data
   });
 };
 

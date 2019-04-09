@@ -219,8 +219,7 @@
 
         if (!this.$store.getters['commandHistory/isRedoEmpty']) {
           return appDialogService.openInfoDialog({
-            data: {text: 'Отмененные действия будут утеряны!'},
-            options: {caption: 'Внимание', width: 400, height: 200}
+            data: {text: 'Отмененные действия будут утеряны!'}
           }).then(() => {
             vm.$store.commit(`commandHistory/${CLEAR_REDO}`);
           });

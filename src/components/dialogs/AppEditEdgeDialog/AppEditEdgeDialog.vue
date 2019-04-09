@@ -67,7 +67,6 @@
     },
     methods: {
       onOkClick() {
-        console.log(this.edge);
         this.options.onResolveClose({
           edge: this.edge,
           edgeDirection: this.edgeDirection
