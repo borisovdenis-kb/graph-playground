@@ -1,24 +1,40 @@
 <template>
   <div class="app-edit-edge-dialog">
-    <app-base-dialog v-bind:options="options">
+    <app-base-dialog :options="options"
+                     @dialogOk="onOkClick()"
+                     @dialogCancel="onCancelClick()">
       <template slot="content">
         <div class="app-edit-edge-dialog__content">
           <div class="app-edit-edge-dialog__row">
-            <app-input v-bind:text="edge.weight"
+            <app-input v-model="edge.weight"
                        label="Weight"
                        placeholder="Enter weight">
             </app-input>
           </div>
 
           <div class="app-edit-edge-dialog__row">
-            <app-checkbox label="Orientation">
+            <app-checkbox v-model="edge.isOriented" label="Orientation">
             </app-checkbox>
           </div>
 
           <div class="app-edit-edge-dialog__row">
             <div>
-              <el-radio v-model="edgeDirection" label="true" border size="mini" style="margin-right: 10px">A - B</el-radio>
-              <el-radio v-model="edgeDirection" label="false" border size="mini" style="margin: 0">B - A</el-radio>
+              <el-radio v-model="edgeDirection"
+                        :disabled="!edge.isOriented"
+                        label="true"
+                        border
+                        size="mini"
+                        style="margin-right: 10px">
+                A - B
+              </el-radio>
+              <el-radio v-model="edgeDirection"
+                        :disabled="!edge.isOriented"
+                        label="false"
+                        border
+                        size="mini"
+                        style="margin: 0">
+                B - A
+              </el-radio>
             </div>
             <label class="app-edit-edge-dialog__direction-label">Direction</label>
           </div>
@@ -47,6 +63,18 @@
       return {
         edge: {},
         edgeDirection: true
+      }
+    },
+    methods: {
+      onOkClick() {
+        console.log(this.edge);
+        this.options.onResolveClose({
+          edge: this.edge,
+          edgeDirection: this.edgeDirection
+        });
+      },
+      onCancelClick() {
+        this.options.onRejectClose();
       }
     },
     created() {

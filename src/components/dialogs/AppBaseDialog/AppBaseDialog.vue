@@ -31,7 +31,7 @@
 
   export default {
     name: "AppBaseDialog",
-    props: ['options', 'onOkClick', 'onCancelClick'],
+    props: ['options'],
     data() {
       return {
         windowTop: 0,
@@ -42,10 +42,10 @@
     },
     methods: {
       okClick() {
-        this.options.onResolveClose({text: 'Hello!'});
+        this.$emit('dialogOk');
       },
       cancelClick() {
-        this.options.onRejectClose({text: 'Hello!'});
+        this.$emit('dialogCancel');
       },
       getWindowLeft() {
         if (this.options.windowLeft) {

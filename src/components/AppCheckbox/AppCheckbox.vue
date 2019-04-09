@@ -10,19 +10,19 @@
 
   export default {
     name: "AppCheckbox",
-    props: ['label', 'value'],
+    props: ['value', 'label'],
     data() {
       return {
         innerValue: ''
       }
     },
     watch: {
-      innerValue: function (val) {
-        this.$emit('change', {value: val});
+      innerValue: function (value) {
+        this.$emit('input', value);
       }
     },
     mounted() {
-      this.innerValue = this.text;
+      this.innerValue = this.value;
     }
   }
 </script>

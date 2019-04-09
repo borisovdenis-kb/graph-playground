@@ -1,6 +1,6 @@
 <template>
   <div class="app-input">
-    <el-input v-model="innerText"
+    <el-input v-model="innerValue"
               v-bind:placeholder="placeholderValue"
               size="mini">
     </el-input>
@@ -13,15 +13,15 @@
 
   export default {
     name: "AppInput",
-    props: ['label', 'text', 'placeholder'],
+    props: ['value', 'label', 'placeholder'],
     data() {
       return {
-        innerText: ''
+        innerValue: ''
       }
     },
     watch: {
-      innerText: function (val) {
-        this.$emit('change', {value: val});
+      innerValue: function (value) {
+        this.$emit('input', value);
       }
     },
     computed: {
@@ -30,7 +30,7 @@
       }
     },
     mounted() {
-      this.innerText = this.text;
+      this.innerValue = this.value;
     }
   }
 </script>

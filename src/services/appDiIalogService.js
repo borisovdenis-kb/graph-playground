@@ -13,7 +13,7 @@ const openInfoDialog = ({data, options = {}}) => {
 const openEditEdgeDialog = ({data, options = {}}) => {
   const defaultOptions = {
     caption: 'EditEdge',
-    width: 190,
+    width: 200,
     height: 300,
     isBlackoutDisabled: true
   };
