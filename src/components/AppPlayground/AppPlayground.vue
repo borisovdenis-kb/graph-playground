@@ -71,7 +71,7 @@
     GRAPH_DELETE_VERTEX,
     GRAPH_DELETE_EDGE,
     GRAPH_MOVE_VERTEX,
-    GRAPH_UPDATE_EDGE,
+    GRAPH_UPDATE_EDGE_WEIGHT,
     GRAPH_COMMANDS_MAP
   } from '../../store/graph/graph.actions';
   import * as entityTypes from '../../constants/entityTypes';
@@ -175,7 +175,7 @@
               edgeId: e.target.id
             }
           }).then(data => {
-            this.$store.dispatch(`graph/${GRAPH_UPDATE_EDGE}`, data.edge);
+            this.$store.dispatch(`graph/${GRAPH_UPDATE_EDGE_WEIGHT}`, data.edge);
           });
         }
       },

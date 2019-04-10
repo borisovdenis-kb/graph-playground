@@ -2,7 +2,7 @@ import _ from 'lodash';
 import * as entityTypes from '../../constants/entityTypes';
 import * as entityFactory from '../../services/entityFactory';
 import * as edgeOrientation from '../../constants/edgeOrientation';
-import { createCommandObject, getNextId } from "../../services/utils";
+import { createCommandObject, createDiffCommandObject, getNextId } from "../../services/utils";
 import {
   ADD_VERTEX,
   ADD_EDGE,
@@ -19,7 +19,7 @@ import {
   GRAPH_ADD_EDGE,
   GRAPH_MOVE_VERTEX,
   GRAPH_DELETE_EDGE,
-  GRAPH_UPDATE_EDGE,
+  GRAPH_UPDATE_EDGE_WEIGHT,
   GRAPH_COMMANDS_MAP
 } from "./graph.actions";
 
@@ -166,8 +166,19 @@ const actions = {
       text: `Delete Edge V(${vertexOne.number}) -- V(${vertexTwo.number})`
     }));
   },
-  [GRAPH_UPDATE_EDGE]({commit}, payload) {
+  [GRAPH_UPDATE_EDGE_WEIGHT]({commit, getters}, payload) {
+    const oldEdge = _.cloneDeep(getters.edgeById(payload.edgeId));
+    const vertexOne = getters.vertexById(oldEdge.vertexOneId);
+    const vertexTwo = getters.vertexById(oldEdge.vertexTwoId);
+
     commit(UPDATE_EDGE, {edgeData: payload});
+
+    return Promise.resolve(createDiffCommandObject({
+      commandDefinition: GRAPH_COMMANDS_MAP[GRAPH_UPDATE_EDGE_WEIGHT],
+      executeData: _.cloneDeep(getters.edgeById(payload.edgeId)),
+      cancelData: oldEdge,
+      text: `Update Edge V(${vertexOne.number}) -- V(${vertexTwo.number}) Weight`
+    }));
   },
   [GRAPH_MOVE_VERTEX]({commit}, payload) {
     commit(UPDATE_VERTEX, {vertexData: payload});

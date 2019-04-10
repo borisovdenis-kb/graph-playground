@@ -36,10 +36,19 @@ const createMultiCommandObject = ({commandDefinition, subCommands, text}) => ({
   date: moment().format('YYYY.MM.DD:HH:mm:ss')
 });
 
+const createDiffCommandObject = ({commandDefinition, executeData, cancelData, text}) => ({
+  ...commandDefinition,
+  text,
+  executeData,
+  cancelData,
+  date: moment().format('YYYY.MM.DD:HH:mm:ss')
+});
+
 export {
   isEventOnEntity,
   getSelectedEntityType,
   getNextId,
   createCommandObject,
-  createMultiCommandObject
+  createMultiCommandObject,
+  createDiffCommandObject
 }

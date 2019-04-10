@@ -1,14 +1,13 @@
 <template>
   <div class="app-edit-edge-dialog">
     <app-base-dialog :options="options"
-                     @dialogOk="onOkClick()"
                      @dialogCancel="onCancelClick()">
       <template slot="content">
         <div class="app-edit-edge-dialog__content">
           <div class="app-edit-edge-dialog__row">
             <app-input v-model="edge.weight"
                        label="Weight"
-                       placeholder="Enter weight">
+                       placeholder="Enter weight" v-on:onSave="onWeightSave()">
             </app-input>
           </div>
 
@@ -48,6 +47,8 @@
   import './app-edit-edge-dialog.css';
   import _ from 'lodash';
   import * as graphOrientation from '../../../constants/edgeOrientation';
+  import { GRAPH_UPDATE_EDGE_WEIGHT } from "../../../store/graph/graph.actions";
+  import { CH_LOG_COMMAND } from "../../../store/commandHistory/commandHistory.actions";
   import $store from '../../../store/index';
   import AppInput from "../../AppInput/AppInput";
   import AppCheckbox from "../../AppCheckbox/AppCheckbox";
@@ -68,13 +69,18 @@
       }
     },
     methods: {
-      onOkClick() {
-        this.options.onResolveClose({
-          edge: this.edge
-        });
-      },
       onCancelClick() {
         this.options.onRejectClose();
+      },
+      onWeightSave() {
+        $store.dispatch(`graph/${GRAPH_UPDATE_EDGE_WEIGHT}`, this.edge)
+          .then(command => {
+            $store.dispatch(
+              `commandHistory/${CH_LOG_COMMAND}`,
+              command,
+              {root: true}
+            );
+          });
       }
     },
     created() {

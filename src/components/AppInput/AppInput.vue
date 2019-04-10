@@ -5,7 +5,8 @@
               size="mini">
     </el-input>
     <app-field-bottom v-bind:label="label"
-                      v-bind:is-value-changed="isValueChanged">
+                      v-bind:is-value-changed="isValueChanged"
+                      v-on:onSave="$emit('onSave')">
     </app-field-bottom>
   </div>
 </template>
