@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import * as entityTypes from '../../constants/entityTypes';
 import * as entityFactory from '../../services/entityFactory';
+import * as edgeOrientation from '../../constants/edgeOrientation';
 import { createCommandObject, getNextId } from "../../services/utils";
 import {
   ADD_VERTEX,
@@ -118,8 +119,7 @@ const actions = {
     const vertexTwo = getters.vertexById(payload.vertexTwoId);
     const edge = {
       weight: null,
-      isOriented: false,
-      direction: true,
+      orientation: edgeOrientation.NONE,
       x1: vertexOne.cx,
       y1: vertexOne.cy,
       x2: vertexTwo.cx,

@@ -22,9 +22,10 @@ const openInfoDialog = ({data, options = {}}) => {
 const openEditEdgeDialog = ({data, options = {}}) => {
   const defaultOptions = {
     caption: 'EditEdge',
-    width: 200,
-    height: 300,
-    isBlackoutDisabled: true
+    width: 270,
+    height: 190,
+    isBlackoutDisabled: true,
+    isFooterHide: true
   };
 
   return baseDialogService.open({

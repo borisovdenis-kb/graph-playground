@@ -13,23 +13,23 @@
           </div>
 
           <div class="app-edit-edge-dialog__row">
-            <app-checkbox v-model="edge.isOriented" label="Orientation">
-            </app-checkbox>
-          </div>
-
-          <div class="app-edit-edge-dialog__row">
             <div>
-              <el-radio v-model="edge.direction"
-                        :disabled="!edge.isOriented"
-                        label="true"
+              <el-radio v-model="edge.orientation"
+                        label="NONE"
                         border
                         size="mini"
-                        style="margin-right: 10px">
+                        style="margin: 0">
+                None
+              </el-radio>
+              <el-radio v-model="edge.orientation"
+                        label="ONE_TWO"
+                        border
+                        size="mini"
+                        style="margin: 0">
                 A - B
               </el-radio>
-              <el-radio v-model="edge.direction"
-                        :disabled="!edge.isOriented"
-                        label="false"
+              <el-radio v-model="edge.orientation"
+                        label="TWO_ONE"
                         border
                         size="mini"
                         style="margin: 0">
@@ -47,6 +47,7 @@
 <script>
   import './app-edit-edge-dialog.css';
   import _ from 'lodash';
+  import * as graphOrientation from '../../../constants/edgeOrientation';
   import $store from '../../../store/index';
   import AppInput from "../../AppInput/AppInput";
   import AppCheckbox from "../../AppCheckbox/AppCheckbox";
@@ -62,7 +63,8 @@
     props: ['inData', 'options'],
     data() {
       return {
-        edge: {}
+        edge: {},
+        graphOrientation
       }
     },
     methods: {

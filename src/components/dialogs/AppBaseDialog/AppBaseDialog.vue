@@ -13,7 +13,7 @@
       <slot name="content"></slot>
     </div>
 
-    <div class="app-base-dialog__footer">
+    <div class="app-base-dialog__footer" v-if="!options.isFooterHide">
       <div class="app-base-dialog__btn app-base-dialog__btn-ok"
            v-on:click="okClick">
         OK

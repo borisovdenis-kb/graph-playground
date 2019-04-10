@@ -4,23 +4,35 @@
               v-bind:placeholder="placeholderValue"
               size="mini">
     </el-input>
-    <label class="app-input__label">{{label}}</label>
+    <app-field-bottom v-bind:label="label"
+                      v-bind:is-value-changed="isValueChanged">
+    </app-field-bottom>
   </div>
 </template>
 
 <script>
   import './app-input.css';
+  import AppFieldBottom from "../AppFieldBottom/AppFieldBottom";
 
   export default {
     name: "AppInput",
+    components: {AppFieldBottom},
     props: ['value', 'label', 'placeholder'],
     data() {
       return {
-        innerValue: ''
+        innerValue: '',
+        lastValue: '',
+        isValueChanged: false
       }
     },
     watch: {
       innerValue: function (value) {
+        if (this.lastValue !== value) {
+          this.isValueChanged = true;
+        } else {
+          this.isValueChanged = false;
+        }
+
         this.$emit('input', value);
       }
     },
@@ -30,7 +42,8 @@
       }
     },
     mounted() {
-      this.innerValue = this.value;
+      this.innerValue = this.value || '';
+      this.lastValue = this.innerValue;
     }
   }
 </script>
