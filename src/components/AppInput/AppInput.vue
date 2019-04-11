@@ -6,7 +6,7 @@
     </el-input>
     <app-field-bottom v-bind:label="label"
                       v-bind:is-value-changed="isValueChanged"
-                      v-on:onSave="$emit('onSave')">
+                      v-on:onSave="onSaveClick()">
     </app-field-bottom>
   </div>
 </template>
@@ -18,7 +18,7 @@
   export default {
     name: "AppInput",
     components: {AppFieldBottom},
-    props: ['value', 'label', 'placeholder'],
+    props: ['value', 'label', 'placeholder', 'onSave'],
     data() {
       return {
         innerValue: '',
@@ -26,7 +26,30 @@
         isValueChanged: false
       }
     },
+    methods: {
+      onSaveClick() {
+        if (this.isValueChanged) {
+          const result = this.onSave();
+
+          if (result && result instanceof Promise) {
+            result.then(() => {
+              this.lastValue = this.innerValue;
+              this.isValueChanged = false;
+            });
+          } else {
+            this.lastValue = this.innerValue;
+            this.isValueChanged = false;
+          }
+        }
+      }
+    },
     watch: {
+      value: function (value) {
+        if (this.innerValue !== value) {
+          this.innerValue = value;
+          this.isValueChanged = false;
+        }
+      },
       innerValue: function (value) {
         if (this.lastValue !== value) {
           this.isValueChanged = true;

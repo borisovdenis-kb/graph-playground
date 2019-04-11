@@ -8,7 +8,7 @@
     </span>
     <span class="app-field-bottom__btn app-field-bottom__btn--clear"
           v-bind:class="{'app-field-bottom__btn--clear-show': isValueChanged, 'app-field-bottom__btn--clear-hide': !isValueChanged}">
-        clear
+        cancel
     </span>
   </div>
 </template>

@@ -6,8 +6,9 @@
         <div class="app-edit-edge-dialog__content">
           <div class="app-edit-edge-dialog__row">
             <app-input v-model="edge.weight"
+                       v-bind:onSave="onWeightSave"
                        label="Weight"
-                       placeholder="Enter weight" v-on:onSave="onWeightSave()">
+                       placeholder="Enter weight">
             </app-input>
           </div>
 
@@ -80,6 +81,8 @@
               command,
               {root: true}
             );
+
+            this.edge = _.cloneDeep($store.getters['graph/edgeById'](this.inData.edgeId));
           });
       }
     },
