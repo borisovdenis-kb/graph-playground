@@ -14,21 +14,16 @@ const getShortestRouteDijkstra = (edgeList, sourceVertexId) => {
     visitedVertexes.push(vertex);
 
     _.forEach(vertex.edgeList, edge => {
-      const adjVertex = edge.vertexOneId === vertex.vertexId ? graph[edge.vertexTwoId] : graph[edge.vertexOneId];
+      const adjVertex = graph[edge.adjVertexId];
 
-      if (adjVertex.distance > vertex.distance + Number(edge.weight)) {
-        adjVertex.distance = vertex.distance + Number(edge.weight);
+      if (adjVertex.distance > vertex.distance + edge.weight) {
+        adjVertex.distance = vertex.distance + edge.weight;
+        adjVertex.path = [...vertex.path, edge.edgeId];
       }
     });
 
-    _.forEach(vertex.edgeList, edge => {
-      const adjVertex = edge.vertexOneId === vertex.vertexId ? graph[edge.vertexTwoId] : graph[edge.vertexOneId];
-
-      dfs(adjVertex);
-    });
+    _.forEach(vertex.edgeList, edge => dfs(graph[edge.adjVertexId]));
   }
-
-  console.log(graph);
 
   return graph;
 };
@@ -44,7 +39,8 @@ const buildGraph = (edgeList, sourceVertexId) => {
       graph[edge.vertexOneId] = {
         vertexId: edge.vertexOneId,
         distance: sourceVertexId === edge.vertexOneId ? 0 : Number.POSITIVE_INFINITY,
-        edgeList: []
+        edgeList: [],
+        path: []
       };
     }
 
@@ -52,12 +48,21 @@ const buildGraph = (edgeList, sourceVertexId) => {
       graph[edge.vertexTwoId] = {
         vertexId: edge.vertexTwoId,
         distance: sourceVertexId === edge.vertexTwoId ? 0 : Number.POSITIVE_INFINITY,
-        edgeList: []
+        edgeList: [],
+        path: []
       };
     }
 
-    graph[edge.vertexOneId].edgeList.push(edge);
-    graph[edge.vertexTwoId].edgeList.push(edge);
+    graph[edge.vertexOneId].edgeList.push({
+      edgeId: edge.edgeId,
+      adjVertexId: edge.vertexTwoId,
+      weight: Number(edge.weight)
+    });
+    graph[edge.vertexTwoId].edgeList.push({
+      edgeId: edge.edgeId,
+      adjVertexId: edge.vertexOneId,
+      weight: Number(edge.weight)
+    });
   });
 
   return graph;

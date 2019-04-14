@@ -66,7 +66,10 @@
     <app-separator is-vertical="true"></app-separator>
 
     <div class="app-button-toolbar__btn-group app-button-toolbar__btn-group-last">
-      <app-button v-on:click="runAlgorithm()" icon-text="A"></app-button>
+      <app-button v-on:click="setCurrentPgState(pgStates.ALGORITHM)"
+                  v-bind:is-selected="checkPgState(pgStates.ALGORITHM)"
+                  icon-text="A">
+      </app-button>
     </div>
   </div>
 </template>
@@ -76,7 +79,6 @@
   import AppButton from '../AppButton/AppButton';
   import AppSeparator from "../AppSeparator/AppSeparator";
   import {mapState} from 'vuex';
-  import { getShortestRouteDijkstra } from "../../services/algorithms/algorithmService";
   import * as mutations from '../../store/mutations';
   import * as graphMutations from '../../store/graph/graph.mutations';
   import * as pgStates from "../../constants/pgStates";
@@ -102,9 +104,6 @@
         this.$store.commit(`graph/${graphMutations.SET_EDGE_WEIGHT_VISIBILITY}`, {
           flag: !this.$store.state.graph.isEdgeWeightVisible
         });
-      },
-      runAlgorithm() {
-        getShortestRouteDijkstra(this.$store.state.graph.edgeList, this.$store.state.graph.vertexList[0].vertexId);
       }
     },
     computed: {
