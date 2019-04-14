@@ -169,7 +169,7 @@
           });
       },
       [pgStates.SELECT_ENTITY](e) {
-        if (!isEventOnEntity(e, entityTypes.VERTEX)) {
+        if (isEventOnEntity(e, entityTypes.EDGE)) {
           appDialogService.openEditEdgeDialog({
             data: {
               edgeId: e.target.id
