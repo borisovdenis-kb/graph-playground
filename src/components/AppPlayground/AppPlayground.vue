@@ -8,15 +8,36 @@
          @mousedown="onPgMousedown"
          @mouseup="onPgMouseup">
 
-      <line v-for="edge in edgeList"
-            :id="edge.edgeId"
-            :x1="edge.x1"
-            :y1="edge.y1"
-            :x2="edge.x2"
-            :y2="edge.y2"
-            :cursor="edgeCursor"
-            stroke="#c3c3c3" stroke-width="5">
-      </line>
+      <g v-for="edge in edgeList"> <!-- TODO: вынести в компоненты -->
+        <line :id="edge.edgeId"
+              :x1="edge.x1"
+              :y1="edge.y1"
+              :x2="edge.x2"
+              :y2="edge.y2"
+              :cursor="edgeCursor"
+              stroke="#c3c3c3"
+              stroke-width="5"> <!-- TODO: проверить, что все нормально с курсором-->
+        </line>
+        <rect v-if="isEdgeWeightVisible"
+              :id="edge.edgeId"
+              :x="calcMiddleCoordinate(edge.x1, edge.x2) - 10"
+              :y="calcMiddleCoordinate(edge.y1, edge.y2) - 10"
+              width="35px"
+              height="20px"
+              fill="#f0f0f0"
+              style="opacity: 0.9"
+              rx="4"
+              ry="4"></rect>
+
+        <text v-if="isEdgeWeightVisible"
+              :id="edge.edgeId"
+              :x="calcMiddleCoordinate(edge.x1, edge.x2) + 7"
+              :y="calcMiddleCoordinate(edge.y1, edge.y2) + 5"
+              text-anchor="middle"
+              fill="#a5a5a5">
+          {{edge.weight || 0}}
+        </text>
+      </g>
 
       <g v-for="vertex in vertexList" :cursor="vertexCursor">
         <circle :id="vertex.vertexId"
@@ -33,7 +54,8 @@
               :stroke="textStrokeColor(vertex.vertexId)"
               text-anchor="middle"
               stroke-width="2px"
-              dy=".3em">{{vertex.number}}
+              dy=".3em">
+          {{vertex.number}}
         </text>
       </g>
     </svg>
@@ -42,20 +64,21 @@
 
 <script>
   import './app-playground.css';
-  import * as pgStates from '../../contants/pgStates';
+  import * as pgStates from '../../constants/pgStates';
   import {
     GRAPH_ADD_VERTEX,
     GRAPH_ADD_EDGE,
     GRAPH_DELETE_VERTEX,
     GRAPH_DELETE_EDGE,
     GRAPH_MOVE_VERTEX,
+    GRAPH_UPDATE_EDGE_WEIGHT,
     GRAPH_COMMANDS_MAP
   } from '../../store/graph/graph.actions';
-  import * as entityTypes from '../../contants/entityTypes';
+  import * as entityTypes from '../../constants/entityTypes';
   import * as appDialogService from '../../services/appDiIalogService';
   import {CH_LOG_COMMAND} from '../../store/commandHistory/commandHistory.actions';
   import {CLEAR_REDO} from '../../store/commandHistory/commandHistory.mutations';
-  import { isEventOnEntity, createCommandObject, createMultiCommandObject } from "../../services/utils";
+  import { isEventOnEntity, createMultiCommandObject } from "../../services/utils";
   import { mapState } from 'vuex';
 
   export default {
@@ -145,6 +168,17 @@
             });
           });
       },
+      [pgStates.SELECT_ENTITY](e) {
+        if (!isEventOnEntity(e, entityTypes.VERTEX)) {
+          appDialogService.openEditEdgeDialog({
+            data: {
+              edgeId: e.target.id
+            }
+          }).then(data => {
+            this.$store.dispatch(`graph/${GRAPH_UPDATE_EDGE_WEIGHT}`, data.edge);
+          });
+        }
+      },
       onPgClick(e) {
         const currentPgState = this.$store.state.currentPgState;
 
@@ -188,8 +222,7 @@
 
         if (!this.$store.getters['commandHistory/isRedoEmpty']) {
           return appDialogService.openInfoDialog({
-            data: {text: 'Отмененные действия будут утеряны!'},
-            options: {caption: 'Внимание', width: 400, height: 200}
+            data: {text: 'Отмененные действия будут утеряны!'}
           }).then(() => {
             vm.$store.commit(`commandHistory/${CLEAR_REDO}`);
           });
@@ -203,12 +236,16 @@
           command,
           {root: true}
         );
+      },
+      calcMiddleCoordinate(c1, c2) {
+        return (c1 + c2) / 2;
       }
     },
     computed: {
       ...mapState('graph', [
         'vertexList',
-        'edgeList'
+        'edgeList',
+        'isEdgeWeightVisible'
       ]),
       vertexCursor() {
         const mapStateToCursor = {

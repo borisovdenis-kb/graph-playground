@@ -2,7 +2,11 @@ import moment from 'moment';
 import _ from 'lodash';
 
 const isEventOnEntity = (event, entityType) => {
-  return event.target.id.split('-')[0] === entityType;
+  return getSelectedEntityType(event) === entityType;
+};
+
+const getSelectedEntityType = event => {
+  return event.target.id.split('-')[0];
 };
 
 const getNextId = entityList => {
@@ -32,9 +36,19 @@ const createMultiCommandObject = ({commandDefinition, subCommands, text}) => ({
   date: moment().format('YYYY.MM.DD:HH:mm:ss')
 });
 
+const createDiffCommandObject = ({commandDefinition, executeData, cancelData, text}) => ({
+  ...commandDefinition,
+  text,
+  executeData,
+  cancelData,
+  date: moment().format('YYYY.MM.DD:HH:mm:ss')
+});
+
 export {
   isEventOnEntity,
+  getSelectedEntityType,
   getNextId,
   createCommandObject,
-  createMultiCommandObject
+  createMultiCommandObject,
+  createDiffCommandObject
 }

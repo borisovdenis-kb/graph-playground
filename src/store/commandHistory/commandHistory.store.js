@@ -10,6 +10,7 @@ import {
   CH_UNDO_COMMAND,
   CH_REDO_COMMAND
 } from "./commandHistory.actions";
+import * as commandTypes from '../../constants/commandTypes';
 
 export default {
   namespaced: true,
@@ -41,14 +42,18 @@ export default {
     [CH_UNDO_COMMAND] ({state, commit, dispatch}) {
       const command = state.undo[state.undo.length - 1];
 
-      if (command.isMulti) {
+      if (command.type === commandTypes.MULTI) {
         command.cancel.forEach(subCommand => {
           dispatch(`${subCommand.module}/${subCommand.cancel}`, subCommand.data, {root: true});
         });
 
         commit(POP_UNDO_COMMAND);
         commit(PUSH_REDO_COMMAND, {command});
-      } else {
+      } else if (command.type === commandTypes.DIFF) {
+        dispatch(`${command.module}/${command.cancel}`, command.cancelData, {root: true});
+        commit(POP_UNDO_COMMAND);
+        commit(PUSH_REDO_COMMAND, {command});
+      } else if (command.type === commandTypes.SIMPLE) {
         dispatch(`${command.module}/${command.cancel}`, command.data, {root: true});
         commit(POP_UNDO_COMMAND);
         commit(PUSH_REDO_COMMAND, {command});
@@ -57,14 +62,18 @@ export default {
     [CH_REDO_COMMAND] ({state, commit, dispatch}) {
       const command = state.redo[state.redo.length - 1];
 
-      if (command.isMulti) {
+      if (command.type === commandTypes.MULTI) {
         command.execute.forEach(subCommand => {
           dispatch(`${subCommand.module}/${subCommand.execute}`, subCommand.data, {root: true});
         });
 
         commit(POP_REDO_COMMAND);
         commit(PUSH_UNDO_COMMAND, {command});
-      } else {
+      } else if (command.type === commandTypes.DIFF) {
+        dispatch(`${command.module}/${command.execute}`, command.executeData, {root: true});
+        commit(POP_REDO_COMMAND);
+        commit(PUSH_UNDO_COMMAND, {command});
+      } else if (command.type === commandTypes.SIMPLE) {
         dispatch(`${command.module}/${command.execute}`, command.data, {root: true});
         commit(POP_REDO_COMMAND);
         commit(PUSH_UNDO_COMMAND, {command});

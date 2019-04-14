@@ -1,0 +1,21 @@
+.app-edit-edge-dialog__header {
+  height: 35px;
+  font-weight: 600;
+}
+
+.app-edit-edge-dialog__content {
+  padding: 10px;
+}
+
+.app-edit-edge-dialog__row {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 15px;
+}
+
+.app-edit-edge-dialog__direction-label {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #a1a1a1;
+}

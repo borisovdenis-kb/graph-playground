@@ -1,5 +1,5 @@
 <template>
-  <div class="app-base-dialog"
+  <div class="app-base-dialog common-dialog"
        v-bind:class="{'app-base-dialog--appear': isReady}"
        v-bind:style="inlineStyles">
     <div class="app-base-dialog__header">
@@ -13,7 +13,7 @@
       <slot name="content"></slot>
     </div>
 
-    <div class="app-base-dialog__footer">
+    <div class="app-base-dialog__footer" v-if="!options.isFooterHide">
       <div class="app-base-dialog__btn app-base-dialog__btn-ok"
            v-on:click="okClick">
         OK
@@ -31,7 +31,7 @@
 
   export default {
     name: "AppBaseDialog",
-    props: ['options', 'onOkClick', 'onCancelClick'],
+    props: ['options'],
     data() {
       return {
         windowTop: 0,
@@ -42,20 +42,29 @@
     },
     methods: {
       okClick() {
-        this.options.onResolveClose({text: 'Hello!'});
+        this.$emit('dialogOk');
       },
       cancelClick() {
-        this.options.onRejectClose({text: 'Hello!'});
+        this.$emit('dialogCancel');
+      },
+      getWindowLeft() {
+        if (this.options.windowLeft) {
+          return this.options.windowLeft;
+        }
+
+        const appRect = document.getElementById('app').getBoundingClientRect();
+
+        return (appRect.width - this.options.width) / 2;
+      },
+      getWindowTop() {
+        if (this.options.windowTop) {
+          return this.options.windowTop;
+        }
+
+        const appRect = document.getElementById('app').getBoundingClientRect();
+
+        return (appRect.height - this.options.height) / 2;
       }
-    },
-    beforeMount() {
-      const appRect = document.getElementById('app').getBoundingClientRect();
-
-      this.windowLeft = (appRect.width - this.options.width) / 2;
-      this.windowTop = (appRect.height - this.options.height) / 2;
-
-      this.blackOutElement = document.getElementsByClassName('global-blackout')[0];
-      this.blackOutElement.style.display = 'block';
     },
     computed: {
       inlineStyles() {
@@ -67,6 +76,15 @@
         }
       }
     },
+    beforeMount() {
+      this.windowLeft = this.getWindowLeft();
+      this.windowTop = this.getWindowTop();
+
+      if (!this.options.isBlackoutDisabled) {
+        this.blackOutElement = document.getElementsByClassName('global-blackout')[0];
+        this.blackOutElement.style.display = 'block';
+      }
+    },
     mounted() {
       this.isReady = true;
     },
@@ -74,9 +92,10 @@
       this.isReady = false;
     },
     destroyed() {
-      this.blackOutElement.style.display = 'none';
+      if (!this.options.isBlackoutDisabled) {
+        this.blackOutElement.style.display = 'none';
+      }
     }
-
   }
 </script>
 

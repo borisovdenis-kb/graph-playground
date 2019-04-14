@@ -1,14 +1,17 @@
 import _ from 'lodash';
-import * as entityTypes from '../../contants/entityTypes';
+import * as entityTypes from '../../constants/entityTypes';
 import * as entityFactory from '../../services/entityFactory';
-import { createCommandObject, getNextId } from "../../services/utils";
+import * as edgeOrientation from '../../constants/edgeOrientation';
+import { createCommandObject, createDiffCommandObject, getNextId } from "../../services/utils";
 import {
   ADD_VERTEX,
   ADD_EDGE,
   DELETE_VERTEX,
   UPDATE_VERTEX,
   REFRESH_EDGES,
-  DELETE_EDGE
+  DELETE_EDGE,
+  UPDATE_EDGE,
+  SET_EDGE_WEIGHT_VISIBILITY
 } from "./graph.mutations";
 import {
   GRAPH_ADD_VERTEX,
@@ -16,6 +19,7 @@ import {
   GRAPH_ADD_EDGE,
   GRAPH_MOVE_VERTEX,
   GRAPH_DELETE_EDGE,
+  GRAPH_UPDATE_EDGE_WEIGHT,
   GRAPH_COMMANDS_MAP
 } from "./graph.actions";
 
@@ -42,6 +46,15 @@ const mutations = {
       return vertex;
     });
   },
+  [UPDATE_EDGE](state, payload) {
+    state.edgeList = state.edgeList.map(edge => {
+      if (edge.edgeId === payload.edgeData.edgeId) {
+        return {...edge, ...payload.edgeData};
+      }
+
+      return edge;
+    });
+  },
   [REFRESH_EDGES](state, payload) {
     state.edgeList = state.edgeList.map(edge => {
       if (edge.vertexOneId === payload.vertexData.vertexId || edge.vertexTwoId === payload.vertexData.vertexId) {
@@ -59,6 +72,9 @@ const mutations = {
 
       return edge;
     });
+  },
+  [SET_EDGE_WEIGHT_VISIBILITY](state, payload) {
+    state.isEdgeWeightVisible = payload.flag;
   }
 };
 
@@ -102,7 +118,8 @@ const actions = {
     const vertexOne = getters.vertexById(payload.vertexOneId);
     const vertexTwo = getters.vertexById(payload.vertexTwoId);
     const edge = {
-      weight: 0,
+      weight: null,
+      orientation: edgeOrientation.NONE,
       x1: vertexOne.cx,
       y1: vertexOne.cy,
       x2: vertexTwo.cx,
@@ -149,6 +166,20 @@ const actions = {
       text: `Delete Edge V(${vertexOne.number}) -- V(${vertexTwo.number})`
     }));
   },
+  [GRAPH_UPDATE_EDGE_WEIGHT]({commit, getters}, payload) {
+    const oldEdge = _.cloneDeep(getters.edgeById(payload.edgeId));
+    const vertexOne = getters.vertexById(oldEdge.vertexOneId);
+    const vertexTwo = getters.vertexById(oldEdge.vertexTwoId);
+
+    commit(UPDATE_EDGE, {edgeData: payload});
+
+    return Promise.resolve(createDiffCommandObject({
+      commandDefinition: GRAPH_COMMANDS_MAP[GRAPH_UPDATE_EDGE_WEIGHT],
+      executeData: _.cloneDeep(getters.edgeById(payload.edgeId)),
+      cancelData: oldEdge,
+      text: `Update Edge V(${vertexOne.number}) -- V(${vertexTwo.number}) Weight`
+    }));
+  },
   [GRAPH_MOVE_VERTEX]({commit}, payload) {
     commit(UPDATE_VERTEX, {vertexData: payload});
     commit(REFRESH_EDGES, {vertexData: payload});
@@ -159,7 +190,8 @@ export default {
   namespaced: true,
   state: {
     vertexList: [],
-    edgeList: []
+    edgeList: [],
+    isEdgeWeightVisible: false
   },
   mutations,
   actions,
