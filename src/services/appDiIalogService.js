@@ -6,7 +6,8 @@ const openInfoDialog = ({data, options = {}}) => {
   const defaultOptions = {
     caption: 'Внимание',
     width: 400,
-    height: 200
+    height: 200,
+    isOverDialogAllowed: true
   };
 
   return baseDialogService.open({
@@ -25,7 +26,8 @@ const openEditEdgeDialog = ({data, options = {}}) => {
     width: 270,
     height: 190,
     isBlackoutDisabled: true,
-    isFooterHide: true
+    isFooterHide: true,
+    isOverDialogAllowed: false
   };
 
   return baseDialogService.open({
