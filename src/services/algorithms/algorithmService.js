@@ -6,12 +6,12 @@ const getShortestRouteDijkstra = (edgeList, sourceVertexId) => {
 
   dfs(graph[sourceVertexId]);
 
-  function dfs(vertex) {
-    if (_.find(visitedVertexes, vertex)) {
+  function dfs(vertex, prevVertexId) {
+    if (visitedVertexes.indexOf(`${vertex.vertexId}${prevVertexId || ''}`) !== -1) {
       return;
     }
 
-    visitedVertexes.push(vertex);
+    visitedVertexes.push(`${vertex.vertexId}${prevVertexId || ''}`);
 
     _.forEach(vertex.edgeList, edge => {
       const adjVertex = graph[edge.adjVertexId];
@@ -22,8 +22,10 @@ const getShortestRouteDijkstra = (edgeList, sourceVertexId) => {
       }
     });
 
-    _.forEach(vertex.edgeList, edge => dfs(graph[edge.adjVertexId]));
+    _.forEach(vertex.edgeList, edge => dfs(graph[edge.adjVertexId], vertex.vertexId));
   }
+
+  console.log(graph);
 
   return graph;
 };
