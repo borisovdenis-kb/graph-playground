@@ -15,7 +15,7 @@
               :x2="edge.x2"
               :y2="edge.y2"
               :cursor="edgeCursor"
-              stroke="#c3c3c3"
+              :stroke="edgeStrokeColor(edge.edgeId)"
               stroke-width="5"> <!-- TODO: проверить, что все нормально с курсором-->
         </line>
         <rect v-if="isEdgeWeightVisible"
@@ -27,7 +27,8 @@
               fill="#f0f0f0"
               style="opacity: 0.9"
               rx="4"
-              ry="4"></rect>
+              ry="4">
+        </rect>
 
         <text v-if="isEdgeWeightVisible"
               :id="edge.edgeId"
@@ -64,7 +65,6 @@
 
 <script>
   import './app-playground.css';
-  import * as pgStates from '../../constants/pgStates';
   import {
     GRAPH_ADD_VERTEX,
     GRAPH_ADD_EDGE,
@@ -74,11 +74,13 @@
     GRAPH_UPDATE_EDGE_WEIGHT,
     GRAPH_COMMANDS_MAP
   } from '../../store/graph/graph.actions';
+  import * as pgStates from '../../constants/pgStates';
   import * as entityTypes from '../../constants/entityTypes';
   import * as appDialogService from '../../services/appDiIalogService';
   import {CH_LOG_COMMAND} from '../../store/commandHistory/commandHistory.actions';
   import {CLEAR_REDO} from '../../store/commandHistory/commandHistory.mutations';
   import { isEventOnEntity, createMultiCommandObject } from "../../services/utils";
+  import { algorithmMap } from "../../constants/algorithms";
   import { mapState } from 'vuex';
 
   export default {
@@ -87,8 +89,10 @@
       return {
         pgWidth: 0,
         pgHeight: 0,
-        firstEdgeVertexId: null,
-        movableVertexId: null
+        firstSelectedVertexId: null,
+        movableVertexId: null,
+        algorithmResult: null,
+        edgesToHighlight: null
       }
     },
     methods: {
@@ -107,20 +111,20 @@
           return;
         }
 
-        if (this.firstEdgeVertexId) {
+        if (this.firstSelectedVertexId) {
           this.checkRedoIsEmpty()
             .then(() => {
               return this.$store.dispatch(`graph/${GRAPH_ADD_EDGE}`, {
-                vertexOneId: this.firstEdgeVertexId,
+                vertexOneId: this.firstSelectedVertexId,
                 vertexTwoId: e.target.id
               });
             })
             .then(command => {
               this.logCommand(command);
-              this.firstEdgeVertexId = null;
+              this.firstSelectedVertexId = null;
             });
         } else {
-          this.firstEdgeVertexId = e.target.id;
+          this.firstSelectedVertexId = e.target.id;
         }
       },
       [pgStates.DELETE_EDGE] (e) {
@@ -169,7 +173,7 @@
           });
       },
       [pgStates.SELECT_ENTITY](e) {
-        if (!isEventOnEntity(e, entityTypes.VERTEX)) {
+        if (isEventOnEntity(e, entityTypes.EDGE)) {
           appDialogService.openEditEdgeDialog({
             data: {
               edgeId: e.target.id
@@ -177,6 +181,22 @@
           }).then(data => {
             this.$store.dispatch(`graph/${GRAPH_UPDATE_EDGE_WEIGHT}`, data.edge);
           });
+        }
+      },
+      [pgStates.ALGORITHM](e) {
+        if (!isEventOnEntity(e, entityTypes.VERTEX)) {
+          return;
+        }
+
+        if (this.firstSelectedVertexId) {
+          this.edgesToHighlight = this.algorithmResult[e.target.id].path;
+          this.firstSelectedVertexId = null;
+        } else {
+          this.firstSelectedVertexId = e.target.id;
+          this.algorithmResult = algorithmMap[this.$store.state.selectedAlgorithm](
+            this.$store.state.graph.edgeList,
+            this.firstSelectedVertexId
+          );
         }
       },
       onPgClick(e) {
@@ -212,10 +232,17 @@
         }
       },
       vertexFillColor(vertexId) {
-        return vertexId === this.firstEdgeVertexId ? '#6062bf' : '#d7d7d7';
+        return vertexId === this.firstSelectedVertexId ? '#6062bf' : '#d7d7d7';
       },
       textStrokeColor(vertexId) {
-        return vertexId === this.firstEdgeVertexId ? '#d7d7d7' : '#6062bf';
+        return vertexId === this.firstSelectedVertexId ? '#d7d7d7' : '#6062bf';
+      },
+      edgeStrokeColor(edgeId) {
+        if (this.edgesToHighlight && this.edgesToHighlight.indexOf(edgeId) !== -1) {
+          return '#ff822a';
+        }
+
+        return '#c3c3c3';
       },
       checkRedoIsEmpty() {
         const vm = this;

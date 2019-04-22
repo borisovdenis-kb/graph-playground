@@ -62,6 +62,23 @@
                v-on:click="toggleEdgeWeightVisibility()"/>
       </div>
     </div>
+
+    <app-separator is-vertical="true"></app-separator>
+
+    <div class="app-button-toolbar__btn-group app-button-toolbar__btn-group-last">
+      <el-select v-model="selectedAlgorithm"
+                 v-on:change="onAlgorithmSelect"
+                 clearable
+                 placeholder="Select algorithm"
+                 size="mini">
+        <el-option
+          v-for="item in algorithmOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+    </div>
   </div>
 </template>
 
@@ -70,6 +87,7 @@
   import AppButton from '../AppButton/AppButton';
   import AppSeparator from "../AppSeparator/AppSeparator";
   import {mapState} from 'vuex';
+  import * as algorithmNames from '../../constants/algorithms';
   import * as mutations from '../../store/mutations';
   import * as graphMutations from '../../store/graph/graph.mutations';
   import * as pgStates from "../../constants/pgStates";
@@ -79,7 +97,12 @@
     components: {AppSeparator, AppButton},
     data() {
       return {
-        pgStates
+        pgStates,
+        algorithmOptions: [{
+          value: algorithmNames.DIJKSTRA_ALGORITHM,
+          label: 'Dijkstra'
+        }],
+        selectedAlgorithm: ''
       }
     },
     methods: {
@@ -94,6 +117,18 @@
       toggleEdgeWeightVisibility() {
         this.$store.commit(`graph/${graphMutations.SET_EDGE_WEIGHT_VISIBILITY}`, {
           flag: !this.$store.state.graph.isEdgeWeightVisible
+        });
+      },
+      onAlgorithmSelect(value) {
+        if (!value) {
+          this.$store.commit(mutations.RESET_CURRENT_PG_STATE);
+          return;
+        }
+
+        this.setCurrentPgState(pgStates.ALGORITHM);
+
+        this.$store.commit(mutations.SET_SELECTED_ALGORITHM, {
+          selectedAlgorithm: value
         });
       }
     },
