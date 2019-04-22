@@ -65,8 +65,6 @@
 
 <script>
   import './app-playground.css';
-  import _ from 'lodash';
-  import * as pgStates from '../../constants/pgStates';
   import {
     GRAPH_ADD_VERTEX,
     GRAPH_ADD_EDGE,
@@ -76,12 +74,13 @@
     GRAPH_UPDATE_EDGE_WEIGHT,
     GRAPH_COMMANDS_MAP
   } from '../../store/graph/graph.actions';
+  import * as pgStates from '../../constants/pgStates';
   import * as entityTypes from '../../constants/entityTypes';
   import * as appDialogService from '../../services/appDiIalogService';
   import {CH_LOG_COMMAND} from '../../store/commandHistory/commandHistory.actions';
   import {CLEAR_REDO} from '../../store/commandHistory/commandHistory.mutations';
   import { isEventOnEntity, createMultiCommandObject } from "../../services/utils";
-  import { getShortestRouteDijkstra } from "../../services/algorithms/algorithmService";
+  import { algorithmMap } from "../../constants/algorithms";
   import { mapState } from 'vuex';
 
   export default {
@@ -194,7 +193,10 @@
           this.firstSelectedVertexId = null;
         } else {
           this.firstSelectedVertexId = e.target.id;
-          this.algorithmResult = getShortestRouteDijkstra(this.$store.state.graph.edgeList, this.firstSelectedVertexId);
+          this.algorithmResult = algorithmMap[this.$store.state.selectedAlgorithm](
+            this.$store.state.graph.edgeList,
+            this.firstSelectedVertexId
+          );
         }
       },
       onPgClick(e) {
