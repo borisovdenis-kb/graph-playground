@@ -90,6 +90,7 @@
   import * as algorithmNames from '../../constants/algorithms';
   import * as mutations from '../../store/mutations';
   import * as graphMutations from '../../store/graph/graph.mutations';
+  import * as grpahActions from '../../store/graph/graph.actions';
   import * as pgStates from "../../constants/pgStates";
 
   export default {
@@ -113,6 +114,16 @@
         this.$store.commit(mutations.SET_CURRENT_PG_STATE, {
           state: state
         });
+
+        if (state !== pgStates.ALGORITHM) {
+          this.$store.dispatch(`graph/${grpahActions.GRAPH_SET_EDGES_HIGHLIGHTING}`, {
+            isHighlighted: false
+          });
+          this.$store.commit(mutations.SET_SELECTED_ALGORITHM, {
+            selectedAlgorithm: null
+          });
+          this.selectedAlgorithm = null;
+        }
       },
       toggleEdgeWeightVisibility() {
         this.$store.commit(`graph/${graphMutations.SET_EDGE_WEIGHT_VISIBILITY}`, {
@@ -122,6 +133,9 @@
       onAlgorithmSelect(value) {
         if (!value) {
           this.$store.commit(mutations.RESET_CURRENT_PG_STATE);
+          this.$store.dispatch(`graph/${grpahActions.GRAPH_SET_EDGES_HIGHLIGHTING}`, {
+            isHighlighted: false
+          });
           return;
         }
 

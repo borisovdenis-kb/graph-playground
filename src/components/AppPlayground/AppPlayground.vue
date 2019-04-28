@@ -15,7 +15,7 @@
               :x2="edge.x2"
               :y2="edge.y2"
               :cursor="edgeCursor"
-              :stroke="edgeStrokeColor(edge.edgeId)"
+              :stroke="edgeStrokeColor(edge.isHighlighted)"
               stroke-width="5"> <!-- TODO: проверить, что все нормально с курсором-->
         </line>
         <rect v-if="isEdgeWeightVisible"
@@ -72,6 +72,7 @@
     GRAPH_DELETE_EDGE,
     GRAPH_MOVE_VERTEX,
     GRAPH_UPDATE_EDGE_WEIGHT,
+    GRAPH_SET_EDGES_HIGHLIGHTING,
     GRAPH_COMMANDS_MAP
   } from '../../store/graph/graph.actions';
   import * as pgStates from '../../constants/pgStates';
@@ -190,6 +191,10 @@
 
         if (this.firstSelectedVertexId) {
           this.edgesToHighlight = this.algorithmResult[e.target.id].path;
+          this.$store.dispatch(`graph/${GRAPH_SET_EDGES_HIGHLIGHTING}`, {
+            edgesToHighlight: this.edgesToHighlight,
+            isHighlighted: true
+          });
           this.firstSelectedVertexId = null;
         } else {
           this.firstSelectedVertexId = e.target.id;
@@ -237,12 +242,8 @@
       textStrokeColor(vertexId) {
         return vertexId === this.firstSelectedVertexId ? '#d7d7d7' : '#6062bf';
       },
-      edgeStrokeColor(edgeId) {
-        if (this.edgesToHighlight && this.edgesToHighlight.indexOf(edgeId) !== -1) {
-          return '#ff822a';
-        }
-
-        return '#c3c3c3';
+      edgeStrokeColor(isHighlighted) {
+        return isHighlighted ? '#ff822a' : '#c3c3c3';
       },
       checkRedoIsEmpty() {
         const vm = this;

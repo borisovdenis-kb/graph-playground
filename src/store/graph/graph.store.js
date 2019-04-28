@@ -20,7 +20,7 @@ import {
   GRAPH_MOVE_VERTEX,
   GRAPH_DELETE_EDGE,
   GRAPH_UPDATE_EDGE_WEIGHT,
-  GRAPH_COMMANDS_MAP
+  GRAPH_COMMANDS_MAP, GRAPH_SET_EDGES_HIGHLIGHTING
 } from "./graph.actions";
 
 
@@ -73,6 +73,7 @@ const mutations = {
       return edge;
     });
   },
+
   [SET_EDGE_WEIGHT_VISIBILITY](state, payload) {
     state.isEdgeWeightVisible = payload.flag;
   }
@@ -117,16 +118,7 @@ const actions = {
   [GRAPH_ADD_EDGE]({commit, state, getters, dispatch}, payload) {
     const vertexOne = getters.vertexById(payload.vertexOneId);
     const vertexTwo = getters.vertexById(payload.vertexTwoId);
-    const edge = {
-      weight: null,
-      orientation: edgeOrientation.NONE,
-      x1: vertexOne.cx,
-      y1: vertexOne.cy,
-      x2: vertexTwo.cx,
-      y2: vertexTwo.cy,
-      vertexOneId: payload.vertexOneId,
-      vertexTwoId: payload.vertexTwoId
-    };
+    const edge = entityFactory.createEdge({vertexOne, vertexTwo});
 
     if (payload.edgeId) {
       edge.edgeId = payload.edgeId;
@@ -183,6 +175,23 @@ const actions = {
   [GRAPH_MOVE_VERTEX]({commit}, payload) {
     commit(UPDATE_VERTEX, {vertexData: payload});
     commit(REFRESH_EDGES, {vertexData: payload});
+  },
+  [GRAPH_SET_EDGES_HIGHLIGHTING]({commit, state}, payload) {
+    if (!payload.edgesToHighlight) {
+      _.forEach(state.edgeList, edge => {
+        commit(
+          UPDATE_EDGE, {
+            edgeData: {edgeId: edge.edgeId, isHighlighted: payload.isHighlighted}
+          });
+      });
+    } else {
+      _.forEach(payload.edgesToHighlight, (edgeId) => {
+        commit(
+          UPDATE_EDGE, {
+            edgeData: {edgeId, isHighlighted: payload.isHighlighted}
+          });
+      });
+    }
   }
 };
 
