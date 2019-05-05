@@ -8,14 +8,16 @@
         <div class="app-command-history__buttons">
           <app-button v-on:click="undoAction()"
                       v-bind:is-disabled="isUndoEmpty"
-                      icon-text="<-">
+                      title="Undo command"
+                      icon="undo">
           </app-button>
         </div>
 
         <div class="app-command-history__buttons">
           <app-button v-on:click="redoAction()"
                       v-bind:is-disabled="isRedoEmpty"
-                      icon-text="->">
+                      title="Redo command"
+                      icon="redo">
           </app-button>
         </div>
       </div>
