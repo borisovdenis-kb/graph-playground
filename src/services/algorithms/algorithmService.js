@@ -25,8 +25,6 @@ const getShortestRouteDijkstra = (edgeList, sourceVertexId) => {
     _.forEach(vertex.edgeList, edge => dfs(graph[edge.adjVertexId], vertex.vertexId));
   }
 
-  console.log(graph);
-
   return graph;
 };
 

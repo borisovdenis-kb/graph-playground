@@ -1,3 +1,5 @@
+import * as edgeOrientation from "../constants/edgeOrientation";
+
 /**
  * Method creates object model of entity Vertex
  * Model: {
@@ -12,16 +14,33 @@
  * @param {Number} cy - OY coordinate
  * @returns {Object} - object of Vertex entity
  */
-const createVertex = ({name, cx, cy}) => {
+const createVertex = ({cx, cy}) => {
   return {
     vertexId: null,
     number: null,
-    name: name || '',
     cx: cx || 0,
-    cy: cy || 0
+    cy: cy || 0,
+    isHighlighted: false
   };
 };
 
+const createEdge = ({vertexOne, vertexTwo}) => {
+  return {
+    edgeId: null,
+    number: null,
+    weight: null,
+    orientation: edgeOrientation.NONE,
+    x1: vertexOne.cx,
+    y1: vertexOne.cy,
+    x2: vertexTwo.cx,
+    y2: vertexTwo.cy,
+    vertexOneId: vertexOne.vertexId,
+    vertexTwoId: vertexTwo.vertexId,
+    isHighlighted: false
+  }
+};
+
 export {
-  createVertex
+  createVertex,
+  createEdge
 }

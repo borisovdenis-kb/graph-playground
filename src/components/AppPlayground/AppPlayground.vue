@@ -8,57 +8,12 @@
          @mousedown="onPgMousedown"
          @mouseup="onPgMouseup">
 
-      <g v-for="edge in edgeList"> <!-- TODO: вынести в компоненты -->
-        <line :id="edge.edgeId"
-              :x1="edge.x1"
-              :y1="edge.y1"
-              :x2="edge.x2"
-              :y2="edge.y2"
-              :cursor="edgeCursor"
-              :stroke="edgeStrokeColor(edge.edgeId)"
-              stroke-width="5"> <!-- TODO: проверить, что все нормально с курсором-->
-        </line>
-        <rect v-if="isEdgeWeightVisible"
-              :id="edge.edgeId"
-              :x="calcMiddleCoordinate(edge.x1, edge.x2) - 10"
-              :y="calcMiddleCoordinate(edge.y1, edge.y2) - 10"
-              width="35px"
-              height="20px"
-              fill="#f0f0f0"
-              style="opacity: 0.9"
-              rx="4"
-              ry="4">
-        </rect>
+      <app-edge v-for="edge in edgeList" v-bind:data="edge"></app-edge>
 
-        <text v-if="isEdgeWeightVisible"
-              :id="edge.edgeId"
-              :x="calcMiddleCoordinate(edge.x1, edge.x2) + 7"
-              :y="calcMiddleCoordinate(edge.y1, edge.y2) + 5"
-              text-anchor="middle"
-              fill="#a5a5a5">
-          {{edge.weight || 0}}
-        </text>
-      </g>
-
-      <g v-for="vertex in vertexList" :cursor="vertexCursor">
-        <circle :id="vertex.vertexId"
-                :cx="vertex.cx"
-                :cy="vertex.cy"
-                :fill="vertexFillColor(vertex.vertexId)"
-                r="15"
-                stroke="#afafaf"
-                stroke-width="4">
-        </circle>
-        <text :id="vertex.vertexId"
-              :x="vertex.cx"
-              :y="vertex.cy"
-              :stroke="textStrokeColor(vertex.vertexId)"
-              text-anchor="middle"
-              stroke-width="2px"
-              dy=".3em">
-          {{vertex.number}}
-        </text>
-      </g>
+      <app-vertex v-for="vertex in vertexList"
+                  v-bind:data="vertex"
+                  v-bind:is-selected="firstSelectedVertexId === vertex.vertexId">
+      </app-vertex>
     </svg>
   </div>
 </template>
@@ -72,6 +27,7 @@
     GRAPH_DELETE_EDGE,
     GRAPH_MOVE_VERTEX,
     GRAPH_UPDATE_EDGE_WEIGHT,
+    GRAPH_SET_EDGES_HIGHLIGHTING,
     GRAPH_COMMANDS_MAP
   } from '../../store/graph/graph.actions';
   import * as pgStates from '../../constants/pgStates';
@@ -82,9 +38,12 @@
   import { isEventOnEntity, createMultiCommandObject } from "../../services/utils";
   import { algorithmMap } from "../../constants/algorithms";
   import { mapState } from 'vuex';
+  import AppEdge from "../AppEdge/AppEdge";
+  import AppVertex from "../AppVertex/AppVertex";
 
   export default {
     name: "app-playground",
+    components: {AppVertex, AppEdge},
     data() {
       return {
         pgWidth: 0,
@@ -190,6 +149,10 @@
 
         if (this.firstSelectedVertexId) {
           this.edgesToHighlight = this.algorithmResult[e.target.id].path;
+          this.$store.dispatch(`graph/${GRAPH_SET_EDGES_HIGHLIGHTING}`, {
+            edgesToHighlight: this.edgesToHighlight,
+            isHighlighted: true
+          });
           this.firstSelectedVertexId = null;
         } else {
           this.firstSelectedVertexId = e.target.id;
@@ -231,19 +194,6 @@
           this.movableVertexId = null;
         }
       },
-      vertexFillColor(vertexId) {
-        return vertexId === this.firstSelectedVertexId ? '#6062bf' : '#d7d7d7';
-      },
-      textStrokeColor(vertexId) {
-        return vertexId === this.firstSelectedVertexId ? '#d7d7d7' : '#6062bf';
-      },
-      edgeStrokeColor(edgeId) {
-        if (this.edgesToHighlight && this.edgesToHighlight.indexOf(edgeId) !== -1) {
-          return '#ff822a';
-        }
-
-        return '#c3c3c3';
-      },
       checkRedoIsEmpty() {
         const vm = this;
 
@@ -263,9 +213,6 @@
           command,
           {root: true}
         );
-      },
-      calcMiddleCoordinate(c1, c2) {
-        return (c1 + c2) / 2;
       }
     },
     computed: {
@@ -273,26 +220,7 @@
         'vertexList',
         'edgeList',
         'isEdgeWeightVisible'
-      ]),
-      vertexCursor() {
-        const mapStateToCursor = {
-          [pgStates.MOVE_VERTEX]: 'move',
-          [pgStates.DELETE_VERTEX]: 'pointer',
-          [pgStates.ADD_EDGE]: 'pointer',
-          [pgStates.DELETE_EDGE]: 'pointer'
-        };
-        const currentPgState = this.$store.state.currentPgState;
-
-        return mapStateToCursor[currentPgState];
-      },
-      edgeCursor() {
-        const mapStateToCursor = {
-          [pgStates.DELETE_EDGE]: 'pointer'
-        };
-        const currentPgState = this.$store.state.currentPgState;
-
-        return mapStateToCursor[currentPgState];
-      }
+      ])
     },
     mounted() {
       const rect = document.getElementById('app-playground').getBoundingClientRect();
