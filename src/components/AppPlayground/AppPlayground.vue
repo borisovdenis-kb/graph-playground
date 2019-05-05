@@ -10,25 +10,10 @@
 
       <app-edge v-for="edge in edgeList" v-bind:data="edge"></app-edge>
 
-      <g v-for="vertex in vertexList" :cursor="vertexCursor">
-        <circle :id="vertex.vertexId"
-                :cx="vertex.cx"
-                :cy="vertex.cy"
-                :fill="vertexFillColor(vertex.vertexId)"
-                r="15"
-                stroke="#afafaf"
-                stroke-width="4">
-        </circle>
-        <text :id="vertex.vertexId"
-              :x="vertex.cx"
-              :y="vertex.cy"
-              :stroke="textStrokeColor(vertex.vertexId)"
-              text-anchor="middle"
-              stroke-width="2px"
-              dy=".3em">
-          {{vertex.number}}
-        </text>
-      </g>
+      <app-vertex v-for="vertex in vertexList"
+                  v-bind:data="vertex"
+                  v-bind:is-selected="firstSelectedVertexId === vertex.vertexId">
+      </app-vertex>
     </svg>
   </div>
 </template>
@@ -54,10 +39,11 @@
   import { algorithmMap } from "../../constants/algorithms";
   import { mapState } from 'vuex';
   import AppEdge from "../AppEdge/AppEdge";
+  import AppVertex from "../AppVertex/AppVertex";
 
   export default {
     name: "app-playground",
-    components: {AppEdge},
+    components: {AppVertex, AppEdge},
     data() {
       return {
         pgWidth: 0,
@@ -208,12 +194,6 @@
           this.movableVertexId = null;
         }
       },
-      vertexFillColor(vertexId) {
-        return vertexId === this.firstSelectedVertexId ? '#6062bf' : '#d7d7d7';
-      },
-      textStrokeColor(vertexId) {
-        return vertexId === this.firstSelectedVertexId ? '#d7d7d7' : '#6062bf';
-      },
       checkRedoIsEmpty() {
         const vm = this;
 
@@ -240,18 +220,7 @@
         'vertexList',
         'edgeList',
         'isEdgeWeightVisible'
-      ]),
-      vertexCursor() {
-        const mapStateToCursor = {
-          [pgStates.MOVE_VERTEX]: 'move',
-          [pgStates.DELETE_VERTEX]: 'pointer',
-          [pgStates.ADD_EDGE]: 'pointer',
-          [pgStates.DELETE_EDGE]: 'pointer'
-        };
-        const currentPgState = this.$store.state.currentPgState;
-
-        return mapStateToCursor[currentPgState];
-      }
+      ])
     },
     mounted() {
       const rect = document.getElementById('app-playground').getBoundingClientRect();

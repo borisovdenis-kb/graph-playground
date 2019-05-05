@@ -14,11 +14,10 @@ import * as edgeOrientation from "../constants/edgeOrientation";
  * @param {Number} cy - OY coordinate
  * @returns {Object} - object of Vertex entity
  */
-const createVertex = ({name, cx, cy}) => {
+const createVertex = ({cx, cy}) => {
   return {
     vertexId: null,
     number: null,
-    name: name || '',
     cx: cx || 0,
     cy: cy || 0,
     isHighlighted: false
