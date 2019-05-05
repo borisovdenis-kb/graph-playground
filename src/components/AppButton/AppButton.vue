@@ -3,32 +3,32 @@
        v-bind:class="{'app-button--selected': isSelected,
                       'app-button--disabled': isDisabled}"
        v-on:click="onBtnClick()">
-
-    <div class="app-button--long" v-if="text">
-      <div class="app-button__text" v-if="text">{{text}}</div>
-    </div>
-
-    <div class="app-button--short" v-if="!text">
-      <div class="app-button__icon">{{iconText}}</div>
-    </div>
+    <img v-if="iconPath" class="app-button__icon" v-bind:src="iconPath">
   </div>
 </template>
 
 <script>
   import './app-button.css';
+  import { getIconPath } from "../../services/utils";
 
   export default {
     name: "AppButton",
-    props: ['text', 'iconText', 'isDisabled', 'isSelected', 'onClick'],
+    props: ['text', 'icon', 'isDisabled', 'isSelected', 'onClick'],
     data() {
-      return {}
+      return {
+        iconPath: ''
+      }
     },
     methods: {
+      getIconPath,
       onBtnClick () {
         if (!this.isDisabled) {
           this.$emit('click');
         }
       }
+    },
+    mounted() {
+      this.iconPath = getIconPath(this.icon);
     }
   }
 </script>

@@ -44,11 +44,16 @@ const createDiffCommandObject = ({commandDefinition, executeData, cancelData, te
   date: moment().format('YYYY.MM.DD:HH:mm:ss')
 });
 
+const getIconPath = iconName => {
+  return `\\static\\icons\\${iconName}.png`;
+};
+
 export {
   isEventOnEntity,
   getSelectedEntityType,
   getNextId,
   createCommandObject,
   createMultiCommandObject,
-  createDiffCommandObject
+  createDiffCommandObject,
+  getIconPath
 }

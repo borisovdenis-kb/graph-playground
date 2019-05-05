@@ -4,7 +4,8 @@
       <div class="app-header-toolbar__button">
         <app-button v-on:click="setCurrentPgState(pgStates.SELECT_ENTITY)"
                     v-bind:is-selected="checkPgState(pgStates.SELECT_ENTITY)"
-                    icon-text="C">
+                    title="Edit Entity"
+                    icon="edit-pencil">
         </app-button>
       </div>
     </div>
@@ -15,21 +16,24 @@
       <div class="app-header-toolbar__button">
         <app-button v-on:click="setCurrentPgState(pgStates.ADD_VERTEX)"
                     v-bind:is-selected="checkPgState(pgStates.ADD_VERTEX)"
-                    icon-text="V+">
+                    title="Add Vertex"
+                    icon="vertex-add">
         </app-button>
       </div>
 
       <div class="app-header-toolbar__button">
         <app-button v-on:click="setCurrentPgState(pgStates.DELETE_VERTEX)"
                     v-bind:is-selected="checkPgState(pgStates.DELETE_VERTEX)"
-                    icon-text="V-">
+                    title="Delete Vertex"
+                    icon="vertex-delete">
         </app-button>
       </div>
 
       <div class="app-header-toolbar__button">
         <app-button v-on:click="setCurrentPgState(pgStates.MOVE_VERTEX)"
                     v-bind:is-selected="checkPgState(pgStates.MOVE_VERTEX)"
-                    icon-text="D">
+                    title="Drag n Drop"
+                    icon="drag-n-drop">
         </app-button>
       </div>
     </div>
@@ -40,14 +44,16 @@
       <div class="app-header-toolbar__button">
         <app-button v-on:click="setCurrentPgState(pgStates.ADD_EDGE)"
                     v-bind:is-selected="checkPgState(pgStates.ADD_EDGE)"
-                    icon-text="E+">
+                    title="Add Edge"
+                    icon="edge-add">
         </app-button>
       </div>
 
       <div class="app-header-toolbar__button">
         <app-button v-on:click="setCurrentPgState(pgStates.DELETE_EDGE)"
                     v-bind:is-selected="checkPgState(pgStates.DELETE_EDGE)"
-                    icon-text="E-">
+                    title="Delete Edge"
+                    icon="edge-delete">
         </app-button>
       </div>
     </div>
@@ -58,6 +64,7 @@
       <div class="app-header-toolbar__button">
         <label>Show edge weight</label>
         <input type="checkbox"
+               title="Show/Hide weight of edges"
                v-bind:value="isEdgeWeightVisible"
                v-on:click="toggleEdgeWeightVisibility()"/>
       </div>
