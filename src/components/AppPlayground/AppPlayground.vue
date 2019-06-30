@@ -8,9 +8,13 @@
          @mousedown="onPgMousedown"
          @mouseup="onPgMouseup">
 
-      <app-edge v-for="edge in edgeList" v-bind:data="edge"></app-edge>
+      <app-edge v-for="edge in edgeList"
+                v-bind:key="edge.edgeId"
+                v-bind:data="edge">
+      </app-edge>
 
       <app-vertex v-for="vertex in vertexList"
+                  v-bind:key="vertex.vertexId"
                   v-bind:data="vertex"
                   v-bind:is-selected="firstSelectedVertexId === vertex.vertexId">
       </app-vertex>

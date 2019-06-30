@@ -4,8 +4,6 @@
 
     </div>
 
-    <app-separator width="250px"></app-separator>
-
     <div class="app-side-bar__command-history-container app-side-bar__group--last">
       <app-command-history></app-command-history>
     </div>
